@@ -166,7 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\addons\ipv6_static_routing\README" />
-    <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="lwIP.vcxproj">

@@ -116,7 +116,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="readme.txt" />
     <None Include="..\..\..\addons\ipv6_static_routing\README">
       <Filter>Source Files\addons\ipv6_static_routing</Filter>
     </None>
