@@ -189,7 +189,7 @@ ping_recv(int s)
       if(from.ss_family == AF_INET) {
         struct sockaddr_in *from4 = (struct sockaddr_in*)&from;
         inet_addr_to_ip4addr(ip_2_ip4(&fromaddr), &from4->sin_addr);
-        IP_SET_TYPE(&fromaddr, IPADDR_TYPE_V4);
+        IP_SET_TYPE_VAL(fromaddr, IPADDR_TYPE_V4);
       }
 #endif /* LWIP_IPV4 */
 
@@ -197,12 +197,12 @@ ping_recv(int s)
       if(from.ss_family == AF_INET6) {
         struct sockaddr_in6 *from6 = (struct sockaddr_in6*)&from;
         inet6_addr_to_ip6addr(ip_2_ip6(&fromaddr), &from6->sin6_addr);
-        IP_SET_TYPE(&fromaddr, IPADDR_TYPE_V6);
+        IP_SET_TYPE_VAL(fromaddr, IPADDR_TYPE_V6);
       }
 #endif /* LWIP_IPV6 */
       
       LWIP_DEBUGF( PING_DEBUG, ("ping: recv "));
-      ip_addr_debug_print(PING_DEBUG, &fromaddr);
+      ip_addr_debug_print_val(PING_DEBUG, fromaddr);
       LWIP_DEBUGF( PING_DEBUG, (" %"U32_F" ms\n", (sys_now() - ping_time)));
 
       /* todo: support ICMP6 echo */

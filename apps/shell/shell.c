@@ -886,7 +886,7 @@ com_udpb(struct command *com)
   }
 
 #if LWIP_IPV4
-  if (IP_IS_V6(&ipaddr)) {
+  if (IP_IS_V6_VAL(ipaddr)) {
     err = netconn_bind(conns[i], &ip_addr_broadcast, lport);
     if (err != ERR_OK) {
       netconn_delete(conns[i]);
