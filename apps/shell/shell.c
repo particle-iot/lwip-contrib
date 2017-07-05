@@ -102,6 +102,7 @@ clos [connection #]: closes a TCP or UDP connection."NEWLINE"\
 stat: prints out lwIP statistics."NEWLINE"\
 idxtoname [index]: outputs interface name from index."NEWLINE"\
 nametoidx [name]: outputs interface index from name."NEWLINE"\
+gethostnm [name]: outputs IP address of host."NEWLINE"\
 quit: quits"NEWLINE"";
 
 #if LWIP_STATS
@@ -995,6 +996,26 @@ com_nametoidx(struct command *com)
 #endif /* LWIP_SOCKET */
 /*-----------------------------------------------------------------------------------*/
 static s8_t
+com_gethostbyname(struct command *com)
+{
+  ip_addr_t addr;
+  err_t err = netconn_gethostbyname(com->args[0], &addr);
+
+  if (err == ERR_OK) {
+    if (ipaddr_ntoa_r(&addr, (char *)buffer, sizeof(buffer))) {
+      sendstr("Host found: ", com->conn);
+      sendstr((char *)buffer, com->conn);
+      sendstr(NEWLINE, com->conn);
+    } else {
+        sendstr("ipaddr_ntoa_r failed", com->conn);
+    }
+  } else {
+    sendstr("No host found"NEWLINE, com->conn);
+  }
+  return ESUCCESS;
+}
+/*-----------------------------------------------------------------------------------*/
+static s8_t
 com_help(struct command *com)
 {
   sendstr(help_msg1, com->conn);
@@ -1054,6 +1075,9 @@ parse_command(struct command *com, u32_t len)
     com->exec = com_nametoidx;
     com->nargs = 1;
 #endif /* LWIP_SOCKET */
+  } else if (strncmp((const char *)buffer, "gethostnm", 9) == 0) {
+    com->exec = com_gethostbyname;
+    com->nargs = 1;
   } else if (strncmp((const char *)buffer, "help", 4) == 0) {
     com->exec = com_help;
     com->nargs = 0;
