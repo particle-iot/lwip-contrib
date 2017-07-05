@@ -995,6 +995,7 @@ com_nametoidx(struct command *com)
 }
 #endif /* LWIP_SOCKET */
 /*-----------------------------------------------------------------------------------*/
+#if LWIP_DNS
 static s8_t
 com_gethostbyname(struct command *com)
 {
@@ -1014,6 +1015,7 @@ com_gethostbyname(struct command *com)
   }
   return ESUCCESS;
 }
+#endif /* LWIP_DNS */
 /*-----------------------------------------------------------------------------------*/
 static s8_t
 com_help(struct command *com)
@@ -1075,9 +1077,11 @@ parse_command(struct command *com, u32_t len)
     com->exec = com_nametoidx;
     com->nargs = 1;
 #endif /* LWIP_SOCKET */
+#if LWIP_DNS
   } else if (strncmp((const char *)buffer, "gethostnm", 9) == 0) {
     com->exec = com_gethostbyname;
     com->nargs = 1;
+#endif /* LWIP_DNS */
   } else if (strncmp((const char *)buffer, "help", 4) == 0) {
     com->exec = com_help;
     com->nargs = 0;
