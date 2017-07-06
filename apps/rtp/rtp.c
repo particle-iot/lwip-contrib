@@ -124,7 +124,7 @@ rtp_send_packets( int sock, struct sockaddr_in* to)
 {
   struct rtp_hdr* rtphdr;
   u8_t*           rtp_payload;
-  int             rtp_payload_size;
+  size_t          rtp_payload_size;
   size_t          rtp_data_index;
 
   /* prepare RTP packet */
@@ -138,18 +138,21 @@ rtp_send_packets( int sock, struct sockaddr_in* to)
   rtp_data_index = 0;
   do {
     rtp_payload      = rtp_send_packet+sizeof(struct rtp_hdr);
-    rtp_payload_size = LWIP_MIN(RTP_PAYLOAD_SIZE, (sizeof(rtp_data) - rtp_data_index));
+    rtp_payload_size = LWIP_MIN(RTP_PAYLOAD_SIZE, sizeof(rtp_data) - rtp_data_index);
 
     MEMCPY(rtp_payload, rtp_data + rtp_data_index, rtp_payload_size);
 
     /* set MARKER bit in RTP header on the last packet of an image */
-    rtphdr->payloadtype = RTP_PAYLOADTYPE | (((rtp_data_index + rtp_payload_size)
-      >= sizeof(rtp_data)) ? RTP_MARKER_MASK : 0);
+    if ((rtp_data_index + rtp_payload_size) >= sizeof(rtp_data)) {
+      rtphdr->payloadtype = RTP_PAYLOADTYPE | RTP_MARKER_MASK;
+    } else {
+      rtphdr->payloadtype = RTP_PAYLOADTYPE;
+    }
 
     /* send RTP stream packet */
     if (sendto(sock, rtp_send_packet, sizeof(struct rtp_hdr) + rtp_payload_size,
         0, (struct sockaddr *)to, sizeof(struct sockaddr)) >= 0) {
-      rtphdr->seqNum  = lwip_htons(lwip_ntohs(rtphdr->seqNum) + 1);
+      rtphdr->seqNum  = lwip_htons((u16_t)(lwip_ntohs(rtphdr->seqNum) + 1));
       rtp_data_index += rtp_payload_size;
     } else {
       LWIP_DEBUGF(RTP_DEBUG, ("rtp_sender: not sendto==%i\n", errno));
@@ -220,7 +223,7 @@ rtp_recv_thread(void *arg)
   struct rtp_hdr*    rtphdr;
   u32_t              rtp_stream_address;
   int                timeout;
-  size_t             result;
+  int                result;
   int                recvrtppackets  = 0;
   int                lostrtppackets  = 0;
   u16_t              lastrtpseq = 0;
@@ -258,11 +261,13 @@ rtp_recv_thread(void *arg)
             fromlen = sizeof(from);
             result  = recvfrom(sock, rtp_recv_packet, sizeof(rtp_recv_packet), 0,
               (struct sockaddr *)&from, (socklen_t *)&fromlen);
-            if (result >= sizeof(struct rtp_hdr)) {
+            if ((result > 0) && ((size_t)result >= sizeof(struct rtp_hdr))) {
+              size_t recved = (size_t)result;
               rtphdr = (struct rtp_hdr *)rtp_recv_packet;
               recvrtppackets++;
               if ((lastrtpseq == 0) || ((lastrtpseq + 1) == lwip_ntohs(rtphdr->seqNum))) {
-                RTP_RECV_PROCESSING((rtp_recv_packet + sizeof(rtp_hdr)),(result-sizeof(rtp_hdr)));
+                RTP_RECV_PROCESSING((rtp_recv_packet + sizeof(rtp_hdr)), (recved-sizeof(rtp_hdr)));
+                LWIP_UNUSED_ARG(recved); /* just in case... */
               } else {
                 lostrtppackets++;
               }

@@ -235,7 +235,7 @@ lwip_privmib_init(void)
   }
 #else /* SENSORS_USE_FILES && SENSORS_SEARCH_FILES */
   for (i = 0; i < SENSOR_COUNT; i++) {
-    sensors[i].num = i+1;
+    sensors[i].num = (u8_t)(i + 1);
     snprintf(sensors[i].file, sizeof(sensors[i].file), "%d.txt", i);
 
 #if !SENSORS_USE_FILES
@@ -366,7 +366,7 @@ sensor_table_get_value(struct snmp_node_instance* instance, void* value)
     return sizeof(s32_t);
   case 2: /* file name */
     MEMCPY(value, sensors[i].file, strlen(sensors[i].file));
-    return (u16_t)strlen(sensors[i].file);
+    return (s16_t)strlen(sensors[i].file);
   default:
     return 0;
   }

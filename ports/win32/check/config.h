@@ -5,7 +5,7 @@
 typedef unsigned int pid_t;
 typedef unsigned int uint32_t;
 
-#define ssize_t size_t
+typedef int ssize_t;
 #define snprintf _snprintf
 
 #define HAVE_DECL_STRDUP 1

@@ -970,7 +970,7 @@ com_idxtoname(struct command *com)
 {
   long i = strtol(com->args[0], NULL, 10);
 
-  if (if_indextoname(i, (char *)buffer)) {
+  if (if_indextoname((unsigned int)i, (char *)buffer)) {
     netconn_write(com->conn, buffer, strlen((const char *)buffer), NETCONN_COPY);
     sendstr(NEWLINE, com->conn);
   } else {
@@ -1178,9 +1178,12 @@ shell_main(struct netconn *conn)
   do {
     ret = netconn_recv_tcp_pbuf(conn, &p);
     if (ret == ERR_OK) {
-      pbuf_copy_partial(p, &buffer[len], BUFSIZE - len, 0);
+      pbuf_copy_partial(p, &buffer[len], (u16_t)(BUFSIZE - len), 0);
       cur_len = p->tot_len;
-      len += cur_len;
+      len = (u16_t)(len + cur_len);
+      if ((len < cur_len) || (len > BUFSIZE)) {
+        len = BUFSIZE;
+      }
 #if SHELL_ECHO
       echomem = mem_malloc(cur_len);
       if (echomem != NULL) {

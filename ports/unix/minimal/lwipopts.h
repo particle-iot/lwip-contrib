@@ -67,7 +67,7 @@
  *    4 byte alignment -> #define MEM_ALIGNMENT 4
  *    2 byte alignment -> #define MEM_ALIGNMENT 2
  */
-#define MEM_ALIGNMENT                   1
+#define MEM_ALIGNMENT                   1U
 
 /**
  * MEM_SIZE: the size of the heap memory. If the application will send

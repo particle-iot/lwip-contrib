@@ -230,7 +230,7 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
 
 void sys_sem_signal(sys_sem_t *sem)
 {
-  DWORD ret;
+  BOOL ret;
   LWIP_ASSERT("sem != NULL", sem != NULL);
   LWIP_ASSERT("sem->sem != NULL", sem->sem != NULL);
   LWIP_ASSERT("sem->sem != INVALID_HANDLE_VALUE", sem->sem != INVALID_HANDLE_VALUE);
@@ -419,7 +419,7 @@ void sys_mbox_free(sys_mbox_t *mbox)
 
 void sys_mbox_post(sys_mbox_t *q, void *msg)
 {
-  DWORD ret;
+  BOOL ret;
   SYS_ARCH_DECL_PROTECT(lev);
 
   /* parameter check */
@@ -444,7 +444,7 @@ void sys_mbox_post(sys_mbox_t *q, void *msg)
 err_t sys_mbox_trypost(sys_mbox_t *q, void *msg)
 {
   u32_t new_head;
-  DWORD ret;
+  BOOL ret;
   SYS_ARCH_DECL_PROTECT(lev);
 
   /* parameter check */

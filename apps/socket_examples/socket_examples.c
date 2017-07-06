@@ -69,7 +69,7 @@ sockex_nonblocking_connect(void *arg)
 #if LWIP_SOCKET_SELECT
   int s;
   int ret;
-  u32_t opt;
+  int opt;
 #if LWIP_IPV6
   struct sockaddr_in6 addr;
 #else /* LWIP_IPV6 */
