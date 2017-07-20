@@ -55,12 +55,6 @@
     <Filter Include="src\include\netif\ppp\polarssl">
       <UniqueIdentifier>{b22a3b7a-d076-44a5-9a16-1e6f49cd5a94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\include\posix">
-      <UniqueIdentifier>{8fb42d78-1e77-4208-b457-44f41c4cc901}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\include\posix\sys">
-      <UniqueIdentifier>{81578f11-9d3c-4bc8-a518-6f78f082fe0e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\netif">
       <UniqueIdentifier>{0109fdbb-3aed-45fa-a308-493988755364}</UniqueIdentifier>
     </Filter>
@@ -96,6 +90,24 @@
     </Filter>
     <Filter Include="src\apps\smtp">
       <UniqueIdentifier>{d9456888-d299-48ff-8165-ff499e5a0ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat">
+      <UniqueIdentifier>{5aa786e4-df26-432c-b32c-9c4fac00b951}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat\posix">
+      <UniqueIdentifier>{8fb42d78-1e77-4208-b457-44f41c4cc901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat\posix\sys">
+      <UniqueIdentifier>{81578f11-9d3c-4bc8-a518-6f78f082fe0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat\posix\net">
+      <UniqueIdentifier>{f8d65087-0cee-46de-8d8c-dca719bf2a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat\posix\arpa">
+      <UniqueIdentifier>{91d8473a-deb5-4943-8b63-b43d86c7fa1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\include\compat\stdc">
+      <UniqueIdentifier>{15855a74-48c6-473c-b4cb-40ec065698d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -735,12 +747,6 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\sha1.h">
       <Filter>src\include\netif\ppp\polarssl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\netdb.h">
-      <Filter>src\include\posix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\sys\socket.h">
-      <Filter>src\include\posix\sys</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\arch\bpstruct.h">
       <Filter>arch</Filter>
     </ClInclude>
@@ -906,9 +912,6 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\errno.h">
       <Filter>src\include\lwip</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\errno.h">
-      <Filter>src\include\posix</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\nd6_priv.h">
       <Filter>src\include\lwip\priv</Filter>
     </ClInclude>
@@ -968,6 +971,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\mqtt_opts.h">
       <Filter>src\include\lwip\apps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\sys\socket.h">
+      <Filter>src\include\compat\posix\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\netdb.h">
+      <Filter>src\include\compat\posix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\net\if.h">
+      <Filter>src\include\compat\posix\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\arpa\inet.h">
+      <Filter>src\include\compat\posix\arpa</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\stdc\errno.h">
+      <Filter>src\include\compat\stdc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

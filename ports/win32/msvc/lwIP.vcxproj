@@ -385,6 +385,11 @@
     <ClInclude Include="..\..\..\..\lwip\src\apps\altcp_tls\altcp_tls_mbedtls_mem.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\altcp_tls\altcp_tls_mbedtls_structs.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_msg.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\stdc\errno.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\arpa\inet.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\netdb.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\net\if.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\compat\posix\sys\socket.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\altcp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\altcp_tcp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\altcp_tls.h" />
@@ -496,9 +501,6 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\md4.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\md5.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\sha1.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\errno.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\netdb.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\include\posix\sys\socket.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\fsdata.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\httpd_structs.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_asn1.h" />
