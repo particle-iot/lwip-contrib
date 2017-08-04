@@ -86,7 +86,7 @@ struct command {
 #define NCONNS 10
 static struct netconn *conns[NCONNS];
 
-/* help_msg is split into 2 strings to prevent exceeding the C89 maximum length of 509 per string */
+/* help_msg is split into 3 strings to prevent exceeding the C89 maximum length of 509 per string */
 static char help_msg1[] = "Available commands:"NEWLINE"\
 open [IP address] [TCP port]: opens a TCP connection to the specified address."NEWLINE"\
 lstn [TCP port]: sets up a server on the specified port."NEWLINE"\
@@ -101,8 +101,9 @@ recv [connection #]: recieves data on a TCP or UDP connection."NEWLINE"\
 clos [connection #]: closes a TCP or UDP connection."NEWLINE"\
 stat: prints out lwIP statistics."NEWLINE"\
 idxtoname [index]: outputs interface name from index."NEWLINE"\
-nametoidx [name]: outputs interface index from name."NEWLINE"\
-gethostnm [name]: outputs IP address of host."NEWLINE"\
+nametoidx [name]: outputs interface index from name."NEWLINE;
+static char help_msg3[] = 
+"gethostnm [name]: outputs IP address of host."NEWLINE"\
 quit: quits"NEWLINE"";
 
 #if LWIP_STATS
@@ -1022,6 +1023,7 @@ com_help(struct command *com)
 {
   sendstr(help_msg1, com->conn);
   sendstr(help_msg2, com->conn);
+  sendstr(help_msg3, com->conn);
   return ESUCCESS;
 }
 /*-----------------------------------------------------------------------------------*/
