@@ -194,19 +194,21 @@ unixif_input_handler(void *data)
   struct netif *netif;
   struct unixif *unixif;
   char buf[1532];
-  int len, plen;
+  int plen;
+  ssize_t len;
+  u16_t len16;
   struct pbuf *p;
 
   netif = (struct netif *)data;
   unixif = (struct unixif *)netif->state;
 
   len = read(unixif->fd, &plen, sizeof(int));
-  if (len == -1) {
+  if (len < 0) {
     perror("unixif_irq_handler: read");
     abort();
   }
 
-  LWIP_DEBUGF(UNIXIF_DEBUG, ("unixif_irq_handler: len == %d plen == %d bytes\n", len, plen));  
+  LWIP_DEBUGF(UNIXIF_DEBUG, ("unixif_irq_handler: len == %d plen == %d bytes\n", (int)len, plen));  
   if (len == sizeof(int)) {
 
     if (plen < 20 || plen > 1500) {
@@ -214,17 +216,21 @@ unixif_input_handler(void *data)
       return;
     }
 
-    len = read(unixif->fd, buf, plen);
-    if (len == -1) {
+    len = read(unixif->fd, buf, (size_t)plen);
+    if (len < 0) {
       perror("unixif_irq_handler: read");
       abort();
     }
-    LWIP_DEBUGF(UNIXIF_DEBUG, ("unixif_irq_handler: read %d bytes\n", len));
-    p = pbuf_alloc(PBUF_LINK, len, PBUF_POOL);
+    if (len != plen) {
+      perror("unixif_irq_handler: read len != plen");
+      abort();
+    }
+    LWIP_DEBUGF(UNIXIF_DEBUG, ("unixif_irq_handler: read %d bytes\n", (int)len));
+    len16 = (u16_t)len;
+    p = pbuf_alloc(PBUF_LINK, len16, PBUF_POOL);
 
     if (p != NULL) {
-      pbuf_take(p, buf, len);
-      pbuf_realloc(p, len);
+      pbuf_take(p, buf, len16);
       LINK_STATS_INC(link.recv);
 #if LWIP_IPV4 && LWIP_TCP
       tcpdump(p, netif);
@@ -299,7 +305,7 @@ unixif_output(struct netif *netif, struct pbuf *p, const ip4_addr_t *ipaddr)
   if (list_elems(unixif->q) == 0) {
     pbuf_ref(p);
     list_push(unixif->q, buf);
-    sys_timeout((double)p->tot_len * 8000.0 / UNIXIF_BPS, unixif_output_timeout,
+    sys_timeout((u32_t)p->tot_len * 8000 / UNIXIF_BPS, unixif_output_timeout,
                 netif);
 
     LWIP_DEBUGF(UNIXIF_DEBUG, ("unixif_output: first on list\n"));
@@ -411,7 +417,7 @@ unixif_output_timeout(void *arg)
     }*/
   if (list_elems(unixif->q) > 0) {
     sys_timeout(((struct unixif_buf *)list_first(unixif->q))->tot_len *
-                8000.0 / UNIXIF_BPS,
+                8000U / UNIXIF_BPS,
                 unixif_output_timeout, netif);
   }
 }

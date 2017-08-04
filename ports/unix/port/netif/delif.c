@@ -365,7 +365,7 @@ delif_init_thread(struct netif *netif)
 
 #if LWIP_IPV6
   {
-    int i;
+    s8_t i;
     netif->output_ip6 = delif_output6;
     for(i=0; i < LWIP_IPV6_NUM_ADDRESSES; i++) {
       netif_ip6_addr_set(del->netif, i, netif_ip6_addr(netif, i));

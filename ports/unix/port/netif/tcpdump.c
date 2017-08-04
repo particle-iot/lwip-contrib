@@ -160,7 +160,7 @@ tcpdump(struct pbuf *p, struct netif* netif)
     len = lwip_ntohs(IPH_LEN(iphdr)) - offset * 4 - IP_HLEN;
     if (len != 0 || flags[0] != '.') {
       fprintf(file, "%s %u:%u(%u) ", flags, lwip_ntohl(tcphdr->seqno),
-              lwip_ntohl(tcphdr->seqno) + len, len);
+              lwip_ntohl(tcphdr->seqno) + (u32_t)len, len);
     }
     if (TCPH_FLAGS(tcphdr) & TCP_ACK) {
       fprintf(file, "ack %u ", lwip_ntohl(tcphdr->ackno));
@@ -193,7 +193,7 @@ tcpdump(struct pbuf *p, struct netif* netif)
             ip_ntoa(&dst),
             lwip_ntohs(udphdr->dest));
     fprintf(file, "U ");
-    len = lwip_ntohs(IPH_LEN(iphdr)) - sizeof(struct udp_hdr) - IP_HLEN;
+    len = (int)(lwip_ntohs(IPH_LEN(iphdr)) - sizeof(struct udp_hdr) - IP_HLEN);
     fprintf(file, " %d\n", len);
 
     fflush(file);
