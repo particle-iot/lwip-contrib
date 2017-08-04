@@ -39,7 +39,7 @@ CFLAGS=-DLWIP_NOASSERT_ON_ERROR -I/usr/include/check -I$(LWIPDIR)/../test/unit
 SYSARCH?=
 include ../Common.mk
 
-LDFLAGS:=$(LDFLAGS) -lcheck -lm -lsubunit
+LDFLAGS:=-lcheck -lm -lsubunit $(LDFLAGS)
 
 TESTDIR=$(LWIPDIR)/../test/unit
 include $(TESTDIR)/Filelists.mk
