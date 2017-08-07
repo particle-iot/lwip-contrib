@@ -311,8 +311,6 @@ snmpv3_get_user(const char* username, snmpv3_auth_algo_t *auth_algo, u8_t *auth_
 
 /**
  * Get engine ID from persistence
- * @param id
- * @param len
  */
 void
 snmpv3_get_engine_id(const char **id, u8_t *len)
@@ -323,8 +321,6 @@ snmpv3_get_engine_id(const char **id, u8_t *len)
 
 /**
  * Store engine ID in persistence
- * @param id
- * @param len
  */
 err_t
 snmpv3_set_engine_id(const char *id, u8_t len)
@@ -336,7 +332,6 @@ snmpv3_set_engine_id(const char *id, u8_t len)
 
 /**
  * Get engine boots from persistence. Must be increased on each boot.
- * @return 
  */
 u32_t
 snmpv3_get_engine_boots(void)
@@ -346,7 +341,6 @@ snmpv3_get_engine_boots(void)
 
 /**
  * Store engine boots in persistence
- * @param boots
  */
 void 
 snmpv3_set_engine_boots(u32_t boots)
