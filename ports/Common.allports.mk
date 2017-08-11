@@ -91,4 +91,4 @@ $(APPLIB): $(APPOBJS)
 	$(AR) $(ARFLAGS) $(APPLIB) $?
 
 %.o:
-	$(CC) $(CFLAGS) -c $(<:.o=.c)
+	$(CC) $(CFLAGS) -c $<

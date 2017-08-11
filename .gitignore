@@ -5,6 +5,7 @@
 /ports/unix/unixsim/simhost
 /ports/unix/unixsim/simrouter
 /ports/unix/unixsim/simnode
+/ports/unix/unixsim/makefsdata
 /ports/unix/minimal/echop
 /ports/win32/msvc/Debug
 /ports/win32/lwipcfg_msvc.h

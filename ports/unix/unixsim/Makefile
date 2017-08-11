@@ -34,6 +34,8 @@ all compile: simhost simrouter simnode
 
 include ../Common.mk
 
+MAKEFSDATAOBJS=$(notdir $(MAKEFSDATAFILES:.c=.o))
+
 clean:
 	rm -f *.o $(LWIPLIBCOMMON) $(APPLIB) simhost simnode simrouter *.s .depend* *.core core
 
@@ -41,7 +43,7 @@ depend dep: .depend
 
 include .depend
 
-.depend: simhost.c simnode.c simrouter.c $(LWIPFILES) $(APPFILES)
+.depend: simhost.c simnode.c simrouter.c $(LWIPFILES) $(APPFILES) $(MAKEFSDATAFILES)
 	$(CCDEP) $(CFLAGS) -MM $^ > .depend || rm -f .depend
 
 simhost: .depend $(LWIPLIBCOMMON) $(APPLIB) simhost.o
@@ -52,3 +54,6 @@ simrouter: .depend $(LWIPLIBCOMMON) $(APPLIB) simrouter.o
 
 simnode: .depend $(LWIPLIBCOMMON) $(APPLIB) simnode.o 
 	$(CC) $(CFLAGS) -o simnode simnode.o -Wl,--start-group $(APPLIB) $(LWIPLIBCOMMON) -Wl,--end-group $(LDFLAGS)
+
+makefsdata: .depend $(MAKEFSDATAOBJS)
+	$(CC) $(CFLAGS) -o makefsdata $(MAKEFSDATAOBJS)
