@@ -990,6 +990,9 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\iana.h">
       <Filter>src\include\lwip\prot</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\ieee.h">
+      <Filter>src\include\lwip\prot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="..\lwipcfg_msvc.h.example">

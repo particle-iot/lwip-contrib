@@ -457,6 +457,7 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\pbuf.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\etharp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\iana.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\ieee.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\igmp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\raw.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\sio.h" />
