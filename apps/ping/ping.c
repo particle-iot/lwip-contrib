@@ -95,7 +95,9 @@
 /* ping variables */
 static const ip_addr_t* ping_target;
 static u16_t ping_seq_num;
+#ifdef LWIP_DEBUG
 static u32_t ping_time;
+#endif /* LWIP_DEBUG */
 #if !PING_USE_SOCKETS
 static struct raw_pcb *ping_pcb;
 #endif /* PING_USE_SOCKETS */
@@ -272,7 +274,9 @@ ping_thread(void *arg)
       ip_addr_debug_print(PING_DEBUG, ping_target);
       LWIP_DEBUGF( PING_DEBUG, ("\n"));
 
+#ifdef LWIP_DEBUG
       ping_time = sys_now();
+#endif /* LWIP_DEBUG */
       ping_recv(s);
     } else {
       LWIP_DEBUGF( PING_DEBUG, ("ping: send "));
@@ -338,7 +342,9 @@ ping_send(struct raw_pcb *raw, ip_addr_t *addr)
     ping_prepare_echo(iecho, (u16_t)ping_size);
 
     raw_sendto(raw, p, addr);
+#ifdef LWIP_DEBUG
     ping_time = sys_now();
+#endif /* LWIP_DEBUG */
   }
   pbuf_free(p);
 }
