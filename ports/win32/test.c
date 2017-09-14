@@ -534,7 +534,7 @@ apps_init(void)
 #endif /* LWIP_CHARGEN_APP && LWIP_SOCKET */
 
 #if LWIP_PING_APP && LWIP_RAW && LWIP_ICMP
-  ping_init();
+  ping_init(&netif.gw);
 #endif /* LWIP_PING_APP && LWIP_RAW && LWIP_ICMP */
 
 #if LWIP_NETBIOS_APP && LWIP_UDP
@@ -574,9 +574,9 @@ apps_init(void)
   rtp_init();
 #endif /* LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP */
 
-#if LWIP_SNTP_APP && LWIP_SOCKET
+#if LWIP_SNTP_APP
   sntp_init();
-#endif /* LWIP_SNTP_APP && LWIP_SOCKET */
+#endif /* LWIP_SNTP_APP */
 
 #if LWIP_SHELL_APP && LWIP_NETCONN
   shell_init();
