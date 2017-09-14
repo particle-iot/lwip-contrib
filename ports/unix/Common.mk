@@ -36,6 +36,7 @@ ARCHFILES=$(LWIPARCH)/perf.c $(SYSARCH) $(LWIPARCH)/netif/tapif.c $(LWIPARCH)/ne
 	$(LWIPARCH)/netif/unixif.c $(LWIPARCH)/netif/list.c $(LWIPARCH)/netif/tcpdump.c \
 	$(LWIPARCH)/netif/delif.c $(LWIPARCH)/netif/sio.c $(LWIPARCH)/netif/fifo.c
 
-include ../../Common.allports.mk
+UNIX_COMMON_MK_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+include $(UNIX_COMMON_MK_DIR)../Common.allports.mk
 
 LDFLAGS+=-pthread -lutil -lrt
