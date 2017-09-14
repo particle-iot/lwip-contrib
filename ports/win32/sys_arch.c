@@ -69,7 +69,15 @@ u32_t sys_win_rand(void)
 static void sys_win_rand_init(void)
 {
   if(!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, 0)) {
-    LWIP_ASSERT("CryptAcquireContext failed", 0);
+    DWORD err = GetLastError();
+    LWIP_PLATFORM_DIAG(("CryptAcquireContext failed with error %d, trying to create NEWKEYSET", (int)err));
+    if(!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET)) {
+      DWORD err = GetLastError();
+      char errbuf[128];
+      snprintf(errbuf, sizeof(errbuf), "CryptAcquireContext failed with error %d", (int)err);
+      LWIP_UNUSED_ARG(err);
+      LWIP_ASSERT(errbuf, 0);
+    }
   }
 }
 
