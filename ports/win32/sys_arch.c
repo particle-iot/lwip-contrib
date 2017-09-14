@@ -592,3 +592,21 @@ void sys_arch_netconn_sem_free(void)
 #endif /* LWIP_NETCONN_SEM_PER_THREAD */
 
 #endif /* !NO_SYS */
+
+/* get keyboard state to terminate the debug app on any kbhit event using win32 API */
+int lwip_win32_keypressed(void)
+{
+  INPUT_RECORD rec;
+  DWORD num = 0;
+  HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+  BOOL ret = PeekConsoleInput(h, &rec, 1, &num);
+  if (ret) {
+    if(rec.EventType == KEY_EVENT) {
+      if(rec.Event.KeyEvent.bKeyDown) {
+        return 1;
+      }
+    }
+    ReadConsoleInput(h, &rec, 1, &num);
+  }
+  return 0;
+}

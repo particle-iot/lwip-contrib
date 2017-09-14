@@ -74,5 +74,7 @@ void sys_arch_netconn_sem_free(void);
 #define LWIP_NETCONN_THREAD_SEM_ALLOC() sys_arch_netconn_sem_alloc()
 #define LWIP_NETCONN_THREAD_SEM_FREE()  sys_arch_netconn_sem_free()
 
+int lwip_win32_keypressed(void);
+
 #endif /* LWIP_ARCH_SYS_ARCH_H */
 

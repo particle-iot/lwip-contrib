@@ -36,7 +36,6 @@
 #include <stdarg.h>
 #include <time.h>
 #include <string.h>
-#include <conio.h>
 
 /* lwIP core includes */
 #include "lwip/opt.h"
@@ -676,7 +675,7 @@ main_loop(void)
 #endif
 
   /* MAIN LOOP for driver update (and timers if NO_SYS) */
-  while (!_kbhit()) {
+  while (!lwip_win32_keypressed()) {
 #if NO_SYS
     /* handle timers (already done in tcpip.c when NO_SYS=0) */
     sys_check_timeouts();
