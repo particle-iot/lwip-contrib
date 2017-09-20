@@ -29,7 +29,7 @@
 # Author: Adam Dunkels <adam@sics.se>
 #
 
-all compile: simhost simrouter simnode
+all compile: simhost simrouter simnode makefsdata
 .PHONY: all
 
 include ../Common.mk
