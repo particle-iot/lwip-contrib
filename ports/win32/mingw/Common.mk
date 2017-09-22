@@ -37,7 +37,7 @@ ARCHFILES=$(LWIPARCH)/sys_arch.c $(LWIPARCH)/test.c $(LWIPARCH)/pcapif.c \
 	$(LWIPARCH)/pcapif_helper.c $(LWIPARCH)/sio.c
 
 WIN32_COMMON_MK_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-include $(UNIX_COMMON_MK_DIR)/../../Common.allports.mk
+include $(WIN32_COMMON_MK_DIR)/../../Common.allports.mk
 
 PCAPDIR=$(PCAP_DIR)/Include
 LDFLAGS+=-L$(PCAP_DIR)/lib -lwpcap -lpacket
