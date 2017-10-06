@@ -600,13 +600,13 @@ int lwip_win32_keypressed(void)
   DWORD num = 0;
   HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
   BOOL ret = PeekConsoleInput(h, &rec, 1, &num);
-  if (ret) {
+  if (ret && num) {
+    ReadConsoleInput(h, &rec, 1, &num);
     if(rec.EventType == KEY_EVENT) {
       if(rec.Event.KeyEvent.bKeyDown) {
         return 1;
       }
     }
-    ReadConsoleInput(h, &rec, 1, &num);
   }
   return 0;
 }
