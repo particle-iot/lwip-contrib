@@ -594,7 +594,7 @@ void sys_arch_netconn_sem_free(void)
 #endif /* !NO_SYS */
 
 /* get keyboard state to terminate the debug app on any kbhit event using win32 API */
-int lwip_win32_keypressed(void)
+int lwip_win32_keypressed(char *key)
 {
   INPUT_RECORD rec;
   DWORD num = 0;
@@ -604,6 +604,9 @@ int lwip_win32_keypressed(void)
     ReadConsoleInput(h, &rec, 1, &num);
     if(rec.EventType == KEY_EVENT) {
       if(rec.Event.KeyEvent.bKeyDown) {
+        if (key) {
+          *key = rec.Event.KeyEvent.uChar.AsciiChar;
+        }
         return 1;
       }
     }

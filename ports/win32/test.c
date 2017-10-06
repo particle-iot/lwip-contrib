@@ -675,7 +675,7 @@ main_loop(void)
 #endif
 
   /* MAIN LOOP for driver update (and timers if NO_SYS) */
-  while (!lwip_win32_keypressed()) {
+  while (!lwip_win32_keypressed(NULL)) {
 #if NO_SYS
     /* handle timers (already done in tcpip.c when NO_SYS=0) */
     sys_check_timeouts();
