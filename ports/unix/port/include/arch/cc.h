@@ -62,6 +62,14 @@
 typedef __kernel_fd_set fd_set;
 #endif
 
+#if defined(LWIP_UNIX_MACH)
+/* sys/types.h and signal.h bring in Darwin byte order macros. pull the
+   header here and disable LwIP's version so that apps still can get
+   the macros via LwIP headers and use system headers */
+#include <sys/types.h>
+#define LWIP_DONT_PROVIDE_BYTEORDER_FUNCTIONS
+#endif
+
 struct sio_status_s;
 typedef struct sio_status_s sio_status_t;
 #define sio_fd_t sio_status_t*
