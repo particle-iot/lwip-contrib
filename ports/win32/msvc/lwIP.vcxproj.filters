@@ -499,6 +499,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\apps\smtp\smtp.c">
       <Filter>src\apps\smtp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\netif\bridgeif_fdb.c">
+      <Filter>src\netif</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\lwiperf.h">
