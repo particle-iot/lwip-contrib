@@ -367,9 +367,7 @@ msvc_netif_init(void)
 #endif /* NO_SYS */
 #if LWIP_IPV6
   netif_create_ip6_linklocal_address(&netif, 1);
-  printf("ip6 linklocal address: ");
-  ip6_addr_debug_print(0xFFFFFFFF & ~LWIP_DBG_HALT, netif_ip6_addr(&netif, 0));
-  printf("\n");
+  printf("ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(&netif, 0)));
 #endif /* LWIP_IPV6 */
 #if LWIP_NETIF_STATUS_CALLBACK
   netif_set_status_callback(&netif, status_callback);
@@ -431,9 +429,7 @@ msvc_netif_init(void)
 #endif /* !USE_ETHERNET */
 #if LWIP_IPV6
   netif_create_ip6_linklocal_address(&slipif1, 1);
-  printf("SLIP ip6 linklocal address: ");
-  ip6_addr_debug_print(0xFFFFFFFF & ~LWIP_DBG_HALT, netif_ip6_addr(&slipif1, 0));
-  printf("\n");
+  printf("SLIP ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(&netif, 0)));
 #endif /* LWIP_IPV6 */
 #if LWIP_NETIF_STATUS_CALLBACK
   netif_set_status_callback(&slipif1, status_callback);
