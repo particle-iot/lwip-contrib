@@ -35,11 +35,21 @@ all compile: lwip_unittests
 # The include path to sys_arch.h and lwipopts.h must be first, so this must be before Common.mk
 CFLAGS=-DLWIP_NOASSERT_ON_ERROR -I/usr/include/check -I$(LWIPDIR)/../test/unit
 
+ifeq (clang,$(findstring clang,$(CC)))
+# check.h causes 'error: token pasting of ',' and __VA_ARGS__ is a GNU extension' with clang 9.0.0
+CFLAGS+=-Wno-gnu-zero-variadic-macro-arguments
+endif
+
 # Prevent compiling sys_arch.c of unix port because unit test provide their own port
 SYSARCH?=
 include ../Common.mk
 
-LDFLAGS:=-lcheck -lm -lsubunit $(LDFLAGS)
+LDFLAGS:=-lcheck -lm $(LDFLAGS)
+
+ifneq ($(UNAME_S),Darwin)
+# check installed via brew on Darwin doesn't have a separate subunit library (must be statically linked)
+LDFLAGS+=-lsubunit
+endif
 
 TESTDIR=$(LWIPDIR)/../test/unit
 include $(TESTDIR)/Filelists.mk
@@ -55,8 +65,14 @@ include .depend
 .depend: $(LWIPFILES) $(APPFILES) $(TESTFILES)
 	$(CCDEP) $(CFLAGS) -MM $^ > .depend || rm -f .depend
 
+ifneq ($(UNAME_S),Darwin)
+# clang on Darwin doesn't support --start-group
 lwip_unittests: .depend $(TESTOBJS) $(LWIPLIBCOMMON) $(APPLIB)
 	$(CC) $(CFLAGS) -o lwip_unittests $(TESTOBJS)  -Wl,--start-group $(LWIPLIBCOMMON) $(APPLIB) $(LDFLAGS) -Wl,--end-group
+else
+lwip_unittests: .depend $(TESTOBJS) $(LWIPLIBCOMMON) $(APPLIB)
+	$(CC) $(CFLAGS) -o lwip_unittests $(TESTOBJS) $(LWIPLIBCOMMON) $(APPLIB) $(LDFLAGS)
+endif
 
 check: lwip_unittests
 	@./lwip_unittests
