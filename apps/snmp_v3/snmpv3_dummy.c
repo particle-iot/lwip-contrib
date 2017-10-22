@@ -142,6 +142,9 @@ snmpv3_set_user_auth_algo(const char *username, snmpv3_auth_algo_t algo)
       if (p->priv_algo != SNMP_V3_PRIV_ALGO_INVAL) {
         /* Privacy MUST be disabled before configuring authentication */
         break;
+      } else {
+        p->auth_algo = algo;
+        return ERR_OK;
       }
 #if LWIP_SNMP_V3_CRYPTO
     case SNMP_V3_AUTH_ALGO_MD5:
@@ -170,6 +173,9 @@ snmpv3_set_user_priv_algo(const char *username, snmpv3_priv_algo_t algo)
       if (p->auth_algo == SNMP_V3_AUTH_ALGO_INVAL) {
         /* Authentication MUST be enabled before configuring privacy */
         break;
+      } else {
+        p->priv_algo = algo;
+        return ERR_OK;
       }
 #endif
     case SNMP_V3_PRIV_ALGO_INVAL:
