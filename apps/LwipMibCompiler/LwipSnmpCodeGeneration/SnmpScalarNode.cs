@@ -331,7 +331,7 @@ namespace LwipSnmpCodeGeneration
 			}
 			else
 			{
-				container.AddCodeFormat("{0} == {1};", retErrVarName, LwipDefs.Def_ErrorCode_Ok);
+				container.AddCodeFormat("{0} = {1};", retErrVarName, LwipDefs.Def_ErrorCode_Ok);
 			}
 		}
 
