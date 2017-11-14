@@ -148,9 +148,9 @@ sio_fd_t sio_open(u8_t devnum)
   CHAR   fileName[256];
   LWIP_DEBUGF(SIO_DEBUG, ("sio_open(%lu)\n", (DWORD)devnum));
 #if SIO_USE_COMPORT
-  _snprintf(fileName, 255, SIO_DEVICENAME"%lu", (DWORD)(devnum));
+  snprintf(fileName, 255, SIO_DEVICENAME"%lu", (DWORD)(devnum));
 #else /* SIO_USE_COMPORT */
-  _snprintf(fileName, 255, SIO_DEVICENAME"%lu", (DWORD)(devnum & ~1));
+  snprintf(fileName, 255, SIO_DEVICENAME"%lu", (DWORD)(devnum & ~1));
   if ((devnum & 1) == 0) {
     fileHandle = CreateNamedPipeA(fileName, PIPE_ACCESS_DUPLEX, PIPE_TYPE_BYTE | PIPE_NOWAIT,
       PIPE_UNLIMITED_INSTANCES, 102400, 102400, 100, NULL);
