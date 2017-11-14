@@ -321,7 +321,7 @@ ping_recv(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_addr_t *addr)
 }
 
 static void
-ping_send(struct raw_pcb *raw, ip_addr_t *addr)
+ping_send(struct raw_pcb *raw, const ip_addr_t *addr)
 {
   struct pbuf *p;
   struct icmp_echo_hdr *iecho;
@@ -353,12 +353,10 @@ static void
 ping_timeout(void *arg)
 {
   struct raw_pcb *pcb = (struct raw_pcb*)arg;
-  ip_addr_t ping_target;
 
   LWIP_ASSERT("ping_timeout: no pcb given!", pcb != NULL);
 
-  ip_addr_copy_from_ip4(ping_target, PING_TARGET);
-  ping_send(pcb, &ping_target);
+  ping_send(pcb, ping_target);
 
   sys_timeout(PING_DELAY, ping_timeout, pcb);
 }
@@ -377,10 +375,8 @@ ping_raw_init(void)
 void
 ping_send_now(void)
 {
-  ip_addr_t ping_target;
   LWIP_ASSERT("ping_pcb != NULL", ping_pcb != NULL);
-  ip_addr_copy_from_ip4(ping_target, PING_TARGET);
-  ping_send(ping_pcb, &ping_target);
+  ping_send(ping_pcb, ping_target);
 }
 
 #endif /* PING_USE_SOCKETS */
@@ -389,7 +385,7 @@ void
 ping_init(const ip_addr_t* ping_addr)
 {
   ping_target = ping_addr;
-  
+
 #if PING_USE_SOCKETS
   sys_thread_new("ping_thread", ping_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 #else /* PING_USE_SOCKETS */
