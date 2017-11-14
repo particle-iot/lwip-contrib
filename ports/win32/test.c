@@ -639,6 +639,7 @@ test_init(void * arg)
 static void
 main_loop(void)
 {
+  char key;
 #if !NO_SYS
   err_t err;
   sys_sem_t init_sem;
@@ -671,7 +672,7 @@ main_loop(void)
 #endif
 
   /* MAIN LOOP for driver update (and timers if NO_SYS) */
-  while (!lwip_win32_keypressed(NULL)) {
+  while (!lwip_win32_keypressed(&key) || (key == 0)) {
 #if NO_SYS
     /* handle timers (already done in tcpip.c when NO_SYS=0) */
     sys_check_timeouts();
