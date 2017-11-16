@@ -78,6 +78,9 @@
 #include "apps/socket_examples/socket_examples.h"
 #include "apps/snmp_v3/snmpv3_dummy.h"
 
+#include "addons/httpd/fs_example/fs_example.h"
+#include "addons/httpd/ssi_example/ssi_example.h"
+
 #if NO_SYS
 /* ... then we need information about the timer intervals: */
 #include "lwip/ip4_frag.h"
@@ -548,7 +551,13 @@ apps_init(void)
 #ifdef LWIP_HTTPD_APP_NETCONN
   http_server_netconn_init();
 #else /* LWIP_HTTPD_APP_NETCONN */
+#if defined(LWIP_HTTPD_EXAMPLE_CUSTOMFILES) && LWIP_HTTPD_EXAMPLE_CUSTOMFILES && defined(LWIP_HTTPD_EXAMPLE_CUSTOMFILES_ROOTDIR)
+  fs_ex_init(LWIP_HTTPD_EXAMPLE_CUSTOMFILES_ROOTDIR);
+#endif
   httpd_init();
+#if defined(LWIP_HTTPD_EXAMPLE_SSI_SIMPLE) && LWIP_HTTPD_EXAMPLE_SSI_SIMPLE
+  ssi_ex_init();
+#endif
 #endif /* LWIP_HTTPD_APP_NETCONN */
 #endif /* LWIP_HTTPD_APP && LWIP_TCP */
 
