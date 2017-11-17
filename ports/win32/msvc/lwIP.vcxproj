@@ -374,7 +374,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\core\ipv4\ip4_frag.c" />
     <ClCompile Include="..\..\..\..\lwip\src\core\timeouts.c" />
     <ClCompile Include="..\..\..\..\lwip\src\apps\mdns\mdns.c" />
-    <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmpv3_mbedtls.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmpv3_mbedtls.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\mbedtls\include;..\..\..\..\lwip\src\include;..\..\..\..\lwip\src\include\ipv4;..\..\..\..\lwip\src\include\ipv6;..\include;..;..\..\..\apps\snmp_private_mib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="..\sio.c" />
     <ClCompile Include="..\sys_arch.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug unittests|Win32'">true</ExcludedFromBuild>
