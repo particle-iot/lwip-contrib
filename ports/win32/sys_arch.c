@@ -49,6 +49,26 @@
 #include <lwip/debug.h>
 #include <lwip/sys.h>
 
+/** Set this to 1 to enable assertion checks that SYS_ARCH_PROTECT() is only
+ * called once in a call stack (calling it nested might cause trouble in some
+ * implementations, so let's avoid this in core code as long as we can).
+ */
+#ifndef LWIP_SYS_ARCH_CHECK_NESTED_PROTECT
+#define LWIP_SYS_ARCH_CHECK_NESTED_PROTECT 1
+#endif
+
+/** Set this to 1 to enable assertion checks that SYS_ARCH_PROTECT() is *not*
+ * called before functions potentiolly involving the OS scheduler.
+ *
+ * This scheme is currently broken only for non-core-locking when waking up
+ * threads waiting on a socket via select/poll.
+ */
+#ifndef LWIP_SYS_ARCH_CHECK_SCHEDULING_UNPROTECTED
+#define LWIP_SYS_ARCH_CHECK_SCHEDULING_UNPROTECTED LWIP_TCPIP_CORE_LOCKING
+#endif
+
+#define LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER (LWIP_SYS_ARCH_CHECK_NESTED_PROTECT || LWIP_SYS_ARCH_CHECK_SCHEDULING_UNPROTECTED)
+
 /* These functions are used from NO_SYS also, for precise timer triggering */
 LARGE_INTEGER freq, sys_start_time;
 #define SYS_INITIALIZED() (freq.QuadPart != 0)
@@ -113,6 +133,9 @@ u32_t sys_now(void)
 }
 
 CRITICAL_SECTION critSec;
+#if LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER
+static int protection_depth;
+#endif
 
 static void InitSysArchProtect(void)
 {
@@ -128,14 +151,40 @@ sys_prot_t sys_arch_protect(void)
   }
 #endif
   EnterCriticalSection(&critSec);
+#if LWIP_SYS_ARCH_CHECK_NESTED_PROTECT
+  LWIP_ASSERT("nested SYS_ARCH_PROTECT", protection_depth == 0);
+#endif
+#if LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER
+  protection_depth++;
+#endif
   return 0;
 }
 
 void sys_arch_unprotect(sys_prot_t pval)
 {
   LWIP_UNUSED_ARG(pval);
+#if LWIP_SYS_ARCH_CHECK_NESTED_PROTECT
+  LWIP_ASSERT("missing SYS_ARCH_PROTECT", protection_depth > 0);
+#endif
+#if LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER
+  protection_depth--;
+#endif
   LeaveCriticalSection(&critSec);
 }
+
+#if LWIP_SYS_ARCH_CHECK_SCHEDULING_UNPROTECTED
+/** This checks that SYS_ARCH_PROTECT() hasn't been called by protecting
+ * and then checking the level
+ */
+static void sys_arch_check_not_protected(void)
+{
+  sys_arch_protect();
+  LWIP_ASSERT("SYS_ARCH_PROTECT before scheduling", protection_depth == 1);
+  sys_arch_unprotect(0);
+}
+#else
+#define sys_arch_check_not_protected()
+#endif
 
 static void msvc_sys_init(void)
 {
@@ -239,6 +288,7 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
 void sys_sem_signal(sys_sem_t *sem)
 {
   BOOL ret;
+  sys_arch_check_not_protected();
   LWIP_ASSERT("sem != NULL", sem != NULL);
   LWIP_ASSERT("sem->sem != NULL", sem->sem != NULL);
   LWIP_ASSERT("sem->sem != INVALID_HANDLE_VALUE", sem->sem != INVALID_HANDLE_VALUE);
@@ -299,6 +349,7 @@ void sys_mutex_lock(sys_mutex_t *mutex)
 
 void sys_mutex_unlock(sys_mutex_t *mutex)
 {
+  sys_arch_check_not_protected();
   LWIP_ASSERT("mutex != NULL", mutex != NULL);
   LWIP_ASSERT("mutex->mut != NULL", mutex->mut != NULL);
   LWIP_ASSERT("mutex->mut != INVALID_HANDLE_VALUE", mutex->mut != INVALID_HANDLE_VALUE);
@@ -429,6 +480,7 @@ void sys_mbox_post(sys_mbox_t *q, void *msg)
 {
   BOOL ret;
   SYS_ARCH_DECL_PROTECT(lev);
+  sys_arch_check_not_protected();
 
   /* parameter check */
   LWIP_ASSERT("q != SYS_MBOX_NULL", q != SYS_MBOX_NULL);
@@ -454,6 +506,7 @@ err_t sys_mbox_trypost(sys_mbox_t *q, void *msg)
   u32_t new_head;
   BOOL ret;
   SYS_ARCH_DECL_PROTECT(lev);
+  sys_arch_check_not_protected();
 
   /* parameter check */
   LWIP_ASSERT("q != SYS_MBOX_NULL", q != SYS_MBOX_NULL);
