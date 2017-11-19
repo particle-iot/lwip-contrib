@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #ifndef SOCK_TARGET_HOST4
-#define SOCK_TARGET_HOST4  "192.168.1.1"
+#define SOCK_TARGET_HOST4  "192.168.0.1"
 #endif
 
 #ifndef SOCK_TARGET_HOST6
@@ -80,6 +80,7 @@ sockex_nonblocking_connect(void *arg)
   u32_t ticks_a, ticks_b;
   int err;
   const ip_addr_t *ipaddr = (const ip_addr_t*)arg;
+  struct pollfd fds;
   INIT_FDSETS(&sets);
 
   /* set up address to connect to */
@@ -202,6 +203,13 @@ sockex_nonblocking_connect(void *arg)
   LWIP_ASSERT("!FD_ISSET(s, &readset)", !FD_ISSET(s, &sets.readset));
   LWIP_ASSERT("!FD_ISSET(s, &errset)", !FD_ISSET(s, &sets.errset));
 
+  fds.fd = s;
+  fds.events = POLLIN|POLLOUT;
+  fds.revents = 0;
+  ret = lwip_poll(&fds, 1, 0);
+  LWIP_ASSERT("ret == 0", ret == 0);
+  LWIP_ASSERT("fds.revents == 0", fds.revents == 0);
+
   FD_ZERO(&sets.readset);
   FD_SET(s, &sets.readset);
   FD_ZERO(&sets.writeset);
@@ -216,6 +224,13 @@ sockex_nonblocking_connect(void *arg)
   LWIP_ASSERT("FD_ISSET(s, &writeset)", FD_ISSET(s, &sets.writeset));
   LWIP_ASSERT("!FD_ISSET(s, &readset)", !FD_ISSET(s, &sets.readset));
   LWIP_ASSERT("!FD_ISSET(s, &errset)", !FD_ISSET(s, &sets.errset));
+
+  fds.fd = s;
+  fds.events = POLLIN|POLLOUT;
+  fds.revents = 0;
+  ret = lwip_poll(&fds, 1, 0);
+  LWIP_ASSERT("ret == 1", ret == 1);
+  LWIP_ASSERT("fds.revents & POLLOUT", fds.revents & POLLOUT);
 
   /* now write should succeed */
   ret = lwip_write(s, "test", 4);
@@ -634,6 +649,7 @@ sockex_testtwoselects(void *arg)
 static void
 socket_example_test(void* arg)
 {
+  sys_msleep(1000);
   sockex_nonblocking_connect(arg);
   sockex_testrecv(arg);
   sockex_testtwoselects(arg);
