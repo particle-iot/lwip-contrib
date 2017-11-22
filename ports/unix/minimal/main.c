@@ -55,7 +55,7 @@
 #include "lwip/apps/snmp.h"
 #include "lwip/apps/snmp_mib2.h"
 
-#include "apps/snmp_private_mib/private_mib.h"
+#include "examples/snmp/snmp_private_mib/private_mib.h"
 #include "apps/udpecho_raw/udpecho_raw.h"
 #include "apps/tcpecho_raw/tcpecho_raw.h"
 
