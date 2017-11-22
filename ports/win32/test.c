@@ -76,10 +76,11 @@
 #include "apps/udpecho/udpecho.h"
 #include "apps/tcpecho_raw/tcpecho_raw.h"
 #include "apps/socket_examples/socket_examples.h"
-#include "apps/snmp_v3/snmpv3_dummy.h"
 
-#include "addons/httpd/fs_example/fs_example.h"
-#include "addons/httpd/ssi_example/ssi_example.h"
+#include "examples/snmp/snmp_v3/snmpv3_dummy.h"
+
+#include "examples/httpd/fs_example/fs_example.h"
+#include "examples/httpd/ssi_example/ssi_example.h"
 
 #if NO_SYS
 /* ... then we need information about the timer intervals: */

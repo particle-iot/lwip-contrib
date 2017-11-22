@@ -39,9 +39,11 @@ CONTRIBAPPFILES=$(CONTRIBDIR)/apps/httpserver/httpserver-netconn.c \
 	$(CONTRIBDIR)/apps/tcpecho_raw/tcpecho_raw.c \
 	$(CONTRIBDIR)/apps/netio/netio.c \
 	$(CONTRIBDIR)/apps/ping/ping.c \
-	$(CONTRIBDIR)/apps/snmp_private_mib/lwip_prvmib.c \
-	$(CONTRIBDIR)/apps/snmp_v3/snmpv3_dummy.c \
 	$(CONTRIBDIR)/apps/socket_examples/socket_examples.c \
 	$(CONTRIBDIR)/apps/rtp/rtp.c \
+	$(CONTRIBDIR)/examples/httpd/fs_example/fs_example.c \
+	$(CONTRIBDIR)/examples/httpd/ssi_example/ssi_example.c \
+	$(CONTRIBDIR)/examples/snmp/snmp_private_mib/lwip_prvmib.c \
+	$(CONTRIBDIR)/examples/snmp/snmp_v3/snmpv3_dummy.c \
 	$(CONTRIBDIR)/addons/tcp_isn/tcp_isn.c \
 	$(CONTRIBDIR)/addons/ipv6_static_routing/ip6_route_table.c
