@@ -56,7 +56,6 @@
 #if SENSORS_SEARCH_FILES
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <ctype.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <dirent.h>
@@ -215,7 +214,7 @@ lwip_privmib_init(void)
           while (cp < ebuf)
           {
             dp = (struct dirent *)cp;
-            if (isdigit(dp->d_name[0]))
+            if (lwip_isdigit(dp->d_name[0]))
             {
               unsigned char idx = dp->d_name[0] - '0';
 
