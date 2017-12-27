@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\lwip\test\unit\api\test_sockets.c" />
     <ClCompile Include="..\..\..\..\lwip\test\unit\arch\sys_arch.c" />
+    <ClCompile Include="..\..\..\..\lwip\test\unit\core\test_def.c" />
     <ClCompile Include="..\..\..\..\lwip\test\unit\core\test_mem.c" />
     <ClCompile Include="..\..\..\..\lwip\test\unit\core\test_pbuf.c" />
     <ClCompile Include="..\..\..\..\lwip\test\unit\ip4\test_ip4.c" />
@@ -101,6 +102,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\test\unit\api\test_sockets.h" />
     <ClInclude Include="..\..\..\..\lwip\test\unit\arch\sys_arch.h" />
+    <ClInclude Include="..\..\..\..\lwip\test\unit\core\test_def.h" />
     <ClInclude Include="..\..\..\..\lwip\test\unit\core\test_mem.h" />
     <ClInclude Include="..\..\..\..\lwip\test\unit\core\test_pbuf.h" />
     <ClInclude Include="..\..\..\..\lwip\test\unit\ip4\test_ip4.h" />
