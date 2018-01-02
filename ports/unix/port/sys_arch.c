@@ -206,11 +206,10 @@ void sys_mark_tcpip_thread(void)
 void sys_check_core_locking(void)
 {
   if (lwip_tcpip_thread_id != 0) {
-    pthread_t current_thread_id = pthread_self();
-
 #if LWIP_TCPIP_CORE_LOCKING
-    LWIP_ASSERT("Function called without core lock", (current_thread_id == lwip_tcpip_thread_id) || lwip_core_locked);
+    LWIP_ASSERT("Function called without core lock", lwip_core_locked);
 #else /* LWIP_TCPIP_CORE_LOCKING */
+    pthread_t current_thread_id = pthread_self();
     LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
 #endif /* LWIP_TCPIP_CORE_LOCKING */
   }
