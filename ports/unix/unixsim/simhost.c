@@ -474,7 +474,7 @@ init_netifs(void)
 
 #if LWIP_IPV4
   netif_add(&slipif, ip_2_ip4(&ipaddr_slip), ip_2_ip4(&netmask_slip), ip_2_ip4(&gw_slip),
-            (void*)&siodev_slip, slipif_init, tcpip_input);
+            LWIP_PTR_NUMERIC_CAST(void*, siodev_slip), slipif_init, tcpip_input);
 #else /* LWIP_IPV4 */
   netif_add(&slipif, (void*)&siodev_slip, slipif_init, tcpip_input);
 #endif /* LWIP_IPV4 */
