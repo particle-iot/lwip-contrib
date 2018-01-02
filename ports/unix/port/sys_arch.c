@@ -64,6 +64,7 @@
 #include "lwip/sys.h"
 #include "lwip/opt.h"
 #include "lwip/stats.h"
+#include "lwip/tcpip.h"
 
 static void
 get_monotonic_time(struct timespec *ts)
@@ -179,6 +180,42 @@ sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksi
   }
   return st;
 }
+
+#if !NO_SYS
+#if LWIP_TCPIP_CORE_LOCKING
+static u8_t lwip_core_locked;
+void sys_lock_tcpip_core(void)
+{
+   sys_mutex_lock(&lock_tcpip_core);
+   lwip_core_locked = 1;
+}
+
+void sys_unlock_tcpip_core(void)
+{
+   lwip_core_locked = 0;
+   sys_mutex_unlock(&lock_tcpip_core);
+}
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+
+static pthread_t lwip_tcpip_thread_id;
+void sys_mark_tcpip_thread(void)
+{
+  lwip_tcpip_thread_id = pthread_self();
+}
+
+void sys_check_core_locking(void)
+{
+  if (lwip_tcpip_thread_id != 0) {
+    pthread_t current_thread_id = pthread_self();
+
+#if LWIP_TCPIP_CORE_LOCKING
+    LWIP_ASSERT("Function called without core lock", (current_thread_id == lwip_tcpip_thread_id) || lwip_core_locked);
+#else /* LWIP_TCPIP_CORE_LOCKING */
+    LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+  }
+}
+#endif /* !NO_SYS */
 
 /*-----------------------------------------------------------------------------------*/
 /* Mailbox */
@@ -639,7 +676,8 @@ sys_arch_unprotect(sys_prot_t pval)
     LWIP_UNUSED_ARG(pval);
     if (lwprot_thread == pthread_self())
     {
-        if (--lwprot_count == 0)
+        lwprot_count--;
+        if (lwprot_count == 0)
         {
             lwprot_thread = (pthread_t) 0xDEAD;
             pthread_mutex_unlock(&lwprot_mutex);

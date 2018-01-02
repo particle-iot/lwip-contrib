@@ -369,6 +369,28 @@ extern void sntp_set_system_time(u32_t sec);
 
 #endif /* PPP_SUPPORT > 0 */
 
-#define LWIP_HTTPD_SSI          1
+#define LWIP_HTTPD_SSI  1
+
+/*
+   ---------------------------------------
+   ---------- Threading options ----------
+   ---------------------------------------
+*/
+
+#define LWIP_TCPIP_CORE_LOCKING    1
+
+#if !NO_SYS
+void sys_check_core_locking(void);
+#define LWIP_ASSERT_CORE_LOCKED()  sys_check_core_locking()
+void sys_mark_tcpip_thread(void);
+#define LWIP_MARK_TCPIP_THREAD()   sys_mark_tcpip_thread()
+
+#if LWIP_TCPIP_CORE_LOCKING
+void sys_lock_tcpip_core(void);
+#define LOCK_TCPIP_CORE()          sys_lock_tcpip_core()
+void sys_unlock_tcpip_core(void);
+#define UNLOCK_TCPIP_CORE()        sys_unlock_tcpip_core()
+#endif
+#endif
 
 #endif /* LWIP_LWIPOPTS_H */
