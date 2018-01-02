@@ -205,6 +205,8 @@ void sys_mark_tcpip_thread(void)
 
 void sys_check_core_locking(void)
 {
+  /* Embedded systems should check we are NOT in an interrupt context here */
+
   if (lwip_tcpip_thread_id != 0) {
     pthread_t current_thread_id = pthread_self();
 
