@@ -570,6 +570,7 @@ apps_init(void)
   mdns_resp_add_netif(netif_default, "lwip", 3600);
 #endif
   mdns_resp_add_service(netif_default, "lwipweb", "_http", DNSSD_PROTO_TCP, HTTPD_SERVER_PORT, 3600, srv_txt, NULL);
+  mdns_resp_announce(netif_default);
 #endif
 
 #if LWIP_NETIO_APP && LWIP_TCP
