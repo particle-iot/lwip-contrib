@@ -183,16 +183,16 @@ sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksi
 
 #if !NO_SYS
 #if LWIP_TCPIP_CORE_LOCKING
-static u8_t lwip_core_locked;
+static pthread_t lwip_core_lock_holder_thread_id;
 void sys_lock_tcpip_core(void)
 {
    sys_mutex_lock(&lock_tcpip_core);
-   lwip_core_locked = 1;
+   lwip_core_lock_holder_thread_id = pthread_self();
 }
 
 void sys_unlock_tcpip_core(void)
 {
-   lwip_core_locked = 0;
+   lwip_core_lock_holder_thread_id = 0;
    sys_mutex_unlock(&lock_tcpip_core);
 }
 #endif /* LWIP_TCPIP_CORE_LOCKING */
@@ -206,10 +206,11 @@ void sys_mark_tcpip_thread(void)
 void sys_check_core_locking(void)
 {
   if (lwip_tcpip_thread_id != 0) {
-#if LWIP_TCPIP_CORE_LOCKING
-    LWIP_ASSERT("Function called without core lock", lwip_core_locked);
-#else /* LWIP_TCPIP_CORE_LOCKING */
     pthread_t current_thread_id = pthread_self();
+
+#if LWIP_TCPIP_CORE_LOCKING
+    LWIP_ASSERT("Function called without core lock", current_thread_id == lwip_core_lock_holder_thread_id);
+#else /* LWIP_TCPIP_CORE_LOCKING */
     LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
 #endif /* LWIP_TCPIP_CORE_LOCKING */
   }
