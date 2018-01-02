@@ -64,7 +64,12 @@
 #define LWIP_SO_RCVTIMEO           1
 #define LWIP_SO_RCVBUF             1
 
-#define LWIP_TCPIP_CORE_LOCKING    1
+#define LWIP_TCPIP_CORE_LOCKING    0
+
+void sys_check_core_locking(void);
+#define LWIP_ASSERT_CORE_LOCKED() sys_check_core_locking()
+void sys_mark_tcpip_thread(void);
+#define LWIP_MARK_TCPIP_THREAD() sys_mark_tcpip_thread()
 
 #define LWIP_NETIF_LINK_CALLBACK   1
 #define LWIP_NETIF_STATUS_CALLBACK 1

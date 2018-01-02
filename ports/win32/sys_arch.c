@@ -439,6 +439,30 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn function, void *arg
   return 0;
 }
 
+#if LWIP_TCPIP_CORE_LOCKING
+void sys_mark_tcpip_thread(void)
+{
+}
+void sys_check_core_locking(void)
+{
+}
+
+#else
+
+static DWORD lwip_tcpip_thread_id;
+void sys_mark_tcpip_thread(void)
+{
+  lwip_tcpip_thread_id = GetCurrentThreadId();
+}
+void sys_check_core_locking(void)
+{
+  if (lwip_tcpip_thread_id != 0) {
+    DWORD current_thread_id = GetCurrentThreadId();
+    LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
+  }
+}
+#endif
+
 err_t sys_mbox_new(sys_mbox_t *mbox, int size)
 {
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
