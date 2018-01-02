@@ -48,6 +48,7 @@
 #include <lwip/stats.h>
 #include <lwip/debug.h>
 #include <lwip/sys.h>
+#include <lwip/tcpip.h>
 
 /** Set this to 1 to enable assertion checks that SYS_ARCH_PROTECT() is only
  * called once in a call stack (calling it nested might cause trouble in some
@@ -439,29 +440,41 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn function, void *arg
   return 0;
 }
 
+#if !NO_SYS
 #if LWIP_TCPIP_CORE_LOCKING
-void sys_mark_tcpip_thread(void)
+static u8_t lwip_core_locked;
+void sys_lock_tcpip_core(void)
 {
-}
-void sys_check_core_locking(void)
-{
+   sys_mutex_lock(&lock_tcpip_core);
+   lwip_core_locked = 1;
 }
 
-#else
+void sys_unlock_tcpip_core(void)
+{
+   lwip_core_locked = 0;
+   sys_mutex_unlock(&lock_tcpip_core);
+}
+#endif /* LWIP_TCPIP_CORE_LOCKING */
 
 static DWORD lwip_tcpip_thread_id;
 void sys_mark_tcpip_thread(void)
 {
   lwip_tcpip_thread_id = GetCurrentThreadId();
 }
+
 void sys_check_core_locking(void)
 {
   if (lwip_tcpip_thread_id != 0) {
     DWORD current_thread_id = GetCurrentThreadId();
+
+#if LWIP_TCPIP_CORE_LOCKING
+    LWIP_ASSERT("Function called without core lock", (current_thread_id == lwip_tcpip_thread_id) || lwip_core_locked);
+#else /* LWIP_TCPIP_CORE_LOCKING */
     LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
+#endif /* LWIP_TCPIP_CORE_LOCKING */
   }
 }
-#endif
+#endif /* !NO_SYS */
 
 err_t sys_mbox_new(sys_mbox_t *mbox, int size)
 {
