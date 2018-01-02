@@ -300,6 +300,7 @@ tcpip_init_done(void *arg)
   mdns_resp_init();
   mdns_resp_add_netif(&netif, "simhost", 3600);
   mdns_resp_add_service(&netif, "myweb", "_http", DNSSD_PROTO_TCP, 80, 3600, srv_txt, NULL);
+  mdns_resp_announce(&netif);
 #endif
   
 #if LWIP_UDP
