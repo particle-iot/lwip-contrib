@@ -70,13 +70,13 @@ sys_init(void)
 u32_t
 sys_now(void)
 {
-  return xTaskGetTickCount();
+  return xTaskGetTickCount() * portTICK_PERIOD_MS;
 }
 
 u32_t
 sys_jiffies(void)
 {
-  return xTaskGetTickCount();
+  return sys_now();
 }
 
 #if SYS_LIGHTWEIGHT_PROT
@@ -91,7 +91,7 @@ sys_arch_protect(void)
   ret = xSemaphoreTakeRecursive(sys_arch_protect_mutex, portMAX_DELAY);
   LWIP_ASSERT("sys_arch_protect failed to take the mutex", ret == pdTRUE);
 #else /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
-  vPortEnterCritical();
+  taskENTER_CRITICAL();
 #endif /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
   return 1;
 }
@@ -106,7 +106,7 @@ sys_arch_unprotect(sys_prot_t pval)
   ret = xSemaphoreGiveRecursive(sys_arch_protect_mutex);
   LWIP_ASSERT("sys_arch_unprotect failed to give the mutex", ret == pdTRUE);
 #else /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
-  vPortExitCritical();
+  taskEXIT_CRITICAL();
 #endif /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
   LWIP_UNUSED_ARG(pval);
 }
