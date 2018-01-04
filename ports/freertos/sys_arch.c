@@ -338,7 +338,6 @@ sys_arch_mbox_tryfetch(sys_mbox_t *mbox, void **msg)
 void
 sys_mbox_free(sys_mbox_t *mbox)
 {
-  BaseType_t ret;
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
   LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
 
