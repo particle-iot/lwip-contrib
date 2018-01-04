@@ -300,7 +300,7 @@ sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout_ms)
     LWIP_ASSERT("mbox fetch failed", ret == pdTRUE);
   } else {
     TickType_t timeout_ticks = timeout_ms / portTICK_RATE_MS;
-    ret = xQueueReceive(mbox->mbx, &(*msg), portMAX_DELAY);
+    ret = xQueueReceive(mbox->mbx, &(*msg), timeout_ticks);
     if (ret == errQUEUE_EMPTY) {
       /* timed out */
       *msg = NULL;
