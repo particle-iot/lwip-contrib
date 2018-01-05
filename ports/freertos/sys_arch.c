@@ -40,14 +40,29 @@
 #include "semphr.h"
 #include "task.h"
 
-/** Set this to 1 to use a mutex for SYS_ARCH_PROTECT critical regions.
- * Default is 0 and locks interrupts.
+/** Set this to 1 to use a mutex for SYS_ARCH_PROTECT() critical regions.
+ * Default is 0 and locks interrupts/scheduler for SYS_ARCH_PROTECT().
  */
-#ifndef LWIP_FREERTOS_PROTECT_USES_MUTEX
-#define LWIP_FREERTOS_PROTECT_USES_MUTEX  0
+#ifndef LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
+#define LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX  0
 #endif
 
-#if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_PROTECT_USES_MUTEX
+#if !configSUPPORT_DYNAMIC_ALLOCATION
+# error "lwIP FreeRTOS port requires configSUPPORT_DYNAMIC_ALLOCATION"
+#endif
+#if !INCLUDE_vTaskDelay
+# error "lwIP FreeRTOS port requires INCLUDE_vTaskDelay"
+#endif
+#if !INCLUDE_vTaskSuspend
+# error "lwIP FreeRTOS port requires INCLUDE_vTaskSuspend"
+#endif
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX || !LWIP_COMPAT_MUTEX
+#if !configUSE_MUTEXES
+# error "lwIP FreeRTOS port requires configUSE_MUTEXES"
+#endif
+#endif
+
+#if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
 static SemaphoreHandle_t sys_arch_protect_mutex;
 #endif
 
@@ -55,12 +70,12 @@ static SemaphoreHandle_t sys_arch_protect_mutex;
 void
 sys_init(void)
 {
-#if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_PROTECT_USES_MUTEX
+#if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
   /* initialize sys_arch_protect global mutex */
   sys_arch_protect_mutex = xSemaphoreCreateRecursiveMutex();
   LWIP_ASSERT("failed to create sys_arch_protect mutex",
     sys_arch_protect_mutex != NULL);
-#endif /* SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_PROTECT_USES_MUTEX */
+#endif /* SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
 }
 
 #if configUSE_16_BIT_TICKS == 1
@@ -76,7 +91,7 @@ sys_now(void)
 u32_t
 sys_jiffies(void)
 {
-  return sys_now();
+  return xTaskGetTickCount();
 }
 
 #if SYS_LIGHTWEIGHT_PROT
@@ -84,30 +99,30 @@ sys_jiffies(void)
 sys_prot_t
 sys_arch_protect(void)
 {
-#if LWIP_FREERTOS_PROTECT_USES_MUTEX
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
   BaseType_t ret;
   LWIP_ASSERT("sys_arch_protect_mutex != NULL", sys_arch_protect_mutex != NULL);
 
   ret = xSemaphoreTakeRecursive(sys_arch_protect_mutex, portMAX_DELAY);
   LWIP_ASSERT("sys_arch_protect failed to take the mutex", ret == pdTRUE);
-#else /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
+#else /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
   taskENTER_CRITICAL();
-#endif /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
+#endif /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
   return 1;
 }
 
 void
 sys_arch_unprotect(sys_prot_t pval)
 {
-#if LWIP_FREERTOS_PROTECT_USES_MUTEX
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
   BaseType_t ret;
   LWIP_ASSERT("sys_arch_protect_mutex != NULL", sys_arch_protect_mutex != NULL);
 
   ret = xSemaphoreGiveRecursive(sys_arch_protect_mutex);
   LWIP_ASSERT("sys_arch_unprotect failed to give the mutex", ret == pdTRUE);
-#else /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
+#else /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
   taskEXIT_CRITICAL();
-#endif /* LWIP_FREERTOS_PROTECT_USES_MUTEX */
+#endif /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
   LWIP_UNUSED_ARG(pval);
 }
 
