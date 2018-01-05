@@ -40,6 +40,14 @@
 #include "semphr.h"
 #include "task.h"
 
+/** Set this to 1 if you want the stack size passed to sys_thread_new() to be
+ * interpreted as number of stack words (FreeRTOS-like).
+ * Default is that they are interpreted as byte count (lwIP-like).
+ */
+#ifndef LWIP_FREERTOS_THREAD_STACKSIZE_IS_STACKWORDS
+#define LWIP_FREERTOS_THREAD_STACKSIZE_IS_STACKWORDS  0
+#endif
+
 /** Set this to 1 to use a mutex for SYS_ARCH_PROTECT() critical regions.
  * Default is 0 and locks interrupts/scheduler for SYS_ARCH_PROTECT().
  */
@@ -428,7 +436,14 @@ sys_thread_new(const char *name, lwip_thread_fn thread, void *arg, int stacksize
   TaskHandle_t rtos_task;
   BaseType_t ret;
   sys_thread_t lwip_thread;
-  size_t rtos_stacksize = stacksize / sizeof(StackType_t);
+  size_t rtos_stacksize;
+
+  LWIP_ASSERT("invalid stacksize", stacksize > 0);
+#if LWIP_FREERTOS_THREAD_STACKSIZE_IS_STACKWORDS
+  rtos_stacksize = (size_t)stacksize;
+#else
+  rtos_stacksize = (size_t)stacksize / sizeof(StackType_t);
+#endif
 
   /* lwIP's lwip_thread_fn matches FreeRTOS' TaskFunction_t, so we can pass the
      thread function without adaption here. */
