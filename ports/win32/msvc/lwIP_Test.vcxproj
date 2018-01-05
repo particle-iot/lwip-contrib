@@ -166,7 +166,6 @@
     <ClInclude Include="..\..\..\apps\tcpecho\tcpecho.h" />
     <ClInclude Include="..\..\..\apps\tcpecho_raw\tcpecho_raw.h" />
     <ClInclude Include="..\..\..\apps\udpecho\udpecho.h" />
-    <ClInclude Include="..\..\..\apps\snmp_private_mib\private_mib.h" />
     <ClInclude Include="..\..\..\apps\udpecho_raw\udpecho_raw.h" />
     <ClInclude Include="..\..\..\examples\httpd\fs_example\fs_example.h" />
     <ClInclude Include="..\..\..\examples\httpd\ssi_example\ssi_example.h" />

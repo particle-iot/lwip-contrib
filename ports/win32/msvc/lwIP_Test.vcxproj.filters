@@ -129,9 +129,6 @@
     <ClInclude Include="..\..\..\apps\udpecho_raw\udpecho_raw.h">
       <Filter>Source Files\apps</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\apps\snmp_private_mib\private_mib.h">
-      <Filter>Source Files\apps</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\addons\tcp_isn\tcp_isn.h">
       <Filter>Source Files\addons\tcp_isn</Filter>
     </ClInclude>
