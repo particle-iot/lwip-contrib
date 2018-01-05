@@ -44,7 +44,19 @@
  * Default is 0 and locks interrupts/scheduler for SYS_ARCH_PROTECT().
  */
 #ifndef LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
-#define LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX  0
+#define LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX     0
+#endif
+
+/** Set this to 1 to include a sanity check that SYS_ARCH_PROTECT() and
+ * SYS_ARCH_UNPROTECT() are called matching.
+ */
+#ifndef LWIP_FREERTOS_SYS_ARCH_PROTECT_SANITY_CHECK
+#define LWIP_FREERTOS_SYS_ARCH_PROTECT_SANITY_CHECK   0
+#endif
+
+/** Set this to 1 to let sys_mbox_free check that queues are empty when freed */
+#ifndef LWIP_FREERTOS_CHECK_QUEUE_EMPTY_ON_FREE
+#define LWIP_FREERTOS_CHECK_QUEUE_EMPTY_ON_FREE       0
 #endif
 
 #if !configSUPPORT_DYNAMIC_ALLOCATION
@@ -64,6 +76,9 @@
 
 #if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
 static SemaphoreHandle_t sys_arch_protect_mutex;
+#endif
+#if SYS_LIGHTWEIGHT_PROT && LWIP_FREERTOS_SYS_ARCH_PROTECT_SANITY_CHECK
+static sys_prot_t sys_arch_protect_nesting;
 #endif
 
 /* Initialize this module (see description in sys.h) */
@@ -108,7 +123,17 @@ sys_arch_protect(void)
 #else /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
   taskENTER_CRITICAL();
 #endif /* LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX */
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_SANITY_CHECK
+  {
+    /* every nested call to sys_arch_protect() returns an increased number */
+    sys_prot_t ret = sys_arch_protect_nesting;
+    sys_arch_protect_nesting++;
+    LWIP_ASSERT("sys_arch_protect overflow", sys_arch_protect_nesting > ret);
+    return ret;
+  }
+#else
   return 1;
+#endif
 }
 
 void
@@ -116,6 +141,14 @@ sys_arch_unprotect(sys_prot_t pval)
 {
 #if LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
   BaseType_t ret;
+#endif
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_SANITY_CHECK
+  LWIP_ASSERT("unexpected sys_arch_protect_nesting", sys_arch_protect_nesting > 0);
+  sys_arch_protect_nesting--;
+  LWIP_ASSERT("unexpected sys_arch_protect_nesting", sys_arch_protect_nesting == pval);
+#endif
+
+#if LWIP_FREERTOS_SYS_ARCH_PROTECT_USES_MUTEX
   LWIP_ASSERT("sys_arch_protect_mutex != NULL", sys_arch_protect_mutex != NULL);
 
   ret = xSemaphoreGiveRecursive(sys_arch_protect_mutex);
@@ -306,10 +339,15 @@ u32_t
 sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout_ms)
 {
   BaseType_t ret;
+  void *msg_dummy;
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
   LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
 
-  if(!timeout_ms) {
+  if (!msg) {
+    msg = &msg_dummy;
+  }
+
+  if (!timeout_ms) {
     /* wait infinite */
     ret = xQueueReceive(mbox->mbx, &(*msg), portMAX_DELAY);
     LWIP_ASSERT("mbox fetch failed", ret == pdTRUE);
@@ -334,8 +372,13 @@ u32_t
 sys_arch_mbox_tryfetch(sys_mbox_t *mbox, void **msg)
 {
   BaseType_t ret;
+  void *msg_dummy;
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
   LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
+
+  if (!msg) {
+    msg = &msg_dummy;
+  }
 
   ret = xQueueReceive(mbox->mbx, &(*msg), 0);
   if (ret == errQUEUE_EMPTY) {
@@ -356,6 +399,17 @@ sys_mbox_free(sys_mbox_t *mbox)
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
   LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
 
+#if LWIP_FREERTOS_CHECK_QUEUE_EMPTY_ON_FREE
+  {
+    UBaseType_t msgs_waiting = uxQueueMessagesWaiting(mbox->mbx);
+    LWIP_ASSERT("mbox quence not empty", msgs_waiting == 0);
+
+    if (msgs_waiting != 0) {
+      SYS_STATS_INC(mbox.err);
+    }
+  }
+#endif
+
   vQueueDelete(mbox->mbx);
 
   SYS_STATS_DEC(mbox.used);
@@ -364,7 +418,7 @@ sys_mbox_free(sys_mbox_t *mbox)
 sys_thread_t
 sys_thread_new(const char *name, lwip_thread_fn thread, void *arg, int stacksize, int prio)
 {
-  xTaskHandle rtos_task;
+  TaskHandle_t rtos_task;
   BaseType_t ret;
   sys_thread_t lwip_thread;
   size_t rtos_stacksize = stacksize / sizeof(StackType_t);

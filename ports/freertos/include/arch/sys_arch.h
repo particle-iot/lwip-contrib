@@ -41,7 +41,7 @@
  */
 
 void sys_arch_msleep(u32_t delay_ms);
-#define sys_mslee(ms) sys_arch_msleep(ms)
+#define sys_msleep(ms) sys_arch_msleep(ms)
 
 #if SYS_LIGHTWEIGHT_PROT
 typedef u32_t sys_prot_t;
