@@ -574,6 +574,11 @@ err_t sys_mbox_trypost(sys_mbox_t *q, void *msg)
   return ERR_OK;
 }
 
+err_t sys_mbox_trypost_fromisr(sys_mbox_t *q, void *msg)
+{
+  return sys_mbox_trypost(q, msg);
+}
+
 u32_t sys_arch_mbox_fetch(sys_mbox_t *q, void **msg, u32_t timeout)
 {
   DWORD ret;

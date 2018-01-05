@@ -296,6 +296,12 @@ sys_mbox_trypost(struct sys_mbox **mb, void *msg)
   return ERR_OK;
 }
 
+err_t
+sys_mbox_trypost_fromisr(sys_mbox_t *q, void *msg)
+{
+  return sys_mbox_trypost(q, msg);
+}
+
 void
 sys_mbox_post(struct sys_mbox **mb, void *msg)
 {
