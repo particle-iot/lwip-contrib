@@ -80,8 +80,9 @@ void sys_unlock_tcpip_core(void);
 #endif
 #endif
 
-#define LWIP_NETIF_LINK_CALLBACK   1
-#define LWIP_NETIF_STATUS_CALLBACK 1
+#define LWIP_NETIF_LINK_CALLBACK        1
+#define LWIP_NETIF_STATUS_CALLBACK      1
+#define LWIP_NETIF_EXT_STATUS_CALLBACK  1
 
 #ifdef LWIP_DEBUG
 

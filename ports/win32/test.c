@@ -272,7 +272,7 @@ status_callback(struct netif *state_netif)
 #else
     printf("status_callback==UP\n");
 #endif
-#if LWIP_MDNS_RESPONDER
+#if LWIP_MDNS_RESPONDER && !LWIP_NETIF_EXT_STATUS_CALLBACK
     mdns_resp_netif_settings_changed(state_netif);
 #endif
   } else {
