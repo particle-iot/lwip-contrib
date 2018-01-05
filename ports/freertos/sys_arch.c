@@ -59,6 +59,13 @@
 #define LWIP_FREERTOS_CHECK_QUEUE_EMPTY_ON_FREE       0
 #endif
 
+/** Set this to 1 to enable core locking check functions in this port.
+ * For this to work, you'll have to define LWIP_ASSERT_CORE_LOCKED()
+ * and LWIP_MARK_TCPIP_THREAD() correctly in your lwipopts.h! */
+#ifndef LWIP_FREERTOS_CHECK_CORE_LOCKING
+#define LWIP_FREERTOS_CHECK_CORE_LOCKING              0
+#endif
+
 #if !configSUPPORT_DYNAMIC_ALLOCATION
 # error "lwIP FreeRTOS port requires configSUPPORT_DYNAMIC_ALLOCATION"
 #endif
@@ -482,3 +489,59 @@ void sys_arch_netconn_sem_free(void)
 #endif /* configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 */
 
 #endif /* LWIP_NETCONN_SEM_PER_THREAD */
+
+#if LWIP_FREERTOS_CHECK_CORE_LOCKING
+#if LWIP_TCPIP_CORE_LOCKING
+
+/** Flag the core lock held. A counter for recursive locks. */
+static u8_t lwip_core_lock_count;
+static TaskHandle_t lwip_core_lock_holder_thread;
+
+void
+sys_lock_tcpip_core(void)
+{
+   sys_mutex_lock(&lock_tcpip_core);
+   if (lwip_core_lock_count == 0) {
+     lwip_core_lock_holder_thread = xTaskGetCurrentTaskHandle();
+   }
+   lwip_core_lock_count++;
+}
+
+void
+sys_unlock_tcpip_core(void)
+{
+   lwip_core_lock_count--;
+   if (lwip_core_lock_count == 0) {
+       lwip_core_lock_holder_thread = 0;
+   }
+   sys_mutex_unlock(&lock_tcpip_core);
+}
+
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+
+static TaskHandle_t lwip_tcpip_thread;
+
+void
+sys_mark_tcpip_thread(void)
+{
+  lwip_tcpip_thread = xTaskGetCurrentTaskHandle();
+}
+
+void
+sys_check_core_locking(void)
+{
+  /* Embedded systems should check we are NOT in an interrupt context here */
+
+  if (lwip_tcpip_thread != 0) {
+    TaskHandle_t current_thread = xTaskGetCurrentTaskHandle();
+
+#if LWIP_TCPIP_CORE_LOCKING
+    LWIP_ASSERT("Function called without core lock",
+                current_thread == lwip_core_lock_holder_thread && lwip_core_lock_count > 0);
+#else /* LWIP_TCPIP_CORE_LOCKING */
+    LWIP_ASSERT("Function called from wrong thread", current_thread == lwip_tcpip_thread);
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+  }
+}
+
+#endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING*/
