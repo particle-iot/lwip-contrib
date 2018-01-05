@@ -71,13 +71,15 @@
 #define LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER (LWIP_SYS_ARCH_CHECK_NESTED_PROTECT || LWIP_SYS_ARCH_CHECK_SCHEDULING_UNPROTECTED)
 
 /* These functions are used from NO_SYS also, for precise timer triggering */
-LARGE_INTEGER freq, sys_start_time;
+static LARGE_INTEGER freq, sys_start_time;
 #define SYS_INITIALIZED() (freq.QuadPart != 0)
 
-DWORD netconn_sem_tls_index;
+static DWORD netconn_sem_tls_index;
 
-HCRYPTPROV hcrypt;
-u32_t sys_win_rand(void)
+static HCRYPTPROV hcrypt;
+
+u32_t
+sys_win_rand(void)
 {
   u32_t ret;
   if (CryptGenRandom(hcrypt, sizeof(ret), (BYTE*)&ret)) {
@@ -87,7 +89,8 @@ u32_t sys_win_rand(void)
   return 0;
 }
 
-static void sys_win_rand_init(void)
+static void
+sys_win_rand_init(void)
 {
   if(!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, 0)) {
     DWORD err = GetLastError();
@@ -102,13 +105,15 @@ static void sys_win_rand_init(void)
   }
 }
 
-static void sys_init_timing(void)
+static void
+sys_init_timing(void)
 {
   QueryPerformanceFrequency(&freq);
   QueryPerformanceCounter(&sys_start_time);
 }
 
-static LONGLONG sys_get_ms_longlong(void)
+static LONGLONG
+sys_get_ms_longlong(void)
 {
   LONGLONG ret;
   LARGE_INTEGER now;
@@ -123,12 +128,14 @@ static LONGLONG sys_get_ms_longlong(void)
   return (u32_t)(((ret)*1000)/freq.QuadPart);
 }
 
-u32_t sys_jiffies(void)
+u32_t
+sys_jiffies(void)
 {
   return (u32_t)sys_get_ms_longlong();
 }
 
-u32_t sys_now(void)
+u32_t
+sys_now(void)
 {
   return (u32_t)sys_get_ms_longlong();
 }
@@ -138,12 +145,14 @@ CRITICAL_SECTION critSec;
 static int protection_depth;
 #endif
 
-static void InitSysArchProtect(void)
+static void
+InitSysArchProtect(void)
 {
   InitializeCriticalSection(&critSec);
 }
 
-sys_prot_t sys_arch_protect(void)
+sys_prot_t
+sys_arch_protect(void)
 {
 #if NO_SYS
   if (!SYS_INITIALIZED()) {
@@ -161,7 +170,8 @@ sys_prot_t sys_arch_protect(void)
   return 0;
 }
 
-void sys_arch_unprotect(sys_prot_t pval)
+void
+sys_arch_unprotect(sys_prot_t pval)
 {
   LWIP_UNUSED_ARG(pval);
 #if LWIP_SYS_ARCH_CHECK_NESTED_PROTECT
@@ -177,7 +187,8 @@ void sys_arch_unprotect(sys_prot_t pval)
 /** This checks that SYS_ARCH_PROTECT() hasn't been called by protecting
  * and then checking the level
  */
-static void sys_arch_check_not_protected(void)
+static void
+sys_arch_check_not_protected(void)
 {
   sys_arch_protect();
   LWIP_ASSERT("SYS_ARCH_PROTECT before scheduling", protection_depth == 1);
@@ -187,7 +198,8 @@ static void sys_arch_check_not_protected(void)
 #define sys_arch_check_not_protected()
 #endif
 
-static void msvc_sys_init(void)
+static void
+msvc_sys_init(void)
 {
   sys_win_rand_init();
   sys_init_timing();
@@ -196,7 +208,8 @@ static void msvc_sys_init(void)
   LWIP_ASSERT("TlsAlloc failed", netconn_sem_tls_index != TLS_OUT_OF_INDEXES);
 }
 
-void sys_init(void)
+void
+sys_init(void)
 {
   msvc_sys_init();
 }
@@ -210,9 +223,10 @@ struct threadlist {
   struct threadlist *next;
 };
 
-struct threadlist *lwip_win32_threads = NULL;
+static struct threadlist *lwip_win32_threads = NULL;
 
-err_t sys_sem_new(sys_sem_t *sem, u8_t count)
+err_t
+sys_sem_new(sys_sem_t *sem, u8_t count)
 {
   HANDLE new_sem = NULL;
 
@@ -235,7 +249,8 @@ err_t sys_sem_new(sys_sem_t *sem, u8_t count)
   return ERR_MEM;
 }
 
-void sys_sem_free(sys_sem_t *sem)
+void
+sys_sem_free(sys_sem_t *sem)
 {
   /* parameter check */
   LWIP_ASSERT("sem != NULL", sem != NULL);
@@ -250,7 +265,8 @@ void sys_sem_free(sys_sem_t *sem)
   sem->sem = NULL;
 }
 
-u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
+u32_t
+sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
 {
   DWORD ret;
   LONGLONG starttime, endtime;
@@ -286,7 +302,8 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
   }
 }
 
-void sys_sem_signal(sys_sem_t *sem)
+void
+sys_sem_signal(sys_sem_t *sem)
 {
   BOOL ret;
   sys_arch_check_not_protected();
@@ -298,7 +315,8 @@ void sys_sem_signal(sys_sem_t *sem)
   LWIP_UNUSED_ARG(ret);
 }
 
-err_t sys_mutex_new(sys_mutex_t *mutex)
+err_t
+sys_mutex_new(sys_mutex_t *mutex)
 {
   HANDLE new_mut = NULL;
 
@@ -321,7 +339,8 @@ err_t sys_mutex_new(sys_mutex_t *mutex)
   return ERR_MEM;
 }
 
-void sys_mutex_free(sys_mutex_t *mutex)
+void
+sys_mutex_free(sys_mutex_t *mutex)
 {
   /* parameter check */
   LWIP_ASSERT("mutex != NULL", mutex != NULL);
@@ -348,7 +367,8 @@ void sys_mutex_lock(sys_mutex_t *mutex)
   LWIP_UNUSED_ARG(ret);
 }
 
-void sys_mutex_unlock(sys_mutex_t *mutex)
+void
+sys_mutex_unlock(sys_mutex_t *mutex)
 {
   sys_arch_check_not_protected();
   LWIP_ASSERT("mutex != NULL", mutex != NULL);
@@ -373,7 +393,8 @@ typedef struct tagTHREADNAME_INFO
   DWORD dwFlags; /* Reserved for future use, must be zero. */
 } THREADNAME_INFO;
 #pragma pack(pop)
-static void SetThreadName(DWORD dwThreadID, const char* threadName)
+static void
+SetThreadName(DWORD dwThreadID, const char* threadName)
 {
   THREADNAME_INFO info;
   info.dwType = 0x1000;
@@ -390,14 +411,16 @@ static void SetThreadName(DWORD dwThreadID, const char* threadName)
   }
 }
 #else /* _MSC_VER */
-static void SetThreadName(DWORD dwThreadID, const char* threadName)
+static void
+SetThreadName(DWORD dwThreadID, const char* threadName)
 {
   LWIP_UNUSED_ARG(dwThreadID);
   LWIP_UNUSED_ARG(threadName);
 }
 #endif /* _MSC_VER */
 
-static void sys_thread_function(void* arg)
+static void
+sys_thread_function(void* arg)
 {
   struct threadlist* t = (struct threadlist*)arg;
 #if LWIP_NETCONN_SEM_PER_THREAD
@@ -409,7 +432,8 @@ static void sys_thread_function(void* arg)
 #endif
 }
 
-sys_thread_t sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksize, int prio)
+sys_thread_t
+sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksize, int prio)
 {
   struct threadlist *new_thread;
   HANDLE h;
@@ -442,14 +466,18 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn function, void *arg
 
 #if !NO_SYS
 #if LWIP_TCPIP_CORE_LOCKING
+
 static DWORD lwip_core_lock_holder_thread_id;
-void sys_lock_tcpip_core(void)
+
+void
+sys_lock_tcpip_core(void)
 {
   sys_mutex_lock(&lock_tcpip_core);
   lwip_core_lock_holder_thread_id = GetCurrentThreadId();
 }
 
-void sys_unlock_tcpip_core(void)
+void
+sys_unlock_tcpip_core(void)
 {
   lwip_core_lock_holder_thread_id = 0;
   sys_mutex_unlock(&lock_tcpip_core);
@@ -457,12 +485,15 @@ void sys_unlock_tcpip_core(void)
 #endif /* LWIP_TCPIP_CORE_LOCKING */
 
 static DWORD lwip_tcpip_thread_id;
-void sys_mark_tcpip_thread(void)
+
+void
+sys_mark_tcpip_thread(void)
 {
   lwip_tcpip_thread_id = GetCurrentThreadId();
 }
 
-void sys_check_core_locking(void)
+void
+sys_check_core_locking(void)
 {
   /* Embedded systems should check we are NOT in an interrupt context here */
 
@@ -478,7 +509,8 @@ void sys_check_core_locking(void)
 }
 #endif /* !NO_SYS */
 
-err_t sys_mbox_new(sys_mbox_t *mbox, int size)
+err_t
+sys_mbox_new(sys_mbox_t *mbox, int size)
 {
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
   LWIP_UNUSED_ARG(size);
@@ -499,7 +531,8 @@ err_t sys_mbox_new(sys_mbox_t *mbox, int size)
   return ERR_OK;
 }
 
-void sys_mbox_free(sys_mbox_t *mbox)
+void
+sys_mbox_free(sys_mbox_t *mbox)
 {
   /* parameter check */
   LWIP_ASSERT("mbox != NULL", mbox != NULL);
@@ -515,7 +548,8 @@ void sys_mbox_free(sys_mbox_t *mbox)
   mbox->sem = NULL;
 }
 
-void sys_mbox_post(sys_mbox_t *q, void *msg)
+void
+sys_mbox_post(sys_mbox_t *q, void *msg)
 {
   BOOL ret;
   SYS_ARCH_DECL_PROTECT(lev);
@@ -540,7 +574,8 @@ void sys_mbox_post(sys_mbox_t *q, void *msg)
   SYS_ARCH_UNPROTECT(lev);
 }
 
-err_t sys_mbox_trypost(sys_mbox_t *q, void *msg)
+err_t
+sys_mbox_trypost(sys_mbox_t *q, void *msg)
 {
   u32_t new_head;
   BOOL ret;
@@ -574,12 +609,14 @@ err_t sys_mbox_trypost(sys_mbox_t *q, void *msg)
   return ERR_OK;
 }
 
-err_t sys_mbox_trypost_fromisr(sys_mbox_t *q, void *msg)
+err_t
+sys_mbox_trypost_fromisr(sys_mbox_t *q, void *msg)
 {
   return sys_mbox_trypost(q, msg);
 }
 
-u32_t sys_arch_mbox_fetch(sys_mbox_t *q, void **msg, u32_t timeout)
+u32_t
+sys_arch_mbox_fetch(sys_mbox_t *q, void **msg, u32_t timeout)
 {
   DWORD ret;
   LONGLONG starttime, endtime;
@@ -619,7 +656,8 @@ u32_t sys_arch_mbox_fetch(sys_mbox_t *q, void **msg, u32_t timeout)
   }
 }
 
-u32_t sys_arch_mbox_tryfetch(sys_mbox_t *q, void **msg)
+u32_t
+sys_arch_mbox_tryfetch(sys_mbox_t *q, void **msg)
 {
   DWORD ret;
   SYS_ARCH_DECL_PROTECT(lev);
@@ -654,13 +692,15 @@ u32_t sys_arch_mbox_tryfetch(sys_mbox_t *q, void **msg)
 }
 
 #if LWIP_NETCONN_SEM_PER_THREAD
-sys_sem_t* sys_arch_netconn_sem_get(void)
+sys_sem_t*
+sys_arch_netconn_sem_get(void)
 {
   LPVOID tls_data = TlsGetValue(netconn_sem_tls_index);
   return (sys_sem_t*)tls_data;
 }
 
-void sys_arch_netconn_sem_alloc(void)
+void
+sys_arch_netconn_sem_alloc(void)
 {
   sys_sem_t *sem;
   err_t err;
@@ -675,7 +715,8 @@ void sys_arch_netconn_sem_alloc(void)
   LWIP_ASSERT("failed to initialise TLS semaphore storage", done == TRUE);
 }
 
-void sys_arch_netconn_sem_free(void)
+void
+sys_arch_netconn_sem_free(void)
 {
   LPVOID tls_data = TlsGetValue(netconn_sem_tls_index);
   if (tls_data != NULL) {
@@ -691,7 +732,8 @@ void sys_arch_netconn_sem_free(void)
 #endif /* !NO_SYS */
 
 /* get keyboard state to terminate the debug app on any kbhit event using win32 API */
-int lwip_win32_keypressed(char *key)
+int
+lwip_win32_keypressed(char *key)
 {
   INPUT_RECORD rec;
   DWORD num = 0;
