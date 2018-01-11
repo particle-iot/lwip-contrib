@@ -35,6 +35,11 @@
 #include "lwip/opt.h"
 #include "lwip/arch.h"
 
+/** This is returned by _fromisr() sys functions to tell the outermost function
+ * that a higher priority task was woken and the scheduler needs to be invoked.
+ */
+#define ERR_NEED_SCHED 123
+
 /* This port includes FreeRTOS headers in sys_arch.c only.
  *  FreeRTOS uses pointers as object types. We use wrapper structs instead of
  * void pointers directly to get a tiny bit of type safety.

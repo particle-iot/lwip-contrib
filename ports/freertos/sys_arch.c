@@ -350,6 +350,27 @@ sys_mbox_trypost(sys_mbox_t *mbox, void *msg)
   }
 }
 
+err_t
+sys_mbox_trypost_fromisr(sys_mbox_t *mbox, void *msg)
+{
+  BaseType_t ret;
+  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+  LWIP_ASSERT("mbox != NULL", mbox != NULL);
+  LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
+
+  ret = xQueueSendToBackFromISR(mbox->mbx, &msg, &xHigherPriorityTaskWoken);
+  if (ret == pdTRUE) {
+    if (xHigherPriorityTaskWoken == pdTRUE) {
+      return ERR_NEED_SCHED;
+    }
+    return ERR_OK;
+  } else {
+    LWIP_ASSERT("mbox trypost failed", ret == errQUEUE_FULL);
+    SYS_STATS_INC(mbox.err);
+    return ERR_MEM;
+  }
+}
+
 u32_t
 sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout_ms)
 {
