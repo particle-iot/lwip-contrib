@@ -74,6 +74,13 @@
 #define LWIP_FREERTOS_CHECK_CORE_LOCKING              0
 #endif
 
+/** Set this to 0 to implement sys_now() yourself, e.g. using a hw timer.
+ * Default is 1, where FreeRTOS ticks are used to calculate back to ms.
+ */
+#ifndef LWIP_FREERTOS_SYS_NOW_FROM_FREERTOS
+#define LWIP_FREERTOS_SYS_NOW_FROM_FREERTOS           1
+#endif
+
 #if !configSUPPORT_DYNAMIC_ALLOCATION
 # error "lwIP FreeRTOS port requires configSUPPORT_DYNAMIC_ALLOCATION"
 #endif
@@ -112,11 +119,13 @@ sys_init(void)
 #error This port requires 32 bit ticks or timer overflow will fail
 #endif
 
+#if LWIP_FREERTOS_SYS_NOW_FROM_FREERTOS
 u32_t
 sys_now(void)
 {
   return xTaskGetTickCount() * portTICK_PERIOD_MS;
 }
+#endif
 
 u32_t
 sys_jiffies(void)
