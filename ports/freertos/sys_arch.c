@@ -510,7 +510,7 @@ sys_arch_netconn_sem_alloc(void)
     sys_sem_t sem;
     err_t err = sys_sem_new(&sem, 0);
     LWIP_ASSERT("err == ERR_OK", err == ERR_OK);
-    LWIP_ASSERT("sem invalid", sys_sem_valid(&sem));
+    LWIP_ASSERT("sem invalid", sys_sem_valid_val(sem));
     vTaskSetThreadLocalStoragePointer(task, 0, &sem);
   }
 }
