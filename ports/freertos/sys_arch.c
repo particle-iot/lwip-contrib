@@ -507,11 +507,15 @@ sys_arch_netconn_sem_alloc(void)
 
   ret = pvTaskGetThreadLocalStoragePointer(task, 0);
   if(ret == NULL) {
-    sys_sem_t sem;
-    err_t err = sys_sem_new(&sem, 0);
+    sys_sem_t *sem;
+    err_t err;
+    /* need to allocate the memory for this semaphore */
+    sem = mem_malloc(sizeof(sys_sem_t));
+    LWIP_ASSERT("sem != NULL", sem != NULL);
+    err = sys_sem_new(sem, 0);
     LWIP_ASSERT("err == ERR_OK", err == ERR_OK);
-    LWIP_ASSERT("sem invalid", sys_sem_valid_val(sem));
-    vTaskSetThreadLocalStoragePointer(task, 0, &sem);
+    LWIP_ASSERT("sem invalid", sys_sem_valid(sem));
+    vTaskSetThreadLocalStoragePointer(task, 0, sem);
   }
 }
 
@@ -525,6 +529,7 @@ void sys_arch_netconn_sem_free(void)
   if(ret != NULL) {
     sys_sem_t *sem = ret;
     sys_sem_free(sem);
+    mem_free(sem);
     vTaskSetThreadLocalStoragePointer(task, 0, NULL);
   }
 }
