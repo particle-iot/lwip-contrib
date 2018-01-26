@@ -37,6 +37,7 @@
 #pragma warning (disable: 4996) /* 'strncpy' was declared deprecated */
 #pragma warning (disable: 4103) /* structure packing changed by including file */
 #pragma warning (disable: 4820) /* 'x' bytes padding added after data member 'y' */
+#pragma warning (disable: 4711) /* The compiler performed inlining on the given function, although it was not marked for inlining */
 #endif
 
 #define LWIP_PROVIDE_ERRNO
