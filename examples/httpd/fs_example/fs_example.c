@@ -46,6 +46,8 @@
 #include "fs_example.h"
 
 #include "lwip/apps/fs.h"
+#include "lwip/def.h"
+#include "lwip/mem.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -55,7 +57,45 @@
 #define LWIP_HTTPD_EXAMPLE_CUSTOMFILES 0
 #endif
 
+/** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED to 1 to delay open and read
+ * as if e.g. reading from external SPI flash */
+#ifndef LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED 1//0
+#endif
+
+/** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ to the number of bytes
+ * to read to emulate limited transfer buffers and don't read whole files in
+ * one chunk.
+ * WARNING: lowering this slows down the connection!
+ */
+#ifndef LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ
+#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ (TCP_MSS*4)//0
+#endif
+
 #if LWIP_HTTPD_EXAMPLE_CUSTOMFILES
+
+#if !LWIP_HTTPD_CUSTOM_FILES
+#error This needs LWIP_HTTPD_CUSTOM_FILES
+#endif
+#if !LWIP_HTTPD_DYNAMIC_HEADERS
+#error This needs LWIP_HTTPD_DYNAMIC_HEADERS
+#endif
+#if !LWIP_HTTPD_DYNAMIC_FILE_READ
+#error This wants to demonstrate read-afer-open, so LWIP_HTTPD_DYNAMIC_FILE_READ is required!
+#endif
+
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+#include "lwip/tcpip.h"
+#endif
+
+struct fs_custom_data {
+  FILE *f;
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+  int delay_read;
+  fs_wait_cb callback_fn;
+  void *callback_arg;
+#endif
+};
 
 const char* fs_ex_root_dir;
 
@@ -80,9 +120,15 @@ fs_open_custom(struct fs_file *file, const char *name)
     if (!fseek(f, 0, SEEK_END)) {
       int len = (int)ftell(f);
       if(!fseek(f, 0, SEEK_SET)) {
+        struct fs_custom_data *data = (struct fs_custom_data *)mem_malloc(sizeof(struct fs_custom_data));
+        LWIP_ASSERT("out of memory?", data != NULL);
         memset(file, 0, sizeof(struct fs_file));
         file->len = len;
-        file->pextension = f;
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+        data->delay_read = 1;
+#endif
+        data->f = f;
+        file->pextension = data;
         return 1;
       }
     }
@@ -95,8 +141,12 @@ void
 fs_close_custom(struct fs_file *file)
 {
   if (file && file->pextension) {
-    fclose((FILE*)file->pextension);
-    file->pextension = NULL;
+    struct fs_custom_data *data = (struct fs_custom_data *)file->pextension;
+    if (data->f != NULL) {
+      fclose(data->f);
+      data->f = NULL;
+    }
+    mem_free(data);
   }
 }
 
@@ -107,28 +157,103 @@ fs_canread_custom(struct fs_file *file)
   /* This function is only necessary for asynchronous I/O:
      If reading would block, return 0 and implement fs_wait_read_custom() to call the
      supplied callback if reading works. */
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+  struct fs_custom_data *data;
+  LWIP_ASSERT("file != NULL", file != NULL);
+  data = (struct fs_custom_data *)file->pextension;
+  if (data == NULL) {
+    /* file transfer has been completed already */
+    LWIP_ASSERT("transfer complete", file->index == file->len);
+    return 1;
+  }
+  LWIP_ASSERT("data != NULL", data != NULL);
+  /* This just simulates a simple delay. This delay would normally come e.g. from SPI transfer */
+  if (data->delay_read == 1) {
+    /* tell read function to delay further */
+    data->delay_read = 2;
+    return 0;
+  }
+#endif
   LWIP_UNUSED_ARG(file);
   return 1;
 }
 
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+static void
+fs_example_read_cb(void *arg)
+{
+  struct fs_custom_data *data = (struct fs_custom_data *)arg;
+  fs_wait_cb callback_fn = data->callback_fn;
+  void *callback_arg = data->callback_arg;
+
+  LWIP_ASSERT("no callback_fn", callback_fn != NULL);
+
+  callback_fn(callback_arg);
+}
+#endif
+
 u8_t
 fs_wait_read_custom(struct fs_file *file, fs_wait_cb callback_fn, void *callback_arg)
 {
-  /* not implemented in this example */
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+  err_t err;
+  struct fs_custom_data *data = (struct fs_custom_data *)file->pextension;
+  LWIP_ASSERT("data not set", data != NULL);
+  data->callback_fn = callback_fn;
+  data->callback_arg = callback_arg;
+  err = tcpip_try_callback(fs_example_read_cb, data);
+  LWIP_ASSERT("out of queue elements?", err == ERR_OK);
+  LWIP_UNUSED_ARG(err);
+#else
+  LWIP_ASSERT("not implemented in this example configuration", 0);
+#endif
   LWIP_UNUSED_ARG(file);
   LWIP_UNUSED_ARG(callback_fn);
   LWIP_UNUSED_ARG(callback_arg);
   /* Return
      - 1 if ready to read (at least one byte)
      - 0 if reading should be delayed (call 'tcpip_callback(callback_fn, callback_arg)' when ready) */
-  return 0;
+  return 1;
 }
 
 int
 fs_read_async_custom(struct fs_file *file, char *buffer, int count, fs_wait_cb callback_fn, void *callback_arg)
 {
-  FILE *f = (FILE*)file->pextension;
-  int len = (int)fread(buffer, 1, count, f);
+  struct fs_custom_data *data = (struct fs_custom_data *)file->pextension;
+  FILE *f;
+  int len;
+  int read_count = count;
+  LWIP_ASSERT("data not set", data != NULL);
+
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
+  /* This just simulates a delay. This delay would normally come e.g. from SPI transfer */
+  LWIP_ASSERT("invalid state", data->delay_read >= 0 && data->delay_read <= 2);
+  if (data->delay_read == 2) {
+    /* no delay next time */
+    data->delay_read = 0;
+    return FS_READ_DELAYED;
+  } else if (data->delay_read == 1) {
+    err_t err;
+    /* execute requested delay */
+    data->delay_read = 2;
+    LWIP_ASSERT("duplicate callback request", data->callback_fn == NULL);
+    data->callback_fn = callback_fn;
+    data->callback_arg = callback_arg;
+    err = tcpip_try_callback(fs_example_read_cb, data);
+    LWIP_ASSERT("out of queue elements?", err == ERR_OK);
+    LWIP_UNUSED_ARG(err);
+    return FS_READ_DELAYED;
+  }
+  /* execute this read but delay the next one */
+  data->delay_read = 1;
+#endif
+
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ
+  read_count = LWIP_MIN(read_count, LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ);
+#endif
+
+  f = data->f;
+  len = (int)fread(buffer, 1, read_count, f);
 
   LWIP_UNUSED_ARG(callback_fn);
   LWIP_UNUSED_ARG(callback_arg);
@@ -138,6 +263,10 @@ fs_read_async_custom(struct fs_file *file, char *buffer, int count, fs_wait_cb c
   /* Return
      - FS_READ_EOF if all bytes have been read
      - FS_READ_DELAYED if reading is delayed (call 'tcpip_callback(callback_fn, callback_arg)' when done) */
+  if (len == 0) {
+    /* all bytes read already */
+    return FS_READ_EOF;
+  }
   return len;
 }
 
@@ -145,8 +274,18 @@ fs_read_async_custom(struct fs_file *file, char *buffer, int count, fs_wait_cb c
 int
 fs_read_custom(struct fs_file *file, char *buffer, int count)
 {
-  FILE *f = (FILE*)file->pextension;
-  int len = (int)fread(buffer, 1, count, f);
+  struct fs_custom_data *data = (struct fs_custom_data *)file->pextension;
+  FILE *f;
+  int len;
+  int read_count = count;
+  LWIP_ASSERT("data not set", data != NULL);
+
+#if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ
+  read_count = LWIP_MIN(read_count, LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ);
+#endif
+
+  f = data->f;
+  len = (int)fread(buffer, 1, read_count, f);
 
   file->index += len;
 
