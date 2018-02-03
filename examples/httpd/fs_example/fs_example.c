@@ -60,7 +60,7 @@
 /** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED to 1 to delay open and read
  * as if e.g. reading from external SPI flash */
 #ifndef LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
-#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED 1//0
+#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED 1
 #endif
 
 /** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ to the number of bytes
@@ -123,9 +123,13 @@ fs_open_custom(struct fs_file *file, const char *name)
         struct fs_custom_data *data = (struct fs_custom_data *)mem_malloc(sizeof(struct fs_custom_data));
         LWIP_ASSERT("out of memory?", data != NULL);
         memset(file, 0, sizeof(struct fs_file));
-        file->len = len;
 #if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
-        data->delay_read = 1;
+        file->len = 0; /* read size delayed */
+        data->delay_read = 3;
+        LWIP_UNUSED_ARG(len);
+#else
+        file->len = len;
+        file->flags = FS_FILE_FLAGS_HEADER_PERSISTENT;
 #endif
         data->f = f;
         file->pextension = data;
@@ -168,10 +172,23 @@ fs_canread_custom(struct fs_file *file)
   }
   LWIP_ASSERT("data != NULL", data != NULL);
   /* This just simulates a simple delay. This delay would normally come e.g. from SPI transfer */
+  if (data->delay_read == 3) {
+    /* delayed file size mode */
+    data->delay_read = 1;
+    LWIP_ASSERT("", file->len == 0);
+    if (!fseek(data->f, 0, SEEK_END)) {
+      int len = (int)ftell(data->f);
+      if(!fseek(data->f, 0, SEEK_SET)) {
+        file->len = len; /* read size delayed */
+        data->delay_read = 1;
+        return 0;
+      }
+    }
+    /* if we come here, something is wrong with the file */
+    LWIP_ASSERT("file error", 0);
+  }
   if (data->delay_read == 1) {
     /* tell read function to delay further */
-    data->delay_read = 2;
-    return 0;
   }
 #endif
   LWIP_UNUSED_ARG(file);
@@ -185,6 +202,8 @@ fs_example_read_cb(void *arg)
   struct fs_custom_data *data = (struct fs_custom_data *)arg;
   fs_wait_cb callback_fn = data->callback_fn;
   void *callback_arg = data->callback_arg;
+  data->callback_fn = NULL;
+  data->callback_arg = NULL;
 
   LWIP_ASSERT("no callback_fn", callback_fn != NULL);
 
