@@ -569,19 +569,30 @@ sys_unlock_tcpip_core(void)
 
 #endif /* LWIP_TCPIP_CORE_LOCKING */
 
+#if !NO_SYS
 static TaskHandle_t lwip_tcpip_thread;
+#endif
 
 void
 sys_mark_tcpip_thread(void)
 {
+#if !NO_SYS
   lwip_tcpip_thread = xTaskGetCurrentTaskHandle();
+#endif
 }
 
 void
 sys_check_core_locking(void)
 {
   /* Embedded systems should check we are NOT in an interrupt context here */
+  /* E.g. core Cortex-M3/M4 ports:
+         configASSERT( ( portNVIC_INT_CTRL_REG & portVECTACTIVE_MASK ) == 0 );
 
+     Instead, we use more generic FreeRTOS functions here, which should fail from ISR: */
+  taskENTER_CRITICAL();
+  taskEXIT_CRITICAL();
+
+#if !NO_SYS
   if (lwip_tcpip_thread != 0) {
     TaskHandle_t current_thread = xTaskGetCurrentTaskHandle();
 
@@ -592,6 +603,7 @@ sys_check_core_locking(void)
     LWIP_ASSERT("Function called from wrong thread", current_thread == lwip_tcpip_thread);
 #endif /* LWIP_TCPIP_CORE_LOCKING */
   }
+#endif /* !NO_SYS */
 }
 
 #endif /* LWIP_FREERTOS_CHECK_CORE_LOCKING*/
