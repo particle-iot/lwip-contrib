@@ -5,6 +5,8 @@
  * This file demonstrates how to add support for SSI.
  * It does this in a very simple way by providing the three tags 'HelloWorld'
  * 'counter', and 'MultiPart'.
+ *
+ * This file also demonstrates how to integrate CGI with SSI.
  */
  
  /*
@@ -45,6 +47,7 @@
 #include "lwip/apps/httpd.h"
 
 #include "lwip/def.h"
+#include "lwip/mem.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -54,12 +57,32 @@
 #define LWIP_HTTPD_EXAMPLE_SSI_SIMPLE 0
 #endif
 
+/** define LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION to 1 to show how to
+ * integrate CGI into SSI (LWIP_HTTPD_CGI_SSI) */
+#ifndef LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION
+#define LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION 0
+#endif
+
 #if LWIP_HTTPD_EXAMPLE_SSI_SIMPLE
+
+#if LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION
+#if !LWIP_HTTPD_FILE_STATE
+#error LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION needs LWIP_HTTPD_FILE_STATE
+#endif
+#if !LWIP_HTTPD_CGI_SSI
+#error LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION needs LWIP_HTTPD_CGI_SSI
+#endif
+
+#define MAX_CGI_LEN   16
+#endif
 
 const char * ssi_example_tags[] = {
   "HellWorl",
   "counter",
   "MultPart"
+#if LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION
+  ,"CgiParam"
+#endif
 };
 
 u16_t ssi_example_ssi_handler(
@@ -125,6 +148,20 @@ u16_t ssi_example_ssi_handler(
     printed = snprintf(pcInsert, iInsertLen, "LWIP_HTTPD_SSI_MULTIPART disabled");
 #endif
     break;
+#if LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION
+  case 3:
+    if (connection_state) {
+      char *params = (char *)connection_state;
+      if (*params) {
+        printed = snprintf(pcInsert, iInsertLen, "%s", (char *)params);
+      } else {
+        printed = snprintf(pcInsert, iInsertLen, "none");
+      }
+    } else {
+       printed = snprintf(pcInsert, iInsertLen, "NULL");
+    }
+    break;
+#endif
   default: /* unknown tag */
     printed = 0;
     break;
@@ -150,5 +187,78 @@ ssi_ex_init(void)
 #endif
     );
 }
+
+#if LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION
+void *
+fs_state_init(struct fs_file *file, const char *name)
+{
+  char *ret;
+  LWIP_UNUSED_ARG(file);
+  LWIP_UNUSED_ARG(name);
+  ret = (char *)mem_malloc(MAX_CGI_LEN);
+  if (ret) {
+    *ret = 0;
+  }
+  return ret;
+}
+
+void
+fs_state_free(struct fs_file *file, void *state)
+{
+  LWIP_UNUSED_ARG(file);
+  if (state != NULL) {
+    mem_free(state);
+  }
+}
+
+void
+httpd_cgi_handler(struct fs_file *file, const char* uri, int iNumParams,
+                              char **pcParam, char **pcValue
+#if defined(LWIP_HTTPD_FILE_STATE) && LWIP_HTTPD_FILE_STATE
+                                     , void *connection_state
+#endif /* LWIP_HTTPD_FILE_STATE */
+                                     )
+{
+  LWIP_UNUSED_ARG(file);
+  LWIP_UNUSED_ARG(uri);
+  if (connection_state != NULL) {
+    char *start = (char *)connection_state;
+    char *end = start + MAX_CGI_LEN;
+    int i;
+    memset(start, 0, MAX_CGI_LEN);
+    /* print a string of the arguments: */
+    for (i = 0; i < iNumParams; i++) {
+      size_t len;
+      len = end - start;
+      if (len) {
+        size_t inlen = strlen(pcParam[i]);
+        size_t copylen = LWIP_MIN(inlen, len);
+        memcpy(start, pcParam[i], copylen);
+        start += copylen;
+        len -= copylen;
+      }
+      if (len) {
+        *start = '=';
+        start++;
+        len--;
+      }
+      if (len) {
+        size_t inlen = strlen(pcValue[i]);
+        size_t copylen = LWIP_MIN(inlen, len);
+        memcpy(start, pcValue[i], copylen);
+        start += copylen;
+        len -= copylen;
+      }
+      if (len) {
+        *start = ';';
+        len--;
+      }
+      /* ensure NULL termination */
+      end--;
+      *end = 0;
+    }
+  }
+}
+#endif /* LWIP_HTTPD_EXAMPLE_SSI_SIMPLE_CGI_INTEGRATION */
 
 #endif /* LWIP_HTTPD_EXAMPLE_SSI_SIMPLE */
