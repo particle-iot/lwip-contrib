@@ -52,7 +52,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES to 1 to enable this file system*/
+/** define LWIP_HTTPD_EXAMPLE_CUSTOMFILES to 1 to enable this file system */
 #ifndef LWIP_HTTPD_EXAMPLE_CUSTOMFILES
 #define LWIP_HTTPD_EXAMPLE_CUSTOMFILES 0
 #endif
@@ -69,7 +69,7 @@
  * WARNING: lowering this slows down the connection!
  */
 #ifndef LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ
-#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ (TCP_MSS*4)//0
+#define LWIP_HTTPD_EXAMPLE_CUSTOMFILES_LIMIT_READ 0
 #endif
 
 #if LWIP_HTTPD_EXAMPLE_CUSTOMFILES
@@ -81,7 +81,7 @@
 #error This needs LWIP_HTTPD_DYNAMIC_HEADERS
 #endif
 #if !LWIP_HTTPD_DYNAMIC_FILE_READ
-#error This wants to demonstrate read-afer-open, so LWIP_HTTPD_DYNAMIC_FILE_READ is required!
+#error This wants to demonstrate read-after-open, so LWIP_HTTPD_DYNAMIC_FILE_READ is required!
 #endif
 
 #if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED

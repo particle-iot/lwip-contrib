@@ -48,7 +48,7 @@
 #include <stdio.h>
 #include <string.h>
 
-/** define LWIP_HTTPD_EXAMPLE_CGI_SIMPLE to 1 to enable this cgi example*/
+/** define LWIP_HTTPD_EXAMPLE_CGI_SIMPLE to 1 to enable this cgi example */
 #ifndef LWIP_HTTPD_EXAMPLE_CGI_SIMPLE
 #define LWIP_HTTPD_EXAMPLE_CGI_SIMPLE 0
 #endif
