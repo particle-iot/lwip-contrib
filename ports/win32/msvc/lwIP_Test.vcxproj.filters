@@ -41,6 +41,9 @@
     <Filter Include="Source Files\examples\httpd\cgi_example">
       <UniqueIdentifier>{24079d2d-aab1-49f9-b0fa-57910a18b93a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\httpd\genfiles_example">
+      <UniqueIdentifier>{d38ed32b-9498-429e-a02c-08332c463725}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test.c">
@@ -100,6 +103,9 @@
     <ClCompile Include="..\..\..\examples\httpd\cgi_example\cgi_example.c">
       <Filter>Source Files\examples\httpd\cgi_example</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.c">
+      <Filter>Source Files\examples\httpd\genfiles_example</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\apps\chargen\chargen.h">
@@ -155,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\examples\httpd\cgi_example\cgi_example.h">
       <Filter>Source Files\examples\httpd\cgi_example</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.h">
+      <Filter>Source Files\examples\httpd\genfiles_example</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
