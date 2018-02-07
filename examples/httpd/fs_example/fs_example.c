@@ -129,8 +129,8 @@ fs_open_custom(struct fs_file *file, const char *name)
         LWIP_UNUSED_ARG(len);
 #else
         file->len = len;
-        file->flags = FS_FILE_FLAGS_HEADER_PERSISTENT;
 #endif
+        file->flags = FS_FILE_FLAGS_HEADER_PERSISTENT;
         data->f = f;
         file->pextension = data;
         return 1;
