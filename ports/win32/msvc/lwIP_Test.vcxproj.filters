@@ -44,6 +44,9 @@
     <Filter Include="Source Files\examples\httpd\genfiles_example">
       <UniqueIdentifier>{d38ed32b-9498-429e-a02c-08332c463725}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\httpd\post_example">
+      <UniqueIdentifier>{672a49fd-94ff-4126-8de3-e96c9c32dfb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test.c">
@@ -105,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.c">
       <Filter>Source Files\examples\httpd\genfiles_example</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\httpd\post_example\post_example.c">
+      <Filter>Source Files\examples\httpd\post_example</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

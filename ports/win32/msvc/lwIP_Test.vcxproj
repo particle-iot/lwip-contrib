@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\..\examples\httpd\cgi_example\cgi_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\fs_example\fs_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.c" />
+    <ClCompile Include="..\..\..\examples\httpd\post_example\post_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\ssi_example\ssi_example.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_private_mib\lwip_prvmib.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_v3\snmpv3_dummy.c" />
