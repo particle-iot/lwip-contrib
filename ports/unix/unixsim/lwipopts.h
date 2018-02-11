@@ -242,6 +242,9 @@ extern void sntp_set_system_time(u32_t sec);
 #define SNTP_SET_SYSTEM_TIME(s) sntp_set_system_time(s)
 
 /* ---------- SNMP options ---------- */
+#define LWIP_MQTT               1
+
+/* ---------- SNMP options ---------- */
 #define LWIP_SNMP               (LWIP_UDP)
 #ifdef LWIP_HAVE_MBEDTLS
 #define LWIP_SNMP_V3            (LWIP_SNMP)
