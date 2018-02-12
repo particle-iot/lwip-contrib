@@ -643,7 +643,7 @@ init_netifs(void)
           mqtt_incoming_data_cb,
           LWIP_CONST_CAST(void*, &mqtt_client_info));
 
-  IP_SET_TYPE_VAL(&mqtt_ip, IPADDR_TYPE_V4);
+  IP_SET_TYPE_VAL(mqtt_ip, IPADDR_TYPE_V4);
   ip4_addr_set_u32(ip_2_ip4(&mqtt_ip), IPADDR_LOOPBACK);
   mqtt_client_connect(mqtt_client,
           &mqtt_ip, MQTT_PORT,
