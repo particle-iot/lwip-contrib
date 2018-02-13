@@ -130,10 +130,6 @@ main_thread(void *arg)
   sys_sem_wait(&sem);
   printf("TCP/IP initialized.\n");
 
-#ifdef MEM_PERF
-  mem_perf_init("/tmp/memstats.client");
-#endif /* MEM_PERF */
-
   /* Block forever. */
   sys_sem_wait(&sem);
 }

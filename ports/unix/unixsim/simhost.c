@@ -677,9 +677,6 @@ main_thread(void *arg)
 
   printf("Applications started.\n");
 
-#ifdef MEM_PERF
-  mem_perf_init("/tmp/memstats.client");
-#endif /* MEM_PERF */
 #if 0
     stats_display();
 #endif
