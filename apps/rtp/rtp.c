@@ -248,7 +248,10 @@ rtp_recv_thread(void *arg)
       if (bind(sock, (struct sockaddr *)&local, sizeof(local)) == 0) {
         /* set recv timeout */
         timeout = RTP_RECV_TIMEOUT;
-        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+        result = setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
+        if (result) {
+          LWIP_DEBUGF(RTP_DEBUG, ("rtp_recv_thread: setsockopt(SO_RCVTIMEO) failed: errno=%d\n", errno));
+        }
 
         /* prepare multicast "ip_mreq" struct */
         ipmreq.imr_multiaddr.s_addr = rtp_stream_address;
@@ -281,7 +284,10 @@ rtp_recv_thread(void *arg)
           }
 
           /* leave multicast group */
-          setsockopt(sock, IPPROTO_IP, IP_DROP_MEMBERSHIP, &ipmreq, sizeof(ipmreq));
+          result = setsockopt(sock, IPPROTO_IP, IP_DROP_MEMBERSHIP, &ipmreq, sizeof(ipmreq));
+          if (result) {
+            LWIP_DEBUGF(RTP_DEBUG, ("rtp_recv_thread: setsockopt(IP_DROP_MEMBERSHIP) failed: errno=%d\n", errno));
+          }
         }
       }
 
