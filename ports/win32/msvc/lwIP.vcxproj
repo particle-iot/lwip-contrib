@@ -342,14 +342,14 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\polarssl\md4.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\polarssl\md5.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\polarssl\sha1.c" />
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\fs.c" />
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\fsdata.c">
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\fs.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\fsdata.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug unittests|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release unittests|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\httpd.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\httpd.c" />
     <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmp_asn1.c" />
     <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmp_core.c" />
     <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmp_mib2.c" />
@@ -508,8 +508,8 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\md4.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\md5.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\polarssl\sha1.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\fsdata.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\httpd_structs.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\apps\http\fsdata.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\apps\http\httpd_structs.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_asn1.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_core_priv.h" />
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_pbuf_stream.h" />

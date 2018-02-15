@@ -67,7 +67,7 @@
     <Filter Include="arch">
       <UniqueIdentifier>{2e87d0f7-38a3-45f8-870d-f8622c20e9d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\apps\httpd">
+    <Filter Include="src\apps\http">
       <UniqueIdentifier>{45f6a578-1f4b-4741-9b55-5b5084ecc1d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\apps\mdns">
@@ -376,14 +376,14 @@
     <ClCompile Include="..\sys_arch.c">
       <Filter>arch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\httpd.c">
-      <Filter>src\apps\httpd</Filter>
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\httpd.c">
+      <Filter>src\apps\http</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\fsdata.c">
-      <Filter>src\apps\httpd</Filter>
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\fsdata.c">
+      <Filter>src\apps\http</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\fs.c">
-      <Filter>src\apps\httpd</Filter>
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\fs.c">
+      <Filter>src\apps\http</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmp_asn1.c">
       <Filter>src\apps\snmp</Filter>
@@ -789,11 +789,11 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\api_msg.h">
       <Filter>src\include\lwip\priv</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\httpd_structs.h">
-      <Filter>src\apps\httpd</Filter>
+    <ClInclude Include="..\..\..\..\lwip\src\apps\http\httpd_structs.h">
+      <Filter>src\apps\http</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\lwip\src\apps\httpd\fsdata.h">
-      <Filter>src\apps\httpd</Filter>
+    <ClInclude Include="..\..\..\..\lwip\src\apps\http\fsdata.h">
+      <Filter>src\apps\http</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\apps\snmp\snmp_asn1.h">
       <Filter>src\apps\snmp</Filter>

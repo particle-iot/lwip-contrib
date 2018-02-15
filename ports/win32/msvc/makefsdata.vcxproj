@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\lwip\src\apps\httpd\makefsdata\makefsdata.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\makefsdata\makefsdata.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0BFC0F21-8E84-4E68-A9E1-CE2A09B72F6D}</ProjectGuid>
