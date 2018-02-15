@@ -502,6 +502,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\bridgeif_fdb.c">
       <Filter>src\netif</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\apps\http\http_client.c">
+      <Filter>src\apps\http</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\lwiperf.h">
@@ -1001,6 +1004,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\mem_priv.h">
       <Filter>src\include\lwip\priv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\http_client.h">
+      <Filter>src\include\lwip\apps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
