@@ -421,6 +421,7 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\api_msg.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\memp_priv.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\memp_std.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\mem_priv.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\nd6_priv.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\raw_priv.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\priv\sockets_priv.h" />
