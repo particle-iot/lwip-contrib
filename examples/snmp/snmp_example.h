@@ -27,17 +27,17 @@
  *
  */
 
-#ifndef SNTP_EXAMPLE_H
-#define SNTP_EXAMPLE_H
+#ifndef SNMP_EXAMPLE_H
+#define SNMP_EXAMPLE_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void sntp_example_init(void);
+void snmp_example_init(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* SNTP_EXAMPLE_H */
+#endif /* SNMP_EXAMPLE_H */

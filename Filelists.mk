@@ -47,6 +47,7 @@ CONTRIBAPPFILES=$(CONTRIBDIR)/apps/httpserver/httpserver-netconn.c \
 	$(CONTRIBDIR)/examples/mqtt/mqtt_example.c \
 	$(CONTRIBDIR)/examples/snmp/snmp_private_mib/lwip_prvmib.c \
 	$(CONTRIBDIR)/examples/snmp/snmp_v3/snmpv3_dummy.c \
+	$(CONTRIBDIR)/examples/snmp/snmp_example.c \
 	$(CONTRIBDIR)/examples/sntp/sntp_example.c \
 	$(CONTRIBDIR)/examples/tftp/tftp_example.c \
 	$(CONTRIBDIR)/addons/tcp_isn/tcp_isn.c \
