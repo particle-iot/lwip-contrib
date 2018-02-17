@@ -27,8 +27,11 @@
  *
  */
 
-#include "lwip/opt.h"
 #include "lwip/dns.h"
+
+#ifndef PPP_SUPPORT
+#define PPP_SUPPORT 0
+#endif
 
 #if PPP_SUPPORT
 #include "netif/ppp/pppos.h"
