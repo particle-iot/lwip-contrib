@@ -92,7 +92,6 @@
 #include "apps/netio/netio.h"
 #include "apps/ping/ping.h"
 #include "lwip/apps/netbiosns.h"
-#include "lwip/apps/mdns.h"
 #include "lwip/apps/snmp.h"
 #include "lwip/apps/snmp_mib2.h"
 #include "examples/snmp/snmp_private_mib/private_mib.h"
@@ -105,6 +104,7 @@
 #include "examples/mqtt/mqtt_example.h"
 #include "examples/tftp/tftp_example.h"
 #include "examples/sntp/sntp_example.h"
+#include "examples/mdns/mdns_example.h"
 
 #if LWIP_RAW
 #include "lwip/icmp.h"
@@ -181,18 +181,6 @@ tcp_debug_timeout(void *data)
 }
 #endif
 
-#if LWIP_MDNS_RESPONDER
-static void
-srv_txt(struct mdns_service *service, void *txt_userdata)
-{
-  err_t res;
-  LWIP_UNUSED_ARG(txt_userdata);
-  
-  res = mdns_resp_add_service_txtitem(service, "path=/", 6);
-  LWIP_ERROR("mdns add service txt failed\n", (res == ERR_OK), return);
-}
-#endif
-
 static void
 tcpip_init_done(void *arg)
 {
@@ -216,17 +204,11 @@ tcpip_init_done(void *arg)
   chargen_init();
 #endif
   
-#if LWIP_MQTT
-  mqtt_example_init();
-#endif
-
 #if LWIP_IPV4
   netbiosns_set_name("simhost");
   netbiosns_init();
 #endif /* LWIP_IPV4 */
 
-  sntp_example_init();
-  
 #if LWIP_SNMP
   lwip_privmib_init();
 #if SNMP_LWIP_MIB2
@@ -246,16 +228,10 @@ tcpip_init_done(void *arg)
   snmp_init();
 #endif /* LWIP_SNMP */
 
-#if LWIP_MDNS_RESPONDER
-  mdns_resp_init();
-  mdns_resp_add_netif(&netif, "simhost", 3600);
-  mdns_resp_add_service(&netif, "myweb", "_http", DNSSD_PROTO_TCP, 80, 3600, srv_txt, NULL);
-  mdns_resp_announce(&netif);
-#endif
-  
-#if LWIP_UDP
-  tfp_example_init();
-#endif /* LWIP_UDP */
+  sntp_example_init();
+  mdns_example_init();  
+  tftp_example_init();
+  mqtt_example_init();
   
   sys_sem_signal(sem);
 }

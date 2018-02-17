@@ -43,6 +43,7 @@ CONTRIBAPPFILES=$(CONTRIBDIR)/apps/httpserver/httpserver-netconn.c \
 	$(CONTRIBDIR)/apps/rtp/rtp.c \
 	$(CONTRIBDIR)/examples/httpd/fs_example/fs_example.c \
 	$(CONTRIBDIR)/examples/httpd/ssi_example/ssi_example.c \
+	$(CONTRIBDIR)/examples/mdns/mdns_example.c \
 	$(CONTRIBDIR)/examples/mqtt/mqtt_example.c \
 	$(CONTRIBDIR)/examples/snmp/snmp_private_mib/lwip_prvmib.c \
 	$(CONTRIBDIR)/examples/snmp/snmp_v3/snmpv3_dummy.c \
