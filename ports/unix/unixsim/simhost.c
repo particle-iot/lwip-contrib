@@ -94,7 +94,6 @@
 #include "apps/ping/ping.h"
 #include "lwip/apps/netbiosns.h"
 #include "lwip/apps/mdns.h"
-#include "lwip/apps/sntp.h"
 #include "lwip/apps/snmp.h"
 #include "lwip/apps/snmp_mib2.h"
 #include "examples/snmp/snmp_private_mib/private_mib.h"
@@ -106,10 +105,12 @@
 
 #include "examples/mqtt/mqtt_example.h"
 #include "examples/tftp/tftp_example.h"
+#include "examples/sntp/sntp_example.h"
 
 #if LWIP_RAW
 #include "lwip/icmp.h"
 #include "lwip/raw.h"
+#include "examples/sntp/sntp_example.h"
 #endif
 
 #if LWIP_SNMP
@@ -239,16 +240,8 @@ tcpip_init_done(void *arg)
   netbiosns_init();
 #endif /* LWIP_IPV4 */
 
-  sntp_setoperatingmode(SNTP_OPMODE_POLL);
-#if LWIP_DHCP
-  sntp_servermode_dhcp(1); /* get SNTP server via DHCP */
-#else /* LWIP_DHCP */
-#if LWIP_IPV4
-  sntp_setserver(0, netif_ip_gw4(&netif));
-#endif /* LWIP_IPV4 */
-#endif /* LWIP_DHCP */
-  sntp_init();
-
+  sntp_example_init();
+  
 #if LWIP_SNMP
   lwip_privmib_init();
 #if SNMP_LWIP_MIB2
