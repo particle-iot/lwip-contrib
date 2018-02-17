@@ -27,6 +27,7 @@
  *
  */
 
+#include "lwip/opt.h"
 #include "lwip/dns.h"
 
 #if PPP_SUPPORT
