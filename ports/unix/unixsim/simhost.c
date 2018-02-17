@@ -102,10 +102,10 @@
 #include "examples/snmp/snmp_v3/snmpv3_dummy.h"
 #include "lwip/apps/snmp_snmpv2_framework.h"
 #include "lwip/apps/snmp_snmpv2_usm.h"
-#include "lwip/apps/tftp_server.h"
 #include "addons/tcp_isn/tcp_isn.h"
 
 #include "examples/mqtt/mqtt_example.h"
+#include "examples/tftp/tftp_example.h"
 
 #if LWIP_RAW
 #include "lwip/icmp.h"
@@ -207,55 +207,6 @@ srv_txt(struct mdns_service *service, void *txt_userdata)
 }
 #endif
 
-#if LWIP_UDP
-
-static void*
-tftp_open(const char* fname, const char* mode, u8_t is_write)
-{
-  LWIP_UNUSED_ARG(mode);
-  
-  if (is_write) {
-    return (void*)fopen(fname, "wb");
-  } else {
-    return (void*)fopen(fname, "rb");
-  }
-}
-static void 
-tftp_close(void* handle)
-{
-  fclose((FILE*)handle);
-}
-static int
-tftp_read(void* handle, void* buf, int bytes)
-{
-  int ret = fread(buf, 1, bytes, (FILE*)handle);
-  if (ret <= 0) {
-    return -1;
-  }
-  return ret;
-}
-static int
-tftp_write(void* handle, struct pbuf* p)
-{
-  while (p != NULL) {
-    if (fwrite(p->payload, 1, p->len, (FILE*)handle) != (size_t)p->len) {
-      return -1;
-    }
-    p = p->next;
-  }
-  
-  return 0;
-}
-
-static const struct tftp_context tftp = {
-  tftp_open,
-  tftp_close,
-  tftp_read,
-  tftp_write
-};
-
-#endif /* LWIP_UDP */
-
 static void
 tcpip_init_done(void *arg)
 {
@@ -306,7 +257,7 @@ tcpip_init_done(void *arg)
 #endif
   
 #if LWIP_UDP
-  tftp_init(&tftp);
+  tfp_example_init();
 #endif /* LWIP_UDP */
   
   sys_sem_signal(sem);

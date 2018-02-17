@@ -30,6 +30,8 @@
 #include "lwip/apps/mqtt.h"
 #include "mqtt_example.h"
 
+#if LWIP_TCP
+
 static ip_addr_t mqtt_ip;
 static mqtt_client_t* mqtt_client;
 
@@ -112,3 +114,5 @@ mqtt_example_init(void)
           mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
           &mqtt_client_info);
 }
+
+#endif /* LWIP_TCP */
