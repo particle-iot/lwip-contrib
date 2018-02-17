@@ -29,6 +29,7 @@
 
 #include <time.h>
 
+#include "lwip/opt.h"
 #include "lwip/apps/sntp.h"
 #include "sntp_example.h"
 #include "lwip/netif.h"
