@@ -140,25 +140,11 @@ static void usage(void)
   }
 }
 
-#if 0
-static void
-tcp_debug_timeout(void *data)
-{
-  LWIP_UNUSED_ARG(data);
-#if TCP_DEBUG
-  tcp_debug_print_pcbs();
-#endif /* TCP_DEBUG */
-  sys_timeout(5000, tcp_debug_timeout, NULL);
-}
-#endif
-
 static void
 tcpip_init_done(void *arg)
 {
   sys_sem_t *sem;
   sem = (sys_sem_t *)arg;
-
-  init_netifs();
 
 #if LWIP_TCP
   netio_init();
@@ -271,50 +257,13 @@ init_netifs(void)
 #if LWIP_DHCP
   dhcp_start(&netif);
 #endif /* LWIP_DHCP */
-
-#if 0
-  /* Only used for testing purposes: */
-  netif_add(&ipaddr, &netmask, &gw, NULL, pcapif_init, tcpip_input);
-#endif
-  
-  /*  sys_timeout(5000, tcp_debug_timeout, NULL);*/
 }
 
-/*-----------------------------------------------------------------------------------*/
-static void
-main_thread(void *arg)
-{
-  sys_sem_t sem;
-  LWIP_UNUSED_ARG(arg);
-
-  lwip_init_tcp_isn(sys_now(), (u8_t*)&netif);
-  
-  if(sys_sem_new(&sem, 0) != ERR_OK) {
-    LWIP_ASSERT("Failed to create semaphore", 0);
-  }
-  tcpip_init(tcpip_init_done, &sem);
-  sys_sem_wait(&sem);
-  printf("TCP/IP initialized.\n");
-
-#if LWIP_SOCKET
-  if (ping_flag) {
-    ping_init(&ping_addr);
-  }
-#endif
-
-  printf("Applications started.\n");
-
-#if 0
-    stats_display();
-#endif
-
-  /* Block forever. */
-  sys_sem_wait(&sem);
-}
 /*-----------------------------------------------------------------------------------*/
 int
 main(int argc, char **argv)
 {
+  sys_sem_t sem;
   int ch;
   char ip_str[IPADDR_STRLEN_MAX] = {0};
 
@@ -374,8 +323,32 @@ main(int argc, char **argv)
 #endif /* PERF */
 
   printf("System initialized.\n");
-    
-  sys_thread_new("main_thread", main_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+
+  init_netifs();
+  printf("Network interfaces initialized.\n");
+
+  lwip_init_tcp_isn(sys_now(), (u8_t*)&netif);
+  
+  if(sys_sem_new(&sem, 0) != ERR_OK) {
+    LWIP_ASSERT("Failed to create semaphore", 0);
+  }
+  tcpip_init(tcpip_init_done, &sem);
+  sys_sem_wait(&sem);
+  printf("TCP/IP initialized.\n");
+
+#if LWIP_SOCKET
+  if (ping_flag) {
+    ping_init(&ping_addr);
+  }
+#endif
+
+  printf("Applications started.\n");
+
+#if 0
+    stats_display();
+#endif
+
+  /* Block forever. */
   pause();
   return 0;
 }
