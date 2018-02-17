@@ -96,10 +96,12 @@ mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t st
             1);
   }
 }
+#endif /* LWIP_TCP */
 
 void
 mqtt_example_init(void)
 {
+#if LWIP_TCP
   mqtt_client = mqtt_client_new();
 
   mqtt_set_inpub_callback(mqtt_client,
@@ -113,6 +115,5 @@ mqtt_example_init(void)
           &mqtt_ip, MQTT_PORT,
           mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
           &mqtt_client_info);
-}
-
 #endif /* LWIP_TCP */
+}
