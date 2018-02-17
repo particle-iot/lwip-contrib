@@ -103,13 +103,13 @@
 #include "lwip/apps/snmp_snmpv2_framework.h"
 #include "lwip/apps/snmp_snmpv2_usm.h"
 #include "lwip/apps/tftp_server.h"
-#include "lwip/apps/mqtt.h"
 #include "addons/tcp_isn/tcp_isn.h"
+
+#include "examples/mqtt/mqtt_example.h"
 
 #if LWIP_RAW
 #include "lwip/icmp.h"
 #include "lwip/raw.h"
-#include "lwip/apps/mqtt_priv.h"
 #endif
 
 #if LWIP_SNMP
@@ -133,26 +133,6 @@ struct netif netif;
 /* ping out destination cmd option */
 static unsigned char ping_flag;
 static ip_addr_t ping_addr;
-
-#if LWIP_MQTT
-ip_addr_t mqtt_ip;
-
-mqtt_client_t* mqtt_client;
-const struct mqtt_connect_client_info_t mqtt_client_info =
-{
-  "test",
-  NULL, /* user */
-  NULL, /* pass */
-  100,  /* keep alive */
-  NULL, /* will_topic */
-  NULL, /* will_msg */
-  0,    /* will_qos */
-  0     /* will_retain */
-#if LWIP_ALTCP && LWIP_ALTCP_TLS
-  , NULL
-#endif
-};
-#endif
 
 /* nonstatic debug cmd option, exported in lwipopts.h */
 unsigned char debug_flags;
@@ -484,57 +464,6 @@ netif_status_callback(struct netif *nif)
 }
 #endif /* LWIP_NETIF_STATUS_CALLBACK */
 
-#if LWIP_MQTT
-
-static void 
-mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
-{
-  const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  LWIP_UNUSED_ARG(data);
-  
-  printf("MQTT client \"%s\" data cb: len %d, flags %d\n", client_info->client_id,
-          (int)len, (int)flags);
-}
-
-static void
-mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
-{
-  const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  
-  printf("MQTT client \"%s\" publish cb: topic %s, len %d\n", client_info->client_id,
-          topic, (int)tot_len);
-}
-
-static void
-mqtt_request_cb(void *arg, err_t err)
-{
-  const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  
-  printf("MQTT client \"%s\" request cb: err %d\n", client_info->client_id, (int)err);
-}
-
-static void
-mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t status)
-{
-  const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  LWIP_UNUSED_ARG(client);
-
-  printf("MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, (int)status);
-  
-  if (status == MQTT_CONNECT_ACCEPTED) {
-    mqtt_sub_unsub(client,
-            "topic_qos1", 1,
-            mqtt_request_cb, LWIP_CONST_CAST(void*, client_info),
-            1);
-    mqtt_sub_unsub(client,
-            "topic_qos0", 0,
-            mqtt_request_cb, LWIP_CONST_CAST(void*, client_info),
-            1);
-  }
-}
-
-#endif
-
 static void
 init_netifs(void)
 {
@@ -636,20 +565,9 @@ init_netifs(void)
 #endif
   
 #if LWIP_MQTT
-  mqtt_client = mqtt_client_new();
-
-  mqtt_set_inpub_callback(mqtt_client,
-          mqtt_incoming_publish_cb,
-          mqtt_incoming_data_cb,
-          LWIP_CONST_CAST(void*, &mqtt_client_info));
-
-  IP_SET_TYPE_VAL(mqtt_ip, IPADDR_TYPE_V4);
-  ip4_addr_set_u32(ip_2_ip4(&mqtt_ip), IPADDR_LOOPBACK);
-  mqtt_client_connect(mqtt_client,
-          &mqtt_ip, MQTT_PORT,
-          mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
-          &mqtt_client_info);
+  mqtt_example_init();
 #endif
+  
   /*  sys_timeout(5000, tcp_debug_timeout, NULL);*/
 }
 
