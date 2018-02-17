@@ -83,7 +83,7 @@ static const struct tftp_context tftp = {
 };
 
 void
-tfp_example_init(void)
+tftp_example_init(void)
 {
   tftp_init(&tftp);
 }

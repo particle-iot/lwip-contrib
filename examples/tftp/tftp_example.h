@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-void tfp_example_init(void);
+void tftp_example_init(void);
 
 #ifdef __cplusplus
 }
