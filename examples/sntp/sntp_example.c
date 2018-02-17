@@ -27,9 +27,24 @@
  *
  */
 
+#include <time.h>
+
 #include "lwip/apps/sntp.h"
 #include "sntp_example.h"
 #include "lwip/netif.h"
+
+void
+sntp_set_system_time(u32_t sec)
+{
+  char buf[32];
+  struct tm current_time_val;
+  time_t current_time = (time_t)sec;
+
+  localtime_r(&current_time, &current_time_val);
+  
+  strftime(buf, sizeof(buf), "%d.%m.%Y %H:%M:%S", &current_time_val);
+  printf("SNTP time: %s\n", buf);
+}
 
 void
 sntp_example_init(void)

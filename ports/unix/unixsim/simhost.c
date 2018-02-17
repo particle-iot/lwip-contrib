@@ -33,7 +33,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <getopt.h>
-#include <time.h>
 #include <string.h>
 
 #include "lwip/opt.h"
@@ -110,7 +109,6 @@
 #if LWIP_RAW
 #include "lwip/icmp.h"
 #include "lwip/raw.h"
-#include "examples/sntp/sntp_example.h"
 #endif
 
 #if LWIP_SNMP
@@ -182,19 +180,6 @@ tcp_debug_timeout(void *data)
   sys_timeout(5000, tcp_debug_timeout, NULL);
 }
 #endif
-
-void
-sntp_set_system_time(u32_t sec)
-{
-  char buf[32];
-  struct tm current_time_val;
-  time_t current_time = (time_t)sec;
-
-  localtime_r(&current_time, &current_time_val);
-  
-  strftime(buf, sizeof(buf), "%d.%m.%Y %H:%M:%S", &current_time_val);
-  printf("SNTP time: %s\n", buf);
-}
 
 #if LWIP_MDNS_RESPONDER
 static void
