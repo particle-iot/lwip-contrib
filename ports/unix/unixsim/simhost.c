@@ -215,6 +215,25 @@ tcpip_init_done(void *arg)
 
   init_netifs();
 
+#if LWIP_TCP
+  netio_init();
+#endif
+#if LWIP_TCP && LWIP_NETCONN
+  tcpecho_init();
+  shell_init();
+  httpd_init();
+#endif
+#if LWIP_UDP && LWIP_NETCONN  
+  udpecho_init();
+#endif  
+#if LWIP_SOCKET
+  chargen_init();
+#endif
+  
+#if LWIP_MQTT
+  mqtt_example_init();
+#endif
+
 #if LWIP_IPV4
   netbiosns_set_name("simhost");
   netbiosns_init();
@@ -498,25 +517,6 @@ init_netifs(void)
 #if 0
   /* Only used for testing purposes: */
   netif_add(&ipaddr, &netmask, &gw, NULL, pcapif_init, tcpip_input);
-#endif
-
-#if LWIP_TCP
-  netio_init();
-#endif
-#if LWIP_TCP && LWIP_NETCONN
-  tcpecho_init();
-  shell_init();
-  httpd_init();
-#endif
-#if LWIP_UDP && LWIP_NETCONN  
-  udpecho_init();
-#endif  
-#if LWIP_SOCKET
-  chargen_init();
-#endif
-  
-#if LWIP_MQTT
-  mqtt_example_init();
 #endif
   
   /*  sys_timeout(5000, tcp_debug_timeout, NULL);*/

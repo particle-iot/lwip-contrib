@@ -27,6 +27,8 @@
  *
  */
 
+#include <stdio.h>
+
 #include "lwip/apps/tftp_server.h"
 #include "tftp_example.h"
 
