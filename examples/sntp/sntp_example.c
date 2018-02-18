@@ -34,6 +34,7 @@
 #include "sntp_example.h"
 #include "lwip/netif.h"
 
+#ifdef SNTP_SET_SYSTEM_TIME
 void
 sntp_set_system_time(u32_t sec)
 {
@@ -46,10 +47,12 @@ sntp_set_system_time(u32_t sec)
   strftime(buf, sizeof(buf), "%d.%m.%Y %H:%M:%S", &current_time_val);
   printf("SNTP time: %s\n", buf);
 }
+#endif
 
 void
 sntp_example_init(void)
 {
+#ifdef SNTP_SET_SYSTEM_TIME
   sntp_setoperatingmode(SNTP_OPMODE_POLL);
 #if LWIP_DHCP
   sntp_servermode_dhcp(1); /* get SNTP server via DHCP */
@@ -59,4 +62,5 @@ sntp_example_init(void)
 #endif /* LWIP_IPV4 */
 #endif /* LWIP_DHCP */
   sntp_init();
+#endif /* SNTP_SET_SYSTEM_TIME */
 }
