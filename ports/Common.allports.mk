@@ -29,8 +29,8 @@
 # Author: Adam Dunkels <adam@sics.se>
 #
 
-CC=gcc
-CC=clang
+#CC=gcc
+#CC=clang
 CCDEP?=$(CC)
 
 CFLAGS+=-g -Wall -DLWIP_DEBUG -pedantic -Werror \
