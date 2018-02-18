@@ -194,15 +194,15 @@ pppos_example_init(void)
 #endif
   if(!ppp_sio)
   {
-      perror("Error opening device: ");
-      exit(1);
+      perror("PPPOS example: Error opening device");
+      return;
   }
 
   ppp = pppos_create(&pppos_netif, ppp_output_cb, ppp_link_status_cb, NULL);
   if (!ppp)
   {
-      printf("Could not create PPP control interface");
-      exit(1);
+      printf("PPPOS example: Could not create PPP control interface");
+      return;
   }
 
 #ifdef LWIP_PPP_CHAP_TEST
