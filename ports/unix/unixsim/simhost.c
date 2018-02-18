@@ -128,6 +128,8 @@ static struct option longopts[] = {
 };
 #define NUM_OPTS ((sizeof(longopts) / sizeof(struct option)) - 1)
 
+static void init_netifs(void);
+
 static void
 usage(void)
 {
@@ -144,6 +146,9 @@ tcpip_init_done(void *arg)
 {
   sys_sem_t *sem;
   sem = (sys_sem_t *)arg;
+
+  init_netifs();
+  printf("Network interfaces initialized.\n");
 
 #if LWIP_TCP
   netio_init();
@@ -322,9 +327,6 @@ main(int argc, char **argv)
 #endif /* PERF */
 
   printf("System initialized.\n");
-
-  init_netifs();
-  printf("Network interfaces initialized.\n");
 
   lwip_init_tcp_isn(sys_now(), (u8_t*)&netif);
   
