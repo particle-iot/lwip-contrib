@@ -238,7 +238,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_DHCP_AUTOIP_COOP_TRIES  3
 
 /* ---------- SNTP options --------- */
-extern void sntp_set_system_time(u32_t sec);
+#include "examples/sntp/sntp_example.h"
 #define SNTP_SET_SYSTEM_TIME(s) sntp_set_system_time(s)
 
 /* ---------- MQTT options ---------- */
