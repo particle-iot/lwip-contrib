@@ -47,6 +47,18 @@
     <Filter Include="Source Files\examples\httpd\post_example">
       <UniqueIdentifier>{672a49fd-94ff-4126-8de3-e96c9c32dfb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\mdns">
+      <UniqueIdentifier>{e5276e3f-3e2a-4376-aee3-85aafd12c77b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\examples\tftp">
+      <UniqueIdentifier>{f6d95ce0-df4f-4988-8654-624468dd4ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\examples\sntp">
+      <UniqueIdentifier>{a37e5539-232e-4d91-9c10-3d7a851b8c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\examples\ppp">
+      <UniqueIdentifier>{a2a65260-5055-4a0d-bd0b-4a3ca3560918}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test.c">
@@ -112,6 +124,21 @@
     <ClCompile Include="..\..\..\examples\httpd\post_example\post_example.c">
       <Filter>Source Files\examples\httpd\post_example</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\examples\mdns\mdns_example.c">
+      <Filter>Source Files\examples\mdns</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\tftp\tftp_example.c">
+      <Filter>Source Files\examples\tftp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\snmp\snmp_example.c">
+      <Filter>Source Files\examples\snmp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\sntp\sntp_example.c">
+      <Filter>Source Files\examples\sntp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\ppp\pppos_example.c">
+      <Filter>Source Files\examples\ppp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\apps\chargen\chargen.h">
@@ -170,6 +197,21 @@
     </ClInclude>
     <ClInclude Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.h">
       <Filter>Source Files\examples\httpd\genfiles_example</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\mdns\mdns_example.h">
+      <Filter>Source Files\examples\mdns</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\tftp\tftp_example.h">
+      <Filter>Source Files\examples\tftp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\snmp\snmp_example.h">
+      <Filter>Source Files\examples\snmp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\sntp\sntp_example.h">
+      <Filter>Source Files\examples\sntp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\ppp\pppos_example.h">
+      <Filter>Source Files\examples\ppp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

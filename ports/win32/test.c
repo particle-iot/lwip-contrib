@@ -62,10 +62,7 @@
 /* applications includes */
 #include "lwip/apps/lwiperf.h"
 #include "lwip/apps/netbiosns.h"
-#include "lwip/apps/sntp.h"
 #include "lwip/apps/httpd.h"
-#include "lwip/apps/mdns.h"
-#include "lwip/apps/snmp.h"
 #include "apps/httpserver/httpserver-netconn.h"
 #include "apps/netio/netio.h"
 #include "apps/ping/ping.h"
@@ -77,7 +74,10 @@
 #include "apps/tcpecho_raw/tcpecho_raw.h"
 #include "apps/socket_examples/socket_examples.h"
 
-#include "examples/snmp/snmp_v3/snmpv3_dummy.h"
+#include "examples/mdns/mdns_example.h"
+#include "examples/snmp/snmp_example.h"
+#include "examples/tftp/tftp_example.h"
+#include "examples/sntp/sntp_example.h"
 
 #include "examples/httpd/cgi_example/cgi_example.h"
 #include "examples/httpd/fs_example/fs_example.h"
@@ -272,9 +272,6 @@ status_callback(struct netif *state_netif)
     printf("status_callback==UP, local interface IP is %s\n", ip4addr_ntoa(netif_ip4_addr(state_netif)));
 #else
     printf("status_callback==UP\n");
-#endif
-#if LWIP_MDNS_RESPONDER && !LWIP_NETIF_EXT_STATUS_CALLBACK
-    mdns_resp_netif_settings_changed(state_netif);
 #endif
   } else {
     printf("status_callback==DOWN\n");
@@ -512,15 +509,6 @@ lwiperf_report(void *arg, enum lwiperf_report_type report_type,
 }
 #endif /* LWIP_LWIPERF_APP */
 
-#if LWIP_MDNS_RESPONDER
-static void srv_txt(struct mdns_service *service, void *txt_userdata)
-{
-   err_t res = mdns_resp_add_service_txtitem(service, "path=/", 6);
-   LWIP_ERROR("mdns add service txt failed\n", (res == ERR_OK), return);
-   LWIP_UNUSED_ARG(txt_userdata);
-}
-#endif
-
 /* This function initializes applications */
 static void
 apps_init(void)
@@ -566,17 +554,6 @@ apps_init(void)
 #endif /* LWIP_HTTPD_APP_NETCONN */
 #endif /* LWIP_HTTPD_APP && LWIP_TCP */
 
-#if LWIP_MDNS_RESPONDER
-  mdns_resp_init();
-#if LWIP_NETIF_HOSTNAME
-  mdns_resp_add_netif(netif_default, netif_default->hostname, 3600);
-#else
-  mdns_resp_add_netif(netif_default, "lwip", 3600);
-#endif
-  mdns_resp_add_service(netif_default, "lwipweb", "_http", DNSSD_PROTO_TCP, HTTPD_SERVER_PORT, 3600, srv_txt, NULL);
-  mdns_resp_announce(netif_default);
-#endif
-
 #if LWIP_NETIO_APP && LWIP_TCP
   netio_init();
 #endif /* LWIP_NETIO_APP && LWIP_TCP */
@@ -584,10 +561,6 @@ apps_init(void)
 #if LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP
   rtp_init();
 #endif /* LWIP_RTP_APP && LWIP_SOCKET && LWIP_IGMP */
-
-#if LWIP_SNTP_APP
-  sntp_init();
-#endif /* LWIP_SNTP_APP */
 
 #if LWIP_SHELL_APP && LWIP_NETCONN
   shell_init();
@@ -608,12 +581,12 @@ apps_init(void)
 #if LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET
   socket_examples_init();
 #endif /* LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET */
-#if LWIP_SNMP && LWIP_UDP
-#if LWIP_SNMP_V3
-  snmpv3_dummy_init();
-#endif
-  snmp_init();
-#endif /* LWIP_SNMP && LWIP_UDP */
+
+  mdns_example_init();
+  snmp_example_init();
+  sntp_example_init();
+  tftp_example_init();
+
 #ifdef LWIP_APP_INIT
   LWIP_APP_INIT();
 #endif

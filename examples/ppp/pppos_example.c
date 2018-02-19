@@ -37,7 +37,6 @@
 #include "netif/ppp/pppos.h"
 #include "lwip/sio.h"
 #define PPP_PTY_TEST 1
-#include <termios.h>
 #endif
 
 #include "pppos_example.h"

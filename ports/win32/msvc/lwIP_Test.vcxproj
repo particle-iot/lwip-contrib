@@ -135,8 +135,13 @@
     <ClCompile Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\post_example\post_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\ssi_example\ssi_example.c" />
+    <ClCompile Include="..\..\..\examples\mdns\mdns_example.c" />
+    <ClCompile Include="..\..\..\examples\ppp\pppos_example.c" />
+    <ClCompile Include="..\..\..\examples\snmp\snmp_example.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_private_mib\lwip_prvmib.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_v3\snmpv3_dummy.c" />
+    <ClCompile Include="..\..\..\examples\sntp\sntp_example.c" />
+    <ClCompile Include="..\..\..\examples\tftp\tftp_example.c" />
     <ClCompile Include="..\test.c">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -174,8 +179,13 @@
     <ClInclude Include="..\..\..\examples\httpd\fs_example\fs_example.h" />
     <ClInclude Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.h" />
     <ClInclude Include="..\..\..\examples\httpd\ssi_example\ssi_example.h" />
+    <ClInclude Include="..\..\..\examples\mdns\mdns_example.h" />
+    <ClInclude Include="..\..\..\examples\ppp\pppos_example.h" />
+    <ClInclude Include="..\..\..\examples\snmp\snmp_example.h" />
     <ClInclude Include="..\..\..\examples\snmp\snmp_private_mib\private_mib.h" />
     <ClInclude Include="..\..\..\examples\snmp\snmp_v3\snmpv3_dummy.h" />
+    <ClInclude Include="..\..\..\examples\sntp\sntp_example.h" />
+    <ClInclude Include="..\..\..\examples\tftp\tftp_example.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\addons\ipv6_static_routing\README" />

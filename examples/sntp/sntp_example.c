@@ -41,7 +41,11 @@ sntp_set_system_time(u32_t sec)
   struct tm current_time_val;
   time_t current_time = (time_t)sec;
 
+#ifdef _MSC_VER
+  localtime_s(&current_time_val, &current_time);
+#else
   localtime_r(&current_time, &current_time_val);
+#endif
   
   strftime(buf, sizeof(buf), "%d.%m.%Y %H:%M:%S", &current_time_val);
   printf("SNTP time: %s\n", buf);

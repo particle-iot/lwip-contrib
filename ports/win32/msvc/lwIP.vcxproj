@@ -231,9 +231,7 @@
     <None Include="..\..\..\..\lwip\doc\FILES" />
     <None Include="..\..\..\..\lwip\doc\mdns.txt" />
     <None Include="..\..\..\..\lwip\doc\ppp.txt" />
-    <None Include="..\..\..\..\lwip\doc\rawapi.txt" />
     <None Include="..\..\..\..\lwip\doc\savannah.txt" />
-    <None Include="..\..\..\..\lwip\doc\sys_arch.txt" />
     <None Include="..\..\..\..\lwip\FILES" />
     <None Include="..\..\..\..\lwip\README" />
     <None Include="..\..\..\..\lwip\UPGRADING" />

@@ -128,13 +128,7 @@
     <None Include="..\..\..\..\lwip\doc\ppp.txt">
       <Filter>doc</Filter>
     </None>
-    <None Include="..\..\..\..\lwip\doc\rawapi.txt">
-      <Filter>doc</Filter>
-    </None>
     <None Include="..\..\..\..\lwip\doc\savannah.txt">
-      <Filter>doc</Filter>
-    </None>
-    <None Include="..\..\..\..\lwip\doc\sys_arch.txt">
       <Filter>doc</Filter>
     </None>
     <None Include="..\..\..\..\lwip\doc\doxygen\generate.bat">
