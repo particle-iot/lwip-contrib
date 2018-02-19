@@ -137,6 +137,7 @@
     <ClCompile Include="..\..\..\examples\httpd\ssi_example\ssi_example.c" />
     <ClCompile Include="..\..\..\examples\lwiperf\lwiperf_example.c" />
     <ClCompile Include="..\..\..\examples\mdns\mdns_example.c" />
+    <ClCompile Include="..\..\..\examples\mqtt\mqtt_example.c" />
     <ClCompile Include="..\..\..\examples\ppp\pppos_example.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_example.c" />
     <ClCompile Include="..\..\..\examples\snmp\snmp_private_mib\lwip_prvmib.c" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\..\..\examples\httpd\ssi_example\ssi_example.h" />
     <ClInclude Include="..\..\..\examples\lwiperf\lwiperf_example.h" />
     <ClInclude Include="..\..\..\examples\mdns\mdns_example.h" />
+    <ClInclude Include="..\..\..\examples\mqtt\mqtt_example.h" />
     <ClInclude Include="..\..\..\examples\ppp\pppos_example.h" />
     <ClInclude Include="..\..\..\examples\snmp\snmp_example.h" />
     <ClInclude Include="..\..\..\examples\snmp\snmp_private_mib\private_mib.h" />

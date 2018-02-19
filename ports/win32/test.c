@@ -78,6 +78,7 @@
 #include "examples/snmp/snmp_example.h"
 #include "examples/tftp/tftp_example.h"
 #include "examples/sntp/sntp_example.h"
+#include "examples/mqtt/mqtt_example.h"
 
 #include "examples/httpd/cgi_example/cgi_example.h"
 #include "examples/httpd/fs_example/fs_example.h"
@@ -572,6 +573,9 @@ apps_init(void)
   tftp_example_init();
 #if LWIP_LWIPERF_APP
   lwiperf_example_init();
+#endif
+#if LWIP_MQTT_APP
+  mqtt_example_init();
 #endif
 
 #ifdef LWIP_APP_INIT

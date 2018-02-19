@@ -62,6 +62,9 @@
     <Filter Include="Source Files\examples\lwiperf">
       <UniqueIdentifier>{aa359e5e-131e-4f20-9e5d-416f9ae76abd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\mqtt">
+      <UniqueIdentifier>{bd6f1fcc-c88f-4b96-a267-401f6bf9898b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test.c">
@@ -145,6 +148,9 @@
     <ClCompile Include="..\..\..\examples\lwiperf\lwiperf_example.c">
       <Filter>Source Files\examples\lwiperf</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\examples\mqtt\mqtt_example.c">
+      <Filter>Source Files\examples\mqtt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\apps\chargen\chargen.h">
@@ -221,6 +227,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\examples\lwiperf\lwiperf_example.h">
       <Filter>Source Files\examples\lwiperf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\mqtt\mqtt_example.h">
+      <Filter>Source Files\examples\mqtt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
