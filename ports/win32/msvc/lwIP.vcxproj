@@ -311,7 +311,6 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\bridgeif.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\bridgeif_fdb.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ethernet.c" />
-    <ClCompile Include="..\..\..\..\lwip\src\netif\ethernetif.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\slipif.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\auth.c" />

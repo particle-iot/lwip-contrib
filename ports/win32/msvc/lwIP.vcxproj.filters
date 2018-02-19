@@ -274,9 +274,6 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\ethernet.c">
       <Filter>src\netif</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\lwip\src\netif\ethernetif.c">
-      <Filter>src\netif</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6.c">
       <Filter>src\netif</Filter>
     </ClCompile>
