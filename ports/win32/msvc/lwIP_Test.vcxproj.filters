@@ -59,6 +59,9 @@
     <Filter Include="Source Files\examples\ppp">
       <UniqueIdentifier>{a2a65260-5055-4a0d-bd0b-4a3ca3560918}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\examples\lwiperf">
+      <UniqueIdentifier>{aa359e5e-131e-4f20-9e5d-416f9ae76abd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\test.c">
@@ -139,6 +142,9 @@
     <ClCompile Include="..\..\..\examples\ppp\pppos_example.c">
       <Filter>Source Files\examples\ppp</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\examples\lwiperf\lwiperf_example.c">
+      <Filter>Source Files\examples\lwiperf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\apps\chargen\chargen.h">
@@ -212,6 +218,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\examples\ppp\pppos_example.h">
       <Filter>Source Files\examples\ppp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\examples\lwiperf\lwiperf_example.h">
+      <Filter>Source Files\examples\lwiperf</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

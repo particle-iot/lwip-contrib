@@ -60,7 +60,6 @@
 #include "netif/ethernet.h"
 
 /* applications includes */
-#include "lwip/apps/lwiperf.h"
 #include "lwip/apps/netbiosns.h"
 #include "lwip/apps/httpd.h"
 #include "apps/httpserver/httpserver-netconn.h"
@@ -74,6 +73,7 @@
 #include "apps/tcpecho_raw/tcpecho_raw.h"
 #include "apps/socket_examples/socket_examples.h"
 
+#include "examples/lwiperf/lwiperf_example.h"
 #include "examples/mdns/mdns_example.h"
 #include "examples/snmp/snmp_example.h"
 #include "examples/tftp/tftp_example.h"
@@ -494,21 +494,6 @@ dns_dorequest(void *arg)
 }
 #endif /* LWIP_DNS_APP && LWIP_DNS */
 
-#if LWIP_LWIPERF_APP
-static void
-lwiperf_report(void *arg, enum lwiperf_report_type report_type,
-  const ip_addr_t* local_addr, u16_t local_port, const ip_addr_t* remote_addr, u16_t remote_port,
-  u32_t bytes_transferred, u32_t ms_duration, u32_t bandwidth_kbitpsec)
-{
-  LWIP_UNUSED_ARG(arg);
-  LWIP_UNUSED_ARG(local_addr);
-  LWIP_UNUSED_ARG(local_port);
-
-  printf("IPERF report: type=%d, remote: %s:%d, total bytes: %lu, duration in ms: %lu, kbits/s: %lu\n",
-    (int)report_type, ipaddr_ntoa(remote_addr), (int)remote_port, bytes_transferred, ms_duration, bandwidth_kbitpsec);
-}
-#endif /* LWIP_LWIPERF_APP */
-
 /* This function initializes applications */
 static void
 apps_init(void)
@@ -575,17 +560,19 @@ apps_init(void)
 #if LWIP_UDPECHO_APP && LWIP_NETCONN
   udpecho_init();
 #endif /* LWIP_UDPECHO_APP && LWIP_NETCONN */
-#if LWIP_LWIPERF_APP
-  lwiperf_start_tcp_server_default(lwiperf_report, NULL);
-#endif
 #if LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET
   socket_examples_init();
 #endif /* LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET */
 
   mdns_example_init();
   snmp_example_init();
+#if LWIP_SNTP_APP
   sntp_example_init();
+#endif
   tftp_example_init();
+#if LWIP_LWIPERF_APP
+  lwiperf_example_init();
+#endif
 
 #ifdef LWIP_APP_INIT
   LWIP_APP_INIT();
