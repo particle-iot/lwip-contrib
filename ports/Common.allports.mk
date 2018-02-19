@@ -39,9 +39,8 @@ CFLAGS+=-g -DLWIP_DEBUG -Wall -pedantic -Werror \
 	-Wc++-compat -Wwrite-strings -Wold-style-definition -Wcast-align \
 	-Wmissing-prototypes -Wredundant-decls -Wnested-externs \
 	-Wunreachable-code -Wuninitialized -Wmissing-prototypes \
-	-Wredundant-decls -Waggregate-return -Wlogical-not-parentheses \
-	-Wmissing-include-dirs
-#	-Wconversion -Wsign-compare
+	-Wredundant-decls -Waggregate-return -Wlogical-not-parentheses
+#	-Wconversion -Wsign-compare -Wmissing-include-dirs
 
 ifeq (,$(findstring clang,$(CC)))
 CFLAGS+= -Wlogical-op -Wc90-c99-compat -Wtrampolines
