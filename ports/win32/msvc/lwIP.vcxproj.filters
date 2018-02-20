@@ -496,6 +496,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\apps\http\http_client.c">
       <Filter>src\apps\http</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\core\altcp_alloc.c">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\lwiperf.h">

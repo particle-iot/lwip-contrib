@@ -274,6 +274,7 @@
     <ClCompile Include="..\..\..\..\lwip\src\apps\sntp\sntp.c" />
     <ClCompile Include="..\..\..\..\lwip\src\apps\tftp\tftp_server.c" />
     <ClCompile Include="..\..\..\..\lwip\src\core\altcp.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\core\altcp_alloc.c" />
     <ClCompile Include="..\..\..\..\lwip\src\core\altcp_tcp.c" />
     <ClCompile Include="..\..\..\..\lwip\src\core\def.c" />
     <ClCompile Include="..\..\..\..\lwip\src\core\dns.c" />
