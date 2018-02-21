@@ -11,8 +11,8 @@
 
 struct timezone 
 {
-  int  tz_minuteswest; /* minutes W of Greenwich */
-  int  tz_dsttime;     /* type of dst correction */
+  int tz_minuteswest; /* minutes W of Greenwich */
+  int tz_dsttime;     /* type of dst correction */
 };
  
 int gettimeofday(struct timeval *tv, struct timezone *tz)
@@ -21,8 +21,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
   unsigned __int64 tmpres = 0;
   static int tzflag;
  
-  if (NULL != tv)
-  {
+  if (NULL != tv) {
     GetSystemTimeAsFileTime(&ft);
  
     tmpres |= ft.dwHighDateTime;
@@ -36,10 +35,8 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
     tv->tv_usec = (long)(tmpres % 1000000UL);
   }
  
-  if (NULL != tz)
-  {
-    if (!tzflag)
-    {
+  if (NULL != tz) {
+    if (!tzflag) {
       _tzset();
       tzflag++;
     }
@@ -53,12 +50,17 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 struct tm *
 localtime_r(const time_t *timer, struct tm *result)
 {
-   struct tm *local_result;
-   local_result = localtime (timer);
+  struct tm *local_result;
 
-   if (local_result == NULL || result == NULL)
-     return NULL;
+  if (result == NULL) {
+    return NULL;
+  }
 
-   memcpy(result, local_result, sizeof(*result));
-   return result;
+  local_result = localtime (timer);
+  if (local_result == NULL) {
+    return NULL;
+  }
+
+  memcpy(result, local_result, sizeof(*result));
+  return result;
 }
