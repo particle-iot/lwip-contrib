@@ -502,6 +502,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\apps\http\altcp_proxyconnect.c">
       <Filter>src\apps\http</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6_ble.c">
+      <Filter>src\netif</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\lwiperf.h">
@@ -1010,6 +1013,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\dhcp6.h">
       <Filter>src\include\lwip\prot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble.h">
+      <Filter>src\include\netif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble_opts.h">
+      <Filter>src\include\netif</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
