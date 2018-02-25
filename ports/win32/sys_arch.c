@@ -752,3 +752,20 @@ lwip_win32_keypressed(char *key)
   }
   return 0;
 }
+
+#include <stdarg.h>
+
+/* This is an example implementation for LWIP_PLATFORM_DIAG:
+ * format a string and pass it to your output function.
+ */
+void
+lwip_win32_platform_diag(const char *format, ...)
+{
+  va_list ap;
+  /* get the varargs */
+  va_start(ap, format);
+  /* print via varargs; to use another output function, you could use
+     vsnprintf here */
+  vprintf(format, ap);
+  va_end(ap);
+}

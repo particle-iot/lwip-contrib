@@ -83,6 +83,13 @@ typedef int sys_prot_t;
 #define strdup   _strdup
 #endif
 
+/* Define an example for LWIP_PLATFORM_DIAG: since this uses varargs and the old
+ * C standard lwIP targets does not support this in macros, we have extra brackets
+ * around the arguments, which are left out in the following macro definition:
+ */
+void lwip_win32_platform_diag(const char *format, ...);
+#define LWIP_PLATFORM_DIAG(x) lwip_win32_platform_diag x
+
 #ifndef LWIP_NORAND
 extern unsigned int sys_win_rand(void);
 #define LWIP_RAND() (sys_win_rand())
