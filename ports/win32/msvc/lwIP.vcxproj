@@ -378,6 +378,7 @@
     <ClCompile Include="..\..\..\..\lwip\src\apps\snmp\snmpv3_mbedtls.c">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\..\mbedtls\include;..\..\..\..\lwip\src\include;..\..\..\..\lwip\src\include\ipv4;..\..\..\..\lwip\src\include\ipv6;..\include;..;..\..\..\apps\snmp_private_mib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\netif\zepif.c" />
     <ClCompile Include="..\sio.c" />
     <ClCompile Include="..\sys_arch.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug unittests|Win32'">true</ExcludedFromBuild>
@@ -481,6 +482,7 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\bridgeif_opts.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\etharp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ethernet.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\ieee802154.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble_opts.h" />
@@ -548,6 +550,7 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\nd6.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\tcp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\udp.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\zepif.h" />
     <ClInclude Include="..\include\arch\bpstruct.h" />
     <ClInclude Include="..\include\arch\cc.h" />
     <ClInclude Include="..\include\arch\epstruct.h" />

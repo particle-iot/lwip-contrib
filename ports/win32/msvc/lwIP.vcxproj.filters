@@ -505,6 +505,9 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6_ble.c">
       <Filter>src\netif</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\lwip\src\netif\zepif.c">
+      <Filter>src\netif</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\apps\lwiperf.h">
@@ -1018,6 +1021,12 @@
       <Filter>src\include\netif</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble_opts.h">
+      <Filter>src\include\netif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\ieee802154.h">
+      <Filter>src\include\netif</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\zepif.h">
       <Filter>src\include\netif</Filter>
     </ClInclude>
   </ItemGroup>
