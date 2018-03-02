@@ -776,6 +776,9 @@ pcapif_low_level_init(struct netif *netif)
     netif_set_link_up(netif);
   }
   sys_timeout(PCAPIF_LINKCHECK_INTERVAL_MS, pcapif_check_linkstate, netif);
+#else /* PCAPIF_HANDLE_LINKSTATE */
+  /* just set the link up so that lwIP can transmit */
+  netif_set_link_up(netif);
 #endif /* PCAPIF_HANDLE_LINKSTATE */
 
 #if PCAPIF_RX_USE_THREAD
