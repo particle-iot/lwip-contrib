@@ -56,7 +56,7 @@ include $(TESTDIR)/Filelists.mk
 TESTOBJS=$(notdir $(TESTFILES:.c=.o))
 
 clean:
-	@rm -f *.o $(LWIPLIBCOMMON) $(APPLIB) lwip_unittests *.s .depend* *.core core
+	@rm -f *.o $(LWIPLIBCOMMON) $(APPLIB) lwip_unittests *.s .depend* *.core core lwip_unittests.xml
 
 depend dep: .depend
 
