@@ -32,7 +32,18 @@
 
 #if LWIP_TCP
 
-static ip_addr_t mqtt_ip;
+/** Define this to a compile-time IP address initialization
+ * to connect anything else than IPv4 loopback
+ */
+#ifndef LWIP_MQTT_EXAMPLE_IPADDR_INIT
+#if LWIP_IPV4
+#define LWIP_MQTT_EXAMPLE_IPADDR_INIT = IPADDR4_INIT(IPADDR_LOOPBACK)
+#else
+#define LWIP_MQTT_EXAMPLE_IPADDR_INIT
+#endif
+#endif
+
+static ip_addr_t mqtt_ip LWIP_MQTT_EXAMPLE_IPADDR_INIT;
 static mqtt_client_t* mqtt_client;
 
 static const struct mqtt_connect_client_info_t mqtt_client_info =
@@ -55,7 +66,7 @@ mqtt_incoming_data_cb(void *arg, const u8_t *data, u16_t len, u8_t flags)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
   LWIP_UNUSED_ARG(data);
-  
+
   printf("MQTT client \"%s\" data cb: len %d, flags %d\n", client_info->client_id,
           (int)len, (int)flags);
 }
@@ -64,7 +75,7 @@ static void
 mqtt_incoming_publish_cb(void *arg, const char *topic, u32_t tot_len)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  
+
   printf("MQTT client \"%s\" publish cb: topic %s, len %d\n", client_info->client_id,
           topic, (int)tot_len);
 }
@@ -73,7 +84,7 @@ static void
 mqtt_request_cb(void *arg, err_t err)
 {
   const struct mqtt_connect_client_info_t* client_info = (const struct mqtt_connect_client_info_t*)arg;
-  
+
   printf("MQTT client \"%s\" request cb: err %d\n", client_info->client_id, (int)err);
 }
 
@@ -84,7 +95,7 @@ mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection_status_t st
   LWIP_UNUSED_ARG(client);
 
   printf("MQTT client \"%s\" connection cb: status %d\n", client_info->client_id, (int)status);
-  
+
   if (status == MQTT_CONNECT_ACCEPTED) {
     mqtt_sub_unsub(client,
             "topic_qos1", 1,
@@ -109,8 +120,6 @@ mqtt_example_init(void)
           mqtt_incoming_data_cb,
           LWIP_CONST_CAST(void*, &mqtt_client_info));
 
-  IP_SET_TYPE_VAL(mqtt_ip, IPADDR_TYPE_V4);
-  ip4_addr_set_u32(ip_2_ip4(&mqtt_ip), IPADDR_LOOPBACK);
   mqtt_client_connect(mqtt_client,
           &mqtt_ip, MQTT_PORT,
           mqtt_connection_cb, LWIP_CONST_CAST(void*, &mqtt_client_info),
