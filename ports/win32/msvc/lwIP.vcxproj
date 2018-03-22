@@ -313,6 +313,7 @@
     <ClCompile Include="..\..\..\..\lwip\src\netif\ethernet.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6_ble.c" />
+    <ClCompile Include="..\..\..\..\lwip\src\netif\lowpan6_common.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\slipif.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\auth.c" />
     <ClCompile Include="..\..\..\..\lwip\src\netif\ppp\ccp.c" />
@@ -485,7 +486,7 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ieee802154.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble.h" />
-    <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_ble_opts.h" />
+    <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_common.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\lowpan6_opts.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\slipif.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\ppp\ccp.h" />
