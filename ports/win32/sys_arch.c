@@ -92,7 +92,7 @@ sys_win_rand(void)
 static void
 sys_win_rand_init(void)
 {
-  if(!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, 0)) {
+  if (!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, 0)) {
     DWORD err = GetLastError();
     LWIP_PLATFORM_DIAG(("CryptAcquireContext failed with error %d, trying to create NEWKEYSET", (int)err));
     if(!CryptAcquireContext(&hcrypt, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET)) {
@@ -175,6 +175,8 @@ sys_arch_unprotect(sys_prot_t pval)
 {
   LWIP_UNUSED_ARG(pval);
 #if LWIP_SYS_ARCH_CHECK_NESTED_PROTECT
+  LWIP_ASSERT("missing SYS_ARCH_PROTECT", protection_depth == 1);
+#else
   LWIP_ASSERT("missing SYS_ARCH_PROTECT", protection_depth > 0);
 #endif
 #if LWIP_WIN32_SYS_ARCH_ENABLE_PROTECT_COUNTER
@@ -237,7 +239,7 @@ sys_sem_new(sys_sem_t *sem, u8_t count)
   if(new_sem != NULL) {
     SYS_STATS_INC_USED(sem);
 #if LWIP_STATS && SYS_STATS
-    LWIP_ASSERT("sys_sem_new() counter overflow", lwip_stats.sys.sem.used != 0 );
+    LWIP_ASSERT("sys_sem_new() counter overflow", lwip_stats.sys.sem.used != 0);
 #endif /* LWIP_STATS && SYS_STATS*/
     sem->sem = new_sem;
     return ERR_OK;
@@ -273,8 +275,7 @@ sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
   LWIP_ASSERT("sem != NULL", sem != NULL);
   LWIP_ASSERT("sem->sem != NULL", sem->sem != NULL);
   LWIP_ASSERT("sem->sem != INVALID_HANDLE_VALUE", sem->sem != INVALID_HANDLE_VALUE);
-  if(!timeout)
-  {
+  if (!timeout) {
     /* wait infinite */
     starttime = sys_get_ms_longlong();
     ret = WaitForSingleObject(sem->sem, INFINITE);
@@ -282,20 +283,15 @@ sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
     endtime = sys_get_ms_longlong();
     /* return the time we waited for the sem */
     return (u32_t)(endtime - starttime);
-  }
-  else
-  {
+  } else {
     starttime = sys_get_ms_longlong();
     ret = WaitForSingleObject(sem->sem, timeout);
     LWIP_ASSERT("Error waiting for semaphore", (ret == WAIT_OBJECT_0) || (ret == WAIT_TIMEOUT));
-    if(ret == WAIT_OBJECT_0)
-    {
+    if (ret == WAIT_OBJECT_0) {
       endtime = sys_get_ms_longlong();
       /* return the time we waited for the sem */
       return (u32_t)(endtime - starttime);
-    }
-    else
-    {
+    } else {
       /* timeout */
       return SYS_ARCH_TIMEOUT;
     }
@@ -324,10 +320,10 @@ sys_mutex_new(sys_mutex_t *mutex)
 
   new_mut = CreateMutex(NULL, FALSE, NULL);
   LWIP_ASSERT("Error creating mutex", new_mut != NULL);
-  if(new_mut != NULL) {
+  if (new_mut != NULL) {
     SYS_STATS_INC_USED(mutex);
 #if LWIP_STATS && SYS_STATS
-    LWIP_ASSERT("sys_mutex_new() counter overflow", lwip_stats.sys.mutex.used != 0 );
+    LWIP_ASSERT("sys_mutex_new() counter overflow", lwip_stats.sys.mutex.used != 0);
 #endif /* LWIP_STATS && SYS_STATS*/
     mutex->mut = new_mut;
     return ERR_OK;
@@ -375,8 +371,7 @@ sys_mutex_unlock(sys_mutex_t *mutex)
   LWIP_ASSERT("mutex->mut != NULL", mutex->mut != NULL);
   LWIP_ASSERT("mutex->mut != INVALID_HANDLE_VALUE", mutex->mut != INVALID_HANDLE_VALUE);
   /* wait infinite */
-  if(!ReleaseMutex(mutex->mut))
-  {
+  if (!ReleaseMutex(mutex->mut)) {
     LWIP_ASSERT("Error releasing mutex", 0);
   }
 }
@@ -393,6 +388,7 @@ typedef struct tagTHREADNAME_INFO
   DWORD dwFlags; /* Reserved for future use, must be zero. */
 } THREADNAME_INFO;
 #pragma pack(pop)
+
 static void
 SetThreadName(DWORD dwThreadID, const char* threadName)
 {
@@ -402,12 +398,10 @@ SetThreadName(DWORD dwThreadID, const char* threadName)
   info.dwThreadID = dwThreadID;
   info.dwFlags = 0;
 
-  __try
-  {
+  __try {
     RaiseException(MS_VC_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info);
   }
-  __except(EXCEPTION_EXECUTE_HANDLER)
-  {
+  __except(EXCEPTION_EXECUTE_HANDLER) {
   }
 }
 #else /* _MSC_VER */
@@ -445,7 +439,7 @@ sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksi
 
   new_thread = (struct threadlist*)malloc(sizeof(struct threadlist));
   LWIP_ASSERT("new_thread != NULL", new_thread != NULL);
-  if(new_thread != NULL) {
+  if (new_thread != NULL) {
     new_thread->function = function;
     new_thread->arg = arg;
     SYS_ARCH_PROTECT(lev);
@@ -517,7 +511,7 @@ sys_mbox_new(sys_mbox_t *mbox, int size)
 
   mbox->sem = CreateSemaphore(0, 0, MAX_QUEUE_ENTRIES, 0);
   LWIP_ASSERT("Error creating semaphore", mbox->sem != NULL);
-  if(mbox->sem == NULL) {
+  if (mbox->sem == NULL) {
     SYS_STATS_INC(mbox.err);
     return ERR_MEM;
   }
@@ -526,7 +520,7 @@ sys_mbox_new(sys_mbox_t *mbox, int size)
   mbox->tail = 0;
   SYS_STATS_INC_USED(mbox);
 #if LWIP_STATS && SYS_STATS
-  LWIP_ASSERT("sys_mbox_new() counter overflow", lwip_stats.sys.mbox.used != 0 );
+  LWIP_ASSERT("sys_mbox_new() counter overflow", lwip_stats.sys.mbox.used != 0);
 #endif /* LWIP_STATS && SYS_STATS */
   return ERR_OK;
 }
@@ -541,9 +535,9 @@ sys_mbox_free(sys_mbox_t *mbox)
 
   CloseHandle(mbox->sem);
 
-   SYS_STATS_DEC(mbox.used);
+  SYS_STATS_DEC(mbox.used);
 #if LWIP_STATS && SYS_STATS
-   LWIP_ASSERT( "sys_mbox_free() ", lwip_stats.sys.mbox.used!= (u16_t)-1 );
+  LWIP_ASSERT( "sys_mbox_free() ", lwip_stats.sys.mbox.used != (u16_t)-1);
 #endif /* LWIP_STATS && SYS_STATS */
   mbox->sem = NULL;
 }
@@ -562,7 +556,7 @@ sys_mbox_post(sys_mbox_t *q, void *msg)
 
   SYS_ARCH_PROTECT(lev);
   q->q_mem[q->head] = msg;
-  (q->head)++;
+  q->head++;
   if (q->head >= MAX_QUEUE_ENTRIES) {
     q->head = 0;
   }
@@ -631,24 +625,23 @@ sys_arch_mbox_fetch(sys_mbox_t *q, void **msg, u32_t timeout)
     timeout = INFINITE;
   }
   starttime = sys_get_ms_longlong();
-  if ((ret = WaitForSingleObject(q->sem, timeout)) == WAIT_OBJECT_0) {
+  ret = WaitForSingleObject(q->sem, timeout);
+  if (ret == WAIT_OBJECT_0) {
     SYS_ARCH_PROTECT(lev);
-    if(msg != NULL) {
+    if (msg != NULL) {
       *msg  = q->q_mem[q->tail];
     }
 
-    (q->tail)++;
+    q->tail++;
     if (q->tail >= MAX_QUEUE_ENTRIES) {
       q->tail = 0;
     }
     SYS_ARCH_UNPROTECT(lev);
     endtime = sys_get_ms_longlong();
     return (u32_t)(endtime - starttime);
-  }
-  else
-  {
+  } else {
     LWIP_ASSERT("Error waiting for sem", ret == WAIT_TIMEOUT);
-    if(msg != NULL) {
+    if (msg != NULL) {
       *msg  = NULL;
     }
 
@@ -667,23 +660,22 @@ sys_arch_mbox_tryfetch(sys_mbox_t *q, void **msg)
   LWIP_ASSERT("q->sem != NULL", q->sem != NULL);
   LWIP_ASSERT("q->sem != INVALID_HANDLE_VALUE", q->sem != INVALID_HANDLE_VALUE);
 
-  if ((ret = WaitForSingleObject(q->sem, 0)) == WAIT_OBJECT_0) {
+  ret = WaitForSingleObject(q->sem, 0);
+  if (ret == WAIT_OBJECT_0) {
     SYS_ARCH_PROTECT(lev);
-    if(msg != NULL) {
+    if (msg != NULL) {
       *msg  = q->q_mem[q->tail];
     }
 
-    (q->tail)++;
+    q->tail++;
     if (q->tail >= MAX_QUEUE_ENTRIES) {
       q->tail = 0;
     }
     SYS_ARCH_UNPROTECT(lev);
     return 0;
-  }
-  else
-  {
+  } else {
     LWIP_ASSERT("Error waiting for sem", ret == WAIT_TIMEOUT);
-    if(msg != NULL) {
+    if (msg != NULL) {
       *msg  = NULL;
     }
 
@@ -741,8 +733,8 @@ lwip_win32_keypressed(char *key)
   BOOL ret = PeekConsoleInput(h, &rec, 1, &num);
   if (ret && num) {
     ReadConsoleInput(h, &rec, 1, &num);
-    if(rec.EventType == KEY_EVENT) {
-      if(rec.Event.KeyEvent.bKeyDown) {
+    if (rec.EventType == KEY_EVENT) {
+      if (rec.Event.KeyEvent.bKeyDown) {
         if (key) {
           *key = rec.Event.KeyEvent.uChar.AsciiChar;
         }
