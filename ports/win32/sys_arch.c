@@ -237,7 +237,11 @@ sys_sem_new(sys_sem_t *sem, u8_t count)
   new_sem = CreateSemaphore(0, count, 100000, 0);
   LWIP_ASSERT("Error creating semaphore", new_sem != NULL);
   if(new_sem != NULL) {
-    SYS_STATS_INC_USED(sem);
+    if (SYS_INITIALIZED()) {
+      SYS_ARCH_LOCKED(SYS_STATS_INC_USED(sem));
+    } else {
+      SYS_STATS_INC_USED(sem);
+    }
 #if LWIP_STATS && SYS_STATS
     LWIP_ASSERT("sys_sem_new() counter overflow", lwip_stats.sys.sem.used != 0);
 #endif /* LWIP_STATS && SYS_STATS*/
@@ -246,7 +250,11 @@ sys_sem_new(sys_sem_t *sem, u8_t count)
   }
    
   /* failed to allocate memory... */
-  SYS_STATS_INC(sem.err);
+  if (SYS_INITIALIZED()) {
+    SYS_ARCH_LOCKED(SYS_STATS_INC(sem.err));
+  } else {
+    SYS_STATS_INC(sem.err);
+  }
   sem->sem = NULL;
   return ERR_MEM;
 }
@@ -260,7 +268,7 @@ sys_sem_free(sys_sem_t *sem)
   LWIP_ASSERT("sem->sem != INVALID_HANDLE_VALUE", sem->sem != INVALID_HANDLE_VALUE);
   CloseHandle(sem->sem);
 
-  SYS_STATS_DEC(sem.used);
+  SYS_ARCH_LOCKED(SYS_STATS_DEC(sem.used));
 #if LWIP_STATS && SYS_STATS
   LWIP_ASSERT("sys_sem_free() closed more than created", lwip_stats.sys.sem.used != (u16_t)-1);
 #endif /* LWIP_STATS && SYS_STATS */
@@ -321,7 +329,7 @@ sys_mutex_new(sys_mutex_t *mutex)
   new_mut = CreateMutex(NULL, FALSE, NULL);
   LWIP_ASSERT("Error creating mutex", new_mut != NULL);
   if (new_mut != NULL) {
-    SYS_STATS_INC_USED(mutex);
+    SYS_ARCH_LOCKED(SYS_STATS_INC_USED(mutex));
 #if LWIP_STATS && SYS_STATS
     LWIP_ASSERT("sys_mutex_new() counter overflow", lwip_stats.sys.mutex.used != 0);
 #endif /* LWIP_STATS && SYS_STATS*/
@@ -330,7 +338,7 @@ sys_mutex_new(sys_mutex_t *mutex)
   }
    
   /* failed to allocate memory... */
-  SYS_STATS_INC(mutex.err);
+  SYS_ARCH_LOCKED(SYS_STATS_INC(mutex.err));
   mutex->mut = NULL;
   return ERR_MEM;
 }
@@ -344,7 +352,7 @@ sys_mutex_free(sys_mutex_t *mutex)
   LWIP_ASSERT("mutex->mut != INVALID_HANDLE_VALUE", mutex->mut != INVALID_HANDLE_VALUE);
   CloseHandle(mutex->mut);
 
-  SYS_STATS_DEC(mutex.used);
+  SYS_ARCH_LOCKED(SYS_STATS_DEC(mutex.used));
 #if LWIP_STATS && SYS_STATS
   LWIP_ASSERT("sys_mutex_free() closed more than created", lwip_stats.sys.mutex.used != (u16_t)-1);
 #endif /* LWIP_STATS && SYS_STATS */
@@ -512,13 +520,13 @@ sys_mbox_new(sys_mbox_t *mbox, int size)
   mbox->sem = CreateSemaphore(0, 0, MAX_QUEUE_ENTRIES, 0);
   LWIP_ASSERT("Error creating semaphore", mbox->sem != NULL);
   if (mbox->sem == NULL) {
-    SYS_STATS_INC(mbox.err);
+    SYS_ARCH_LOCKED(SYS_STATS_INC(mbox.err));
     return ERR_MEM;
   }
   memset(&mbox->q_mem, 0, sizeof(u32_t)*MAX_QUEUE_ENTRIES);
   mbox->head = 0;
   mbox->tail = 0;
-  SYS_STATS_INC_USED(mbox);
+  SYS_ARCH_LOCKED(SYS_STATS_INC_USED(mbox));
 #if LWIP_STATS && SYS_STATS
   LWIP_ASSERT("sys_mbox_new() counter overflow", lwip_stats.sys.mbox.used != 0);
 #endif /* LWIP_STATS && SYS_STATS */
