@@ -293,6 +293,8 @@ a lot of data that needs to be copied, this should be set high. */
 #define SYS_STATS               1
 #endif /* LWIP_STATS */
 
+/* ---------- NETBIOS options ---------- */
+#define LWIP_NETBIOS_RESPOND_NAME_QUERY 1
 
 /* ---------- PPP options ---------- */
 

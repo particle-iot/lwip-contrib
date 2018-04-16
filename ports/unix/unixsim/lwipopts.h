@@ -239,12 +239,12 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_DHCP_AUTOIP_COOP   (LWIP_DHCP)
 #define LWIP_DHCP_AUTOIP_COOP_TRIES  3
 
+/* ---------- NETBIOS options ---------- */
+#define LWIP_NETBIOS_RESPOND_NAME_QUERY 1
+
 /* ---------- SNTP options --------- */
 #include "examples/sntp/sntp_example.h"
 #define SNTP_SET_SYSTEM_TIME(s) sntp_set_system_time(s)
-
-/* ---------- MQTT options ---------- */
-#define LWIP_MQTT               1
 
 /* ---------- SNMP options ---------- */
 #define LWIP_SNMP               (LWIP_UDP)
