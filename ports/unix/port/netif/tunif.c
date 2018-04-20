@@ -125,23 +125,35 @@ static err_t
 low_level_output(struct tunif *tunif, struct pbuf *p)
 {
   char buf[1500];
-  int rnd_val;
+  ssize_t written;
 
   /* initiate transfer(); */
 
-  rnd_val = rand();
-  if (((double)rnd_val/(double)RAND_MAX) < 0.4) {
-    printf("drop\n");
-    return ERR_OK;
+#if 0
+  if (((double)rand()/(double)RAND_MAX) < 0.4) {
+    printf("drop output\n");
+    return ERR_OK; /* ERR_OK because we simulate packet loss on cable */
+  }
+#endif
+
+  if (p->tot_len > sizeof(buf)) {
+    MIB2_STATS_NETIF_INC(netif, ifoutdiscards);
+    perror("tunif: packet too large");
+    return ERR_IF;
   }
 
   pbuf_copy_partial(p, buf, p->tot_len, 0);
 
   /* signal that packet should be sent(); */
-  if (write(tunif->fd, buf, p->tot_len) == -1) {
+  written = write(tunif->fd, buf, p->tot_len);
+  if (written < p->tot_len) {
+    MIB2_STATS_NETIF_INC(netif, ifoutdiscards);
     perror("tunif: write");
+    return ERR_IF;
+  } else {
+    MIB2_STATS_NETIF_ADD(netif, ifoutoctets, (u32_t)written);
+    return ERR_OK;
   }
-  return ERR_OK;
 }
 /*-----------------------------------------------------------------------------------*/
 /*
