@@ -48,6 +48,7 @@
 #include "lwip/def.h"
 #include "lwip/ip.h"
 #include "lwip/mem.h"
+#include "lwip/snmp.h"
 #include "lwip/netif.h"
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
@@ -122,7 +123,7 @@ low_level_init(struct netif *netif)
 /*-----------------------------------------------------------------------------------*/
 
 static err_t
-low_level_output(struct tunif *tunif, struct pbuf *p)
+low_level_output(struct netif *netif, struct tunif *tunif, struct pbuf *p)
 {
   char buf[1500];
   ssize_t written;
@@ -241,7 +242,7 @@ tunif_output(struct netif *netif, struct pbuf *p,
 
   tunif = (struct tunif *)netif->state;
 
-  return low_level_output(tunif, p);
+  return low_level_output(netif, tunif, p);
 
 }
 /*-----------------------------------------------------------------------------------*/
