@@ -128,6 +128,9 @@ low_level_output(struct netif *netif, struct tunif *tunif, struct pbuf *p)
   char buf[1500];
   ssize_t written;
 
+  /* in case SNMP MIB2 is disabled */
+  LWIP_UNUSED_ARG(netif);
+
   /* initiate transfer(); */
 
 #if 0
