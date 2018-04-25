@@ -3,6 +3,7 @@
 *.a
 *lwip_unittests.xml
 .depend
+/ports/unix/unixsim/build
 /ports/unix/unixsim/simhost
 /ports/unix/unixsim/simrouter
 /ports/unix/unixsim/simnode
