@@ -11,4 +11,15 @@ set(lwipcontribportunix_SRCS
     port/netif/fifo.c
 )
 
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+    link_libraries(util)
+    link_libraries(pthread)
+    link_libraries(rt)
+endif()
+
+if (CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    # Darwin doesn't have pthreads or POSIX real-time extensions libs
+    link_libraries(util)
+endif()
+
 add_library(lwipcontribportunix EXCLUDE_FROM_ALL ${lwipcontribportunix_SRCS})
