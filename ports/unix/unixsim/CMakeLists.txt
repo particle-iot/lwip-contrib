@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
+include(../../CMakeCommon.cmake)
+
 include_directories(lwip PUBLIC
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip/src/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../../"
