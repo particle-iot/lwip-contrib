@@ -15,3 +15,19 @@ endif()
 if(CMAKE_C_COMPILER_ID STREQUAL MSVC)
     # TODO
 endif()
+
+# ARM mbedtls support https://tls.mbed.org/
+if((CMAKE_C_COMPILER_ID STREQUAL Clang) OR (CMAKE_C_COMPILER_ID STREQUAL GNU))
+    set(MBEDTLSDIR ${LWIP_CONTRIB_DIR}/../mbedtls)
+    if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-redundant-decls -DLWIP_HAVE_MBEDTLS=1")
+        
+        if(CMAKE_C_COMPILER_ID STREQUAL GNU)
+            set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-c90-c99-compat")
+        endif()
+    
+        include_directories(${MBEDTLSDIR}/include)
+        link_directories(${MBEDTLSDIR}/library)
+        link_libraries(mbedtls mbedcrypto mbedx509)
+    endif()
+endif()
