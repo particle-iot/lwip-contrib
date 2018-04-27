@@ -19,10 +19,11 @@ endif()
 # ARM mbedtls support https://tls.mbed.org/
 set(MBEDTLSDIR ${LWIP_CONTRIB_DIR}/../mbedtls)
 if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
+    add_subdirectory(${LWIP_CONTRIB_DIR}/../mbedtls mbedtls)
+
     add_definitions(-DLWIP_HAVE_MBEDTLS=1)
 
     include_directories(${MBEDTLSDIR}/include)
 
-    link_directories(${MBEDTLSDIR}/library)
     link_libraries(mbedtls mbedcrypto mbedx509)
 endif()
