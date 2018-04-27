@@ -12,14 +12,20 @@ set(lwipcontribportunix_SRCS
 )
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
-    link_libraries(util)
-    link_libraries(pthread)
-    link_libraries(rt)
+    find_library(LIBUTIL util)
+    link_libraries(${LIBUTIL})
+    
+    find_library(LIBPTHREAD pthread)
+    link_libraries(${LIBPTHREAD})
+    
+    find_library(LIBRT rt)
+    link_libraries(${LIBRT})
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL Darwin)
     # Darwin doesn't have pthreads or POSIX real-time extensions libs
-    link_libraries(util)
+    find_library(LIBUTIL util)
+    link_libraries(${LIBUTIL})
 endif()
 
 add_library(lwipcontribportunix EXCLUDE_FROM_ALL ${lwipcontribportunix_SRCS})
