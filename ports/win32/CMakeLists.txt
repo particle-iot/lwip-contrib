@@ -6,9 +6,10 @@ set(lwipcontribportwindows_SRCS
 )
 
 # pcapif needs WinPcap developer package: https://www.winpcap.org/devel.htm
-find_library(WPCAP  wpcap  HINTS ${LWIP_CONTRIB_DIR}/../WpdPack/lib)
-find_library(PACKET packet HINTS ${LWIP_CONTRIB_DIR}/../WpdPack/lib)
-include_directories("${LWIP_CONTRIB_DIR}/../WpdPack/include")
+set(WPDPACK_DIR ${LWIP_CONTRIB_DIR}/../WpdPack)
+find_library(WPCAP  wpcap  HINTS ${WPDPACK_DIR}/lib)
+find_library(PACKET packet HINTS ${WPDPACK_DIR}/lib)
+include_directories("${WPDPACK_DIR}/include")
 link_libraries(${WPCAP} ${PACKET})
 
 add_library(lwipcontribportwindows EXCLUDE_FROM_ALL ${lwipcontribportwindows_SRCS})
