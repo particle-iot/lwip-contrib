@@ -7,6 +7,10 @@ set(LWIP_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip)
 
 include(${LWIP_CONTRIB_DIR}/ports/CMakeCommon.cmake)
 
+include(${LWIP_DIR}/src/Filelists.cmake)
+include(${LWIP_CONTRIB_DIR}/Filelists.cmake)
+include(${LWIP_CONTRIB_DIR}/ports/unix/Filelists.cmake)
+
 add_definitions(-DLWIP_DEBUG)
 
 include_directories(
@@ -16,19 +20,17 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
-add_subdirectory(${LWIP_DIR}/src lwip)
-add_subdirectory(${LWIP_CONTRIB_DIR} contrib)
-add_subdirectory(${LWIP_CONTRIB_DIR}/ports/unix unixport)
-
 # lwipcontribaddons is specified multiple times in target_link_libraries because of cyclic dependency
 # lwipcontribaddons call various functions in lwipcore
 # lwipcore needs tcp_hook_isn from lwipcontribaddons
 
 add_executable(simhost simhost.c)
-target_link_libraries(simhost lwipcontribexamples lwipcontribapps lwipcontribaddons lwipapps lwipcontribportunix lwipcore lwipcontribaddons)
+target_link_libraries(simhost lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcontribportunix lwipcore lwipcontribaddons)
 
 add_executable(simnode simnode.c)
-target_link_libraries(simnode lwipcontribexamples lwipcontribapps lwipcontribaddons lwipapps lwipcontribportunix lwipcore lwipcontribaddons)
+target_link_libraries(simnode lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcontribportunix lwipcore lwipcontribaddons)
 
 add_executable(simrouter simrouter.c)
-target_link_libraries(simrouter lwipcontribexamples lwipcontribapps lwipcontribaddons lwipapps lwipcontribportunix lwipcore lwipcontribaddons)
+target_link_libraries(simrouter lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcontribportunix lwipcore lwipcontribaddons)
+
+add_executable(makefsdata ${lwipmakefsdata_SRCS})
