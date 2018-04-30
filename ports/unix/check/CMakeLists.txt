@@ -11,8 +11,6 @@ set(LWIP_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip)
 
 include(${LWIP_CONTRIB_DIR}/ports/CMakeCommon.cmake)
 
-include(${LWIP_DIR}/src/Filelists.cmake)
-
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     # check.h causes 'error: token pasting of ',' and __VA_ARGS__ is a GNU extension' with clang 9.0.0
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
@@ -28,15 +26,14 @@ include_directories(
     "${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
+include(${LWIP_CONTRIB_DIR}/ports/unix/Filelists.cmake)
+include(${LWIP_DIR}/src/Filelists.cmake)
 include(${LWIP_DIR}/test/unit/Filelists.cmake)
 add_executable(lwip_unittests ${LWIP_TESTFILES})
 
 find_library(LIBCHECK check)
 find_library(LIBM m)
-find_library(LIBUTIL util)
-find_library(LIBPTHREAD pthread)
-find_library(LIBRT rt)
-target_link_libraries(lwip_unittests lwipallapps lwipcore ${LIBCHECK} ${LIBM} ${LIBUTIL} ${LIBPTHREAD} ${LIBRT})
+target_link_libraries(lwip_unittests lwipallapps lwipcore ${LIBCHECK} ${LIBM})
 
 if (NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
     # check installed via brew on Darwin doesn't have a separate subunit library (must be statically linked)
