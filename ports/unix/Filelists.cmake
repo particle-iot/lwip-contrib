@@ -3,7 +3,7 @@
 # It assumes the variable LWIP_CONTRIB_DIR is defined pointing to the
 # root path of lwIP contrib sources.
 #
-# This file is NOT designed (on purpose) to be included as cmake
+# This file is NOT designed (on purpose) to be used as cmake
 # subdir via add_subdirectory()
 # The intention is to provide greater flexibility to users to 
 # create their own targets using the *_SRCS variables.
@@ -26,13 +26,9 @@ set(lwipcontribportunixnetifs_SRCS
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_library(LIBUTIL util)
-    link_libraries(${LIBUTIL})
-    
     find_library(LIBPTHREAD pthread)
-    link_libraries(${LIBPTHREAD})
-    
     find_library(LIBRT rt)
-    link_libraries(${LIBRT})
+    link_libraries(${LIBUTIL} ${LIBPTHREAD} ${LIBRT})
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL Darwin)
