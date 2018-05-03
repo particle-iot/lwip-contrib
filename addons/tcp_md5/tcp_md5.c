@@ -318,8 +318,7 @@ static int
 tcp_md5_is_enabled_on_pcb(const struct tcp_pcb *pcb)
 {
   if (tcp_md5_extarg_id != LWIP_TCP_PCB_NUM_EXT_ARG_ID_INVALID) {
-    struct tcp_md5_conn_info *info = (struct tcp_md5_conn_info *)tcp_ext_arg_get(
-      LWIP_CONST_CAST(struct tcp_pcb *, pcb), tcp_md5_extarg_id);
+    struct tcp_md5_conn_info *info = (struct tcp_md5_conn_info *)tcp_ext_arg_get(pcb, tcp_md5_extarg_id);
     if (info != NULL) {
       return 1;
     }
@@ -498,7 +497,7 @@ tcp_md5_setsockopt_hook(struct lwip_sock *sock, int level, int optname, const vo
             memset(&info->remote_addr, 0, sizeof(info->remote_addr));
             if (md5->tcpm_addr.ss_family == AF_INET) {
 #if LWIP_IPV4
-              struct sockaddr_in *sin = LWIP_CONST_CAST(struct sockaddr_in *, &md5->tcpm_addr);
+              const struct sockaddr_in *sin = (const struct sockaddr_in *)&md5->tcpm_addr;
               memcpy(&info->remote_addr, &sin->sin_addr, sizeof(sin->sin_addr));
               IP_SET_TYPE_VAL(info->remote_addr, IPADDR_TYPE_V4);
               info->remote_port = lwip_htons(sin->sin_port);
@@ -506,7 +505,7 @@ tcp_md5_setsockopt_hook(struct lwip_sock *sock, int level, int optname, const vo
 #endif /* LWIP_IPV4 */
             } else if (md5->tcpm_addr.ss_family == AF_INET6) {
 #if LWIP_IPV6
-              struct sockaddr_in6 *sin6 = LWIP_CONST_CAST(struct sockaddr_in6 *, &md5->tcpm_addr);
+              const struct sockaddr_in6 *sin6 = (const struct sockaddr_in6 *)&md5->tcpm_addr;
               memcpy(&info->remote_addr, &sin6->sin6_addr, sizeof(sin6->sin6_addr));
               IP_SET_TYPE_VAL(info->remote_addr, IPADDR_TYPE_V6);
               info->remote_port = lwip_htons(sin6->sin6_port);
