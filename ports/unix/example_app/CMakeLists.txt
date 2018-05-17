@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
-project(unixsim C)
+project(example_app C)
 
 set(LWIP_CONTRIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 set(LWIP_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip)

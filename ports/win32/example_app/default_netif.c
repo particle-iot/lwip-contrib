@@ -49,9 +49,9 @@ void init_default_netif(void)
 #endif
 {
 #if NO_SYS
-  netif_set_default(netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, netif_input));
+  netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, netif_input);
 #else  /* NO_SYS */
-  netif_set_default(netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, tcpip_input));
+  netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, tcpip_input);
 #endif /* NO_SYS */
   netif_set_default(&netif);
 }

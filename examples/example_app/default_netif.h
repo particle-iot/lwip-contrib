@@ -30,8 +30,8 @@
  *
  */
 
-#ifndef LWIP_INIT_PORT_DEFAULT_NETIF_H
-#define LWIP_INIT_PORT_DEFAULT_NETIF_H
+#ifndef LWIP_DEFAULT_NETIF_H
+#define LWIP_DEFAULT_NETIF_H
 
 #include "lwip/ip_addr.h"
 

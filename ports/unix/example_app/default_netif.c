@@ -51,7 +51,7 @@ void init_default_netif(void)
 #if NO_SYS
   #error tapif not implemented for NO_SYS mode
 #else  /* NO_SYS */
-  netif_set_default(netif_add(&netif, NETIF_ADDRS NULL, tapif_init, tcpip_input));
+  netif_add(&netif, NETIF_ADDRS NULL, tapif_init, tcpip_input);
 #endif /* NO_SYS */
   netif_set_default(&netif);
 }
