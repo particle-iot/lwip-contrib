@@ -8,8 +8,6 @@ testing lwIP applications.
 
 * check: Runs the unit tests shipped with main lwIP on the Unix port.
 
-* fuzz: Helper application for fuzzing the lwIP stack
-
 * port/netif, port/include/netif: Various network interface implementations and
   their helpers, some explicitly for Unix infrastructure, some generic (but most
   useful on an easy to debug system):
@@ -37,16 +35,3 @@ testing lwIP applications.
 
   * unixif: Network interface that allows lwIP Unix programs to "meet" at Unix
     socket address and exchange traffic over it.
-
-* lib: Compiling lwIP as a shared library
-
-* minimal: Standalone example program that runs in NO_SYS=1 mode.
-  Contains the mintapif network interface implementation, which is similar to
-  netif/tapif, but runs without threads.
-
-  Runs an echo server and SNMP.
-
-* unixsim: Standalone example program that runs in NO_SYS=0 mode. Uses
-  the tapif network interface.
-
-  Runs an HTTP server.

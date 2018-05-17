@@ -243,7 +243,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define IP_REASS_MAX_PBUFS      10
 #define MEMP_NUM_REASSDATA      10
 #define IP_FRAG                 1
-
+#define IPV6_FRAG_COPYHEADER    1
 
 /* ---------- ICMP options ---------- */
 #define ICMP_TTL                255

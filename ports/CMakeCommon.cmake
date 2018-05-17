@@ -16,7 +16,7 @@ if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
     link_libraries(mbedtls mbedcrypto mbedx509)
 endif()
 
-set(LWIP_GNU_CLANG_COMMON_FLAGS "-Wall -pedantic -Werror -Wparentheses -Wsequence-point -Wswitch-default -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-qual -Wc++-compat -Wwrite-strings -Wold-style-definition -Wcast-align -Wmissing-prototypes -Wnested-externs -Wunreachable-code -Wuninitialized -Wmissing-prototypes -Waggregate-return -Wlogical-not-parentheses")
+set(LWIP_GNU_CLANG_COMMON_FLAGS "-g -Wall -pedantic -Werror -Wparentheses -Wsequence-point -Wswitch-default -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-qual -Wc++-compat -Wwrite-strings -Wold-style-definition -Wcast-align -Wmissing-prototypes -Wnested-externs -Wunreachable-code -Wuninitialized -Wmissing-prototypes -Waggregate-return -Wlogical-not-parentheses")
 if (NOT LWIP_HAVE_MBEDTLS)
     set(LWIP_GNU_CLANG_COMMON_FLAGS "${LWIP_GNU_CLANG_COMMON_FLAGS} -Wredundant-decls")
 endif()

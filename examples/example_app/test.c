@@ -84,6 +84,8 @@
 #include "examples/httpd/fs_example/fs_example.h"
 #include "examples/httpd/ssi_example/ssi_example.h"
 
+#include "default_netif.h"
+
 #if NO_SYS
 /* ... then we need information about the timer intervals: */
 #include "lwip/ip4_frag.h"
@@ -103,11 +105,11 @@
 #endif /* PPP_SUPPORT */
 
 /* include the port-dependent configuration */
-#include "lwipcfg_msvc.h"
+#include "lwipcfg.h"
 
-/** Define this to 1 to enable a PCAP interface as default interface. */
-#ifndef USE_PCAPIF
-#define USE_PCAPIF 1
+/** Define this to 1 to enable a port-specific ethernet interface as default interface. */
+#ifndef USE_DEFAULT_ETH_NETIF
+#define USE_DEFAULT_ETH_NETIF 1
 #endif
 
 /** Define this to 1 to enable a PPP interface. */
@@ -120,19 +122,16 @@
 #define USE_SLIPIF 0
 #endif
 
-/** Use an ethernet adapter? Default to enabled if PCAPIF or PPPoE are used. */
+/** Use an ethernet adapter? Default to enabled if port-specific ethernet netif or PPPoE are used. */
 #ifndef USE_ETHERNET
-#define USE_ETHERNET  (USE_PCAPIF || PPPOE_SUPPORT)
+#define USE_ETHERNET  (USE_DEFAULT_ETH_NETIF || PPPOE_SUPPORT)
 #endif
 
-/** Use an ethernet adapter for TCP/IP? By default only if PCAPIF is used. */
+/** Use an ethernet adapter for TCP/IP? By default only if port-specific ethernet netif is used. */
 #ifndef USE_ETHERNET_TCPIP
-#define USE_ETHERNET_TCPIP  (USE_PCAPIF)
+#define USE_ETHERNET_TCPIP  (USE_DEFAULT_ETH_NETIF)
 #endif
 
-#if USE_ETHERNET
-#include "pcapif.h"
-#endif /* USE_ETHERNET */
 #if USE_SLIPIF
 #include <netif/slipif.h>
 #endif /* USE_SLIPIF */
@@ -146,8 +145,6 @@
 
 /* globales variables for netifs */
 #if USE_ETHERNET
-/* THE ethernet interface */
-struct netif netif;
 #if LWIP_DHCP
 /* dhcp struct for the ethernet netif */
 struct dhcp netif_dhcp;
@@ -342,7 +339,6 @@ msvc_netif_init(void)
 
 #if USE_ETHERNET
 #if LWIP_IPV4
-#define NETIF_ADDRS &ipaddr, &netmask, &gw,
   ip4_addr_set_zero(&gw);
   ip4_addr_set_zero(&ipaddr);
   ip4_addr_set_zero(&netmask);
@@ -359,39 +355,39 @@ msvc_netif_init(void)
 #endif /* USE_DHCP */
 #endif /* USE_ETHERNET_TCPIP */
 #else /* LWIP_IPV4 */
-#define NETIF_ADDRS
   printf("Starting lwIP, IPv4 disable\n");
 #endif /* LWIP_IPV4 */
 
-#if NO_SYS
-  netif_set_default(netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, netif_input));
-#else  /* NO_SYS */
-  netif_set_default(netif_add(&netif, NETIF_ADDRS NULL, pcapif_init, tcpip_input));
-#endif /* NO_SYS */
+#if LWIP_IPV4
+  init_default_netif(&ipaddr, &netmask, &gw);
+#else
+  init_default_netif();
+#endif
 #if LWIP_IPV6
-  netif_create_ip6_linklocal_address(&netif, 1);
-  printf("ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(&netif, 0)));
+  netif_create_ip6_linklocal_address(netif_default, 1);
+  netif_default->ip6_autoconfig_enabled = 1;
+  printf("ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(netif_default, 0)));
 #endif /* LWIP_IPV6 */
 #if LWIP_NETIF_STATUS_CALLBACK
-  netif_set_status_callback(&netif, status_callback);
+  netif_set_status_callback(netif_default, status_callback);
 #endif /* LWIP_NETIF_STATUS_CALLBACK */
 #if LWIP_NETIF_LINK_CALLBACK
-  netif_set_link_callback(&netif, link_callback);
+  netif_set_link_callback(netif_default, link_callback);
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 
 #if USE_ETHERNET_TCPIP
 #if LWIP_AUTOIP
-  autoip_set_struct(&netif, &netif_autoip);
+  autoip_set_struct(netif_default, &netif_autoip);
 #endif /* LWIP_AUTOIP */
 #if LWIP_DHCP
-  dhcp_set_struct(&netif, &netif_dhcp);
+  dhcp_set_struct(netif_default, &netif_dhcp);
 #endif /* LWIP_DHCP */
-  netif_set_up(&netif);
+  netif_set_up(netif_default);
 #if USE_DHCP
-  err = dhcp_start(&netif);
+  err = dhcp_start(netif_default);
   LWIP_ASSERT("dhcp_start failed", err == ERR_OK);
 #elif USE_AUTOIP
-  err = autoip_start(&netif);
+  err = autoip_start(netif_default);
   LWIP_ASSERT("autoip_start failed", err == ERR_OK);
 #endif /* USE_DHCP */
 #else /* USE_ETHERNET_TCPIP */
@@ -402,7 +398,7 @@ msvc_netif_init(void)
 
 #if USE_PPP && PPPOE_SUPPORT
   /* start PPPoE after ethernet netif is added! */
-  ppp = pppoe_create(&ppp_netif, &netif, NULL, NULL, pppLinkStatusCallback, NULL);
+  ppp = pppoe_create(&ppp_netif, netif_default, NULL, NULL, pppLinkStatusCallback, NULL);
   if (ppp == NULL) {
     printf("pppos_create error\n");
   } else {
@@ -618,7 +614,7 @@ test_init(void * arg)
 static void
 main_loop(void)
 {
-  char key;
+  /* char key; */
 #if !NO_SYS
   err_t err;
   sys_sem_t init_sem;
@@ -651,23 +647,15 @@ main_loop(void)
 #endif
 
   /* MAIN LOOP for driver update (and timers if NO_SYS) */
-  while (!lwip_win32_keypressed(&key) || (key == 0)) {
+  /* while (!lwip_win32_keypressed(&key) || (key == 0)) { FIXME this is port specific */ 
+  while (1) {
 #if NO_SYS
     /* handle timers (already done in tcpip.c when NO_SYS=0) */
     sys_check_timeouts();
 #endif /* NO_SYS */
 
 #if USE_ETHERNET
-#if !PCAPIF_RX_USE_THREAD
-    /* check for packets and link status*/
-    pcapif_poll(&netif);
-    /* When pcapif_poll comes back, there are not packets, so sleep to
-       prevent 100% CPU load. Don't do this in an embedded system since it
-       increases latency! */
-    sys_msleep(1);
-#else /* !PCAPIF_RX_USE_THREAD */
-    sys_msleep(50);
-#endif /* !PCAPIF_RX_USE_THREAD */
+    default_netif_poll();
 #else /* USE_ETHERNET */
     /* try to read characters from serial line and pass them to PPPoS */
     count = sio_read(ppp_sio, (u8_t*)rxbuf, 1024);
@@ -725,11 +713,9 @@ main_loop(void)
       started = sys_now();
       do
       {
-#if USE_ETHERNET && !PCAPIF_RX_USE_THREAD
-        pcapif_poll(&netif);
-#else /* USE_ETHERNET && !PCAPIF_RX_USE_THREAD */
-        sys_msleep(50);
-#endif /* USE_ETHERNET && !PCAPIF_RX_USE_THREAD */
+#if USE_ETHERNET
+        default_netif_poll();
+#endif
         /* @todo: need a better check here: only wait until PPP is down */
       } while(sys_now() - started < 5000);
     }
@@ -738,8 +724,7 @@ main_loop(void)
   netconn_thread_cleanup();
 #endif
 #if USE_ETHERNET
-  /* release the pcap library... */
-  pcapif_shutdown(&netif);
+  default_netif_shutdown();
 #endif /* USE_ETHERNET */
 }
 
