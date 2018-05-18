@@ -93,7 +93,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\lwip\src\include;..\..\..\..\lwip\src\include\ipv4;..\..\..\..\lwip\src\include\ipv6;..\include;..;..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\..\lwip\src\include;..\..\..\..\lwip\src\include\ipv4;..\..\..\..\lwip\src\include\ipv6;..\include;..\..\..\examples\example_app;..\..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CONSOLE;WIN32;_DEBUG;LWIP_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -130,6 +130,7 @@
     <ClCompile Include="..\..\..\addons\tcp_isn\tcp_isn.c" />
     <ClCompile Include="..\..\..\apps\tcpecho_raw\tcpecho_raw.c" />
     <ClCompile Include="..\..\..\apps\udpecho_raw\udpecho_raw.c" />
+    <ClCompile Include="..\..\..\examples\example_app\test.c" />
     <ClCompile Include="..\..\..\examples\httpd\cgi_example\cgi_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\fs_example\fs_example.c" />
     <ClCompile Include="..\..\..\examples\httpd\genfiles_example\genfiles_example.c" />
@@ -144,15 +145,6 @@
     <ClCompile Include="..\..\..\examples\snmp\snmp_v3\snmpv3_dummy.c" />
     <ClCompile Include="..\..\..\examples\sntp\sntp_example.c" />
     <ClCompile Include="..\..\..\examples\tftp\tftp_example.c" />
-    <ClCompile Include="..\test.c">
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">EnableFastChecks</BasicRuntimeChecks>
-      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
     <ClCompile Include="..\..\..\apps\chargen\chargen.c" />
     <ClCompile Include="..\..\..\apps\httpserver\httpserver-netconn.c" />
     <ClCompile Include="..\..\..\apps\netio\netio.c" />
@@ -162,6 +154,7 @@
     <ClCompile Include="..\..\..\apps\socket_examples\socket_examples.c" />
     <ClCompile Include="..\..\..\apps\tcpecho\tcpecho.c" />
     <ClCompile Include="..\..\..\apps\udpecho\udpecho.c" />
+    <ClCompile Include="..\example_app\default_netif.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ipv6_static_routing\ip6_route_table.h" />

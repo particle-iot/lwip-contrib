@@ -42,7 +42,7 @@
 #ifdef _MSC_VER
 #pragma warning (pop)
 #endif
-#include "lwipcfg_msvc.h"
+#include "lwipcfg.h"
 
 /** When 1, use COM ports, when 0, use named pipes (for simulation). */
 #ifndef SIO_USE_COMPORT

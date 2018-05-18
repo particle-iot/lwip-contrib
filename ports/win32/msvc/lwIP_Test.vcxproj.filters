@@ -67,9 +67,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\apps\chargen\chargen.c">
       <Filter>Source Files\apps</Filter>
     </ClCompile>
@@ -150,6 +147,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\examples\mqtt\mqtt_example.c">
       <Filter>Source Files\examples\mqtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\examples\example_app\test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\example_app\default_netif.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

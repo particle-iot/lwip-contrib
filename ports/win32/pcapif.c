@@ -35,7 +35,7 @@
  */
 
 /* include the port-dependent configuration */
-#include "lwipcfg_msvc.h"
+#include "lwipcfg.h"
 
 #include <stdlib.h>
 #include <stdio.h>
