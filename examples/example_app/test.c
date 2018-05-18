@@ -428,7 +428,7 @@ msvc_netif_init(void)
 #endif /* !USE_ETHERNET */
 #if LWIP_IPV6
   netif_create_ip6_linklocal_address(&slipif1, 1);
-  printf("SLIP ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(&netif, 0)));
+  printf("SLIP ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(&slipif1, 0)));
 #endif /* LWIP_IPV6 */
 #if LWIP_NETIF_STATUS_CALLBACK
   netif_set_status_callback(&slipif1, status_callback);
@@ -505,7 +505,7 @@ apps_init(void)
 #endif /* LWIP_CHARGEN_APP && LWIP_SOCKET */
 
 #if LWIP_PING_APP && LWIP_RAW && LWIP_ICMP
-  ping_init(&netif.gw);
+  ping_init(&netif_default->gw);
 #endif /* LWIP_PING_APP && LWIP_RAW && LWIP_ICMP */
 
 #if LWIP_NETBIOS_APP && LWIP_UDP
