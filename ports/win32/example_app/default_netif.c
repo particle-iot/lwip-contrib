@@ -35,7 +35,7 @@
 #include "lwip/netif.h"
 #include "lwip/ip_addr.h"
 #include "lwip/tcpip.h"
-#include "pcapif.h"
+#include "../pcapif.h"
 #include "examples/example_app/default_netif.h"
 
 static struct netif netif;

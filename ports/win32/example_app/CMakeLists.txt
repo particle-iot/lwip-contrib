@@ -21,6 +21,7 @@ include_directories(
 )
 
 add_executable(example_app ${LWIP_CONTRIB_DIR}/examples/example_app/test.c default_netif.c)
-target_link_libraries(example_app lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcontribportwindows lwipcore)
+target_link_libraries(example_app lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcore lwipcontribportwindows)
 
 add_executable(makefsdata ${lwipmakefsdata_SRCS})
+target_link_libraries(makefsdata lwipcore lwipcontribportwindows)
