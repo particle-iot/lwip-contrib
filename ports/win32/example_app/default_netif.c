@@ -40,11 +40,11 @@
 
 static struct netif netif;
 
-#define NETIF_ADDRS ipaddr, netmask, gw,
-
 #if LWIP_IPV4
+#define NETIF_ADDRS ipaddr, netmask, gw,
 void init_default_netif(const ip4_addr_t *ipaddr, const ip4_addr_t *netmask, const ip4_addr_t *gw)
 #else
+#define NETIF_ADDRS
 void init_default_netif(void)
 #endif
 {
