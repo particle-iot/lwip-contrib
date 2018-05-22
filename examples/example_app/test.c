@@ -107,6 +107,10 @@
 /* include the port-dependent configuration */
 #include "lwipcfg.h"
 
+#ifndef LWIP_EXAMPLE_APP_ABORT
+#define LWIP_EXAMPLE_APP_ABORT() 0
+#endif
+
 /** Define this to 1 to enable a port-specific ethernet interface as default interface. */
 #ifndef USE_DEFAULT_ETH_NETIF
 #define USE_DEFAULT_ETH_NETIF 1
@@ -614,7 +618,6 @@ test_init(void * arg)
 static void
 main_loop(void)
 {
-  /* char key; */
 #if !NO_SYS
   err_t err;
   sys_sem_t init_sem;
@@ -647,8 +650,7 @@ main_loop(void)
 #endif
 
   /* MAIN LOOP for driver update (and timers if NO_SYS) */
-  /* while (!lwip_win32_keypressed(&key) || (key == 0)) { FIXME this is port specific */ 
-  while (1) {
+  while (!LWIP_EXAMPLE_APP_ABORT()) {
 #if NO_SYS
     /* handle timers (already done in tcpip.c when NO_SYS=0) */
     sys_check_timeouts();

@@ -733,7 +733,7 @@ sys_arch_netconn_sem_free(void)
 
 /* get keyboard state to terminate the debug app on any kbhit event using win32 API */
 int
-lwip_win32_keypressed(char *key)
+lwip_win32_keypressed(void)
 {
   INPUT_RECORD rec;
   DWORD num = 0;
@@ -743,10 +743,10 @@ lwip_win32_keypressed(char *key)
     ReadConsoleInput(h, &rec, 1, &num);
     if (rec.EventType == KEY_EVENT) {
       if (rec.Event.KeyEvent.bKeyDown) {
-        if (key) {
-          *key = rec.Event.KeyEvent.uChar.AsciiChar;
+        /* not a special key? */
+        if (rec.Event.KeyEvent.uChar.AsciiChar != 0) {
+          return 1;
         }
-        return 1;
       }
     }
   }
