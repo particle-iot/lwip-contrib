@@ -564,13 +564,18 @@ apps_init(void)
 #if LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET
   socket_examples_init();
 #endif /* LWIP_SOCKET_EXAMPLES_APP && LWIP_SOCKET */
-
+#if LWIP_MDNS_APP
   mdns_example_init();
+#endif
+#if LWIP_SNMP_APP
   snmp_example_init();
+#endif
 #if LWIP_SNTP_APP
   sntp_example_init();
 #endif
+#if LWIP_TFTP_APP
   tftp_example_init();
+#endif
 #if LWIP_LWIPERF_APP
   lwiperf_example_init();
 #endif
