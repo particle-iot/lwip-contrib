@@ -235,6 +235,12 @@
     <None Include="..\..\..\..\lwip\FILES" />
     <None Include="..\..\..\..\lwip\README" />
     <None Include="..\..\..\..\lwip\UPGRADING" />
+    <None Include="..\..\..\examples\example_app\lwipcfg.h.example">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug unittests|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release unittests|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\lwip\doc\NO_SYS_SampleCode.c">
@@ -552,12 +558,14 @@
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\tcp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\lwip\prot\udp.h" />
     <ClInclude Include="..\..\..\..\lwip\src\include\netif\zepif.h" />
+    <ClInclude Include="..\..\..\examples\example_app\default_netif.h" />
+    <ClInclude Include="..\..\..\examples\example_app\lwipcfg.h" />
+    <ClInclude Include="..\..\..\examples\example_app\lwipopts.h" />
+    <ClInclude Include="..\..\..\examples\example_app\lwippools.h" />
+    <ClInclude Include="..\..\..\examples\example_app\ppp_settings.h" />
     <ClInclude Include="..\include\arch\bpstruct.h" />
     <ClInclude Include="..\include\arch\cc.h" />
     <ClInclude Include="..\include\arch\epstruct.h" />
-    <ClInclude Include="..\lwipcfg_msvc.h" />
-    <ClInclude Include="..\include\lwipopts.h" />
-    <ClInclude Include="..\lwippools.h" />
     <ClInclude Include="..\include\arch\perf.h" />
     <ClInclude Include="..\include\arch\sys_arch.h" />
   </ItemGroup>
