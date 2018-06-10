@@ -369,7 +369,9 @@ test_netif_init(void)
 #endif
 #if LWIP_IPV6
   netif_create_ip6_linklocal_address(netif_default, 1);
+#if LWIP_IPV6_AUTOCONFIG 
   netif_default->ip6_autoconfig_enabled = 1;
+#endif
   printf("ip6 linklocal address: %s\n", ip6addr_ntoa(netif_ip6_addr(netif_default, 0)));
 #endif /* LWIP_IPV6 */
 #if LWIP_NETIF_STATUS_CALLBACK
@@ -404,7 +406,7 @@ test_netif_init(void)
   /* start PPPoE after ethernet netif is added! */
   ppp = pppoe_create(&ppp_netif, netif_default, NULL, NULL, pppLinkStatusCallback, NULL);
   if (ppp == NULL) {
-    printf("pppos_create error\n");
+    printf("pppoe_create error\n");
   } else {
     ppp_set_auth(ppp, PPPAUTHTYPE_ANY, username, password);
     ppp_connect(ppp, 0);
