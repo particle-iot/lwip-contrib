@@ -68,7 +68,6 @@
 #define LWIP_TFTP_APP                 0
 #define LWIP_UDPECHO_APP              0
 #define LWIP_LWIPERF_APP              0
-#define LWIP_MQTT_APP                 0
 
 /*#define USE_DHCP    1*/
 /*#define USE_AUTOIP  1*/
