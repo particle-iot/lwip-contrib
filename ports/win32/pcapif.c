@@ -1031,6 +1031,8 @@ pcapif_init(struct netif *netif)
   local_index = ethernetif_index++;
   SYS_ARCH_UNPROTECT(lev);
 
+  LWIP_ASSERT("pcapif needs an input callback", netif->input != NULL);
+
   netif->name[0] = IFNAME0;
   netif->name[1] = (char)(IFNAME1 + local_index);
   netif->linkoutput = pcapif_low_level_output;
