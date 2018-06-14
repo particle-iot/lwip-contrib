@@ -29,19 +29,19 @@
 
 #include "lwip/dns.h"
 
-#ifndef PPP_SUPPORT
-#define PPP_SUPPORT 0
-#endif
+#ifndef PPPOS_SUPPORT
+#define PPPOS_SUPPORT 0
+#endif /* PPPOS_SUPPORT */
 
-#if PPP_SUPPORT
+#if PPPOS_SUPPORT
 #include "netif/ppp/pppos.h"
 #include "lwip/sio.h"
 #define PPP_PTY_TEST 1
-#endif
+#endif /* PPPOS_SUPPORT */
 
 #include "pppos_example.h"
 
-#if PPP_SUPPORT
+#if PPPOS_SUPPORT
 static sio_fd_t ppp_sio;
 static ppp_pcb *ppp;
 static struct netif pppos_netif;
@@ -185,7 +185,7 @@ netif_status_callback(struct netif *nif)
 void
 pppos_example_init(void)
 {
-#if PPP_SUPPORT
+#if PPPOS_SUPPORT
 #if PPP_PTY_TEST
   ppp_sio = sio_open(2);
 #else
@@ -215,5 +215,5 @@ pppos_example_init(void)
 #endif /* LWIP_NETIF_STATUS_CALLBACK */
 
   sys_thread_new("pppos_rx_thread", pppos_rx_thread, NULL, DEFAULT_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
-#endif /* PPP_SUPPORT */
+#endif /* PPPOS_SUPPORT */
 }
