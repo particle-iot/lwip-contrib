@@ -295,7 +295,7 @@ link_callback(struct netif *state_netif)
 
 /* This function initializes all network interfaces */
 static void
-msvc_netif_init(void)
+test_netif_init(void)
 {
 #if LWIP_IPV4 && USE_ETHERNET
   ip4_addr_t ipaddr, netmask, gw;
@@ -606,7 +606,7 @@ test_init(void * arg)
   srand((unsigned int)time(0));
 
   /* init network interfaces */
-  msvc_netif_init();
+  test_netif_init();
 
   /* init apps */
   apps_init();
