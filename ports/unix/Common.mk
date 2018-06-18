@@ -32,9 +32,12 @@
 # Architecture specific files.
 LWIPARCH?=$(CONTRIBDIR)/ports/unix/port
 SYSARCH?=$(LWIPARCH)/sys_arch.c
-ARCHFILES=$(LWIPARCH)/perf.c $(SYSARCH) $(LWIPARCH)/netif/tapif.c $(LWIPARCH)/netif/tunif.c \
-	$(LWIPARCH)/netif/unixif.c $(LWIPARCH)/netif/list.c $(LWIPARCH)/netif/tcpdump.c \
-	$(LWIPARCH)/netif/delif.c $(LWIPARCH)/netif/sio.c $(LWIPARCH)/netif/fifo.c
+ARCHFILES=$(LWIPARCH)/perf.c \
+    $(SYSARCH) \
+	$(LWIPARCH)/netif/tapif.c \
+	$(LWIPARCH)/netif/list.c \
+	$(LWIPARCH)/netif/sio.c \
+	$(LWIPARCH)/netif/fifo.c
 
 UNIX_COMMON_MK_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(UNIX_COMMON_MK_DIR)../Common.allports.mk
