@@ -55,15 +55,10 @@
 #include "lwip/def.h"
 #include "lwip/mem.h"
 #include "lwip/pbuf.h"
-#include "netif/unixif.h"
 #include "lwip/sys.h"
 
 #include "lwip/ip.h"
 
-
-#if defined(LWIP_DEBUG) && defined(LWIP_TCPDUMP)
-#include "netif/tcpdump.h"
-#endif /* LWIP_DEBUG && LWIP_TCPDUMP */
 
 struct pcapif {
   pcap_t *pd;
@@ -106,10 +101,6 @@ timeout(void *arg)
     
     if (p != NULL) {
       pbuf_take(p, pcapif->pkt, pcapif->len);
-
-#if defined(LWIP_DEBUG) && defined(LWIP_TCPDUMP)
-      tcpdump(p, netif);
-#endif /* LWIP_DEBUG && LWIP_TCPDUMP */
 
       ethhdr = p->payload;
       switch (lwip_htons(ethhdr->type)) {

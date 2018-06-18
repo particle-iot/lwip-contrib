@@ -12,9 +12,6 @@ testing lwIP applications.
   their helpers, some explicitly for Unix infrastructure, some generic (but most
   useful on an easy to debug system):
 
-  * delif: Network interface that inserts delay before receiving or sending
-    packages
-
   * fifo: Helper for sio
 
   * list: Helper for unixif
@@ -26,12 +23,3 @@ testing lwIP applications.
 
   * tapif: Network interface that is mapped to a tap interface (Unix user
     space layer 2 network device). Uses lwIP threads.
-
-  * tcpdump: Utility functions to dump pbufs into a tcpdump formatted log
-    file
-
-  * tunif: Network interface that is mapped to a tun interface (Unix user
-    space layer 3 network device). Uses lwIP threads.
-
-  * unixif: Network interface that allows lwIP Unix programs to "meet" at Unix
-    socket address and exchange traffic over it.
