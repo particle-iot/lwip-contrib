@@ -507,6 +507,7 @@ sys_check_core_locking(void)
 #else /* LWIP_TCPIP_CORE_LOCKING */
     LWIP_ASSERT("Function called from wrong thread", current_thread_id == lwip_tcpip_thread_id);
 #endif /* LWIP_TCPIP_CORE_LOCKING */
+    LWIP_UNUSED_ARG(current_thread_id); /* for LWIP_NOASSERT */
   }
 }
 #endif /* !NO_SYS */
