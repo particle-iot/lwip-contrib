@@ -83,6 +83,9 @@
 #if !LWIP_HTTPD_DYNAMIC_FILE_READ
 #error This wants to demonstrate read-after-open, so LWIP_HTTPD_DYNAMIC_FILE_READ is required!
 #endif
+#if !LWIP_HTTPD_FS_ASYNC_READ
+#error This needs LWIP_HTTPD_FS_ASYNC_READ
+#endif
 
 #if LWIP_HTTPD_EXAMPLE_CUSTOMFILES_DELAYED
 #include "lwip/tcpip.h"
