@@ -971,7 +971,7 @@ com_idxtoname(struct command *com)
 {
   long i = strtol(com->args[0], NULL, 10);
 
-  if (if_indextoname((unsigned int)i, (char *)buffer)) {
+  if (lwip_if_indextoname((unsigned int)i, (char *)buffer)) {
     netconn_write(com->conn, buffer, strlen((const char *)buffer), NETCONN_COPY);
     sendstr(NEWLINE, com->conn);
   } else {
@@ -984,7 +984,7 @@ com_idxtoname(struct command *com)
 static s8_t
 com_nametoidx(struct command *com)
 {
-  unsigned int idx = if_nametoindex(com->args[0]);
+  unsigned int idx = lwip_if_nametoindex(com->args[0]);
 
   if (idx) {
     snprintf((char *)buffer, sizeof(buffer), "%u"NEWLINE, idx);
