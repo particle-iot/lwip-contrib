@@ -75,6 +75,8 @@
 #include "lwip/sys.h"
 #include <string.h>
 
+#ifdef LWIP_HOOK_TCP_ISN
+
 /* pull in md5 of ppp? */
 #include "netif/ppp/ppp_opts.h"
 #if !PPP_SUPPORT || (!LWIP_USE_EXTERNAL_POLARSSL && !LWIP_USE_EXTERNAL_MBEDTLS)
@@ -176,3 +178,5 @@ lwip_hook_tcp_isn(const ip_addr_t *local_ip, u16_t local_port,
   /* Add the current time in 4-microsecond units. */
   return isn + base_time + sys_now() * 250;
 }
+
+#endif /* LWIP_HOOK_TCP_ISN */
