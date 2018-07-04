@@ -284,10 +284,11 @@ rtp_recv_thread(void *arg)
           }
 
           /* leave multicast group */
+          /* TODO: this code is never reached
           result = lwip_setsockopt(sock, IPPROTO_IP, IP_DROP_MEMBERSHIP, &ipmreq, sizeof(ipmreq));
           if (result) {
             LWIP_DEBUGF(RTP_DEBUG, ("rtp_recv_thread: setsockopt(IP_DROP_MEMBERSHIP) failed: errno=%d\n", errno));
-          }
+          }*/
         }
       }
 
