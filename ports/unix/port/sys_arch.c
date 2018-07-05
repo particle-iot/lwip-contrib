@@ -84,6 +84,12 @@ get_monotonic_time(struct timespec *ts)
 #endif
 }
 
+#if SYS_LIGHTWEIGHT_PROT
+static pthread_mutex_t lwprot_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_t lwprot_thread = (pthread_t)0xDEAD;
+static int lwprot_count = 0;
+#endif /* SYS_LIGHTWEIGHT_PROT */
+
 #if !NO_SYS
 
 static struct sys_thread *threads = NULL;
@@ -120,12 +126,6 @@ struct sys_thread {
   struct sys_thread *next;
   pthread_t pthread;
 };
-
-#if SYS_LIGHTWEIGHT_PROT
-static pthread_mutex_t lwprot_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_t lwprot_thread = (pthread_t)0xDEAD;
-static int lwprot_count = 0;
-#endif /* SYS_LIGHTWEIGHT_PROT */
 
 static struct sys_sem *sys_sem_new_internal(u8_t count);
 static void sys_sem_free_internal(struct sys_sem *sem);
@@ -181,7 +181,6 @@ sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksi
   return st;
 }
 
-#if !NO_SYS
 #if LWIP_TCPIP_CORE_LOCKING
 static pthread_t lwip_core_lock_holder_thread_id;
 void sys_lock_tcpip_core(void)
@@ -217,7 +216,6 @@ void sys_check_core_locking(void)
 #endif /* LWIP_TCPIP_CORE_LOCKING */
   }
 }
-#endif /* !NO_SYS */
 
 /*-----------------------------------------------------------------------------------*/
 /* Mailbox */

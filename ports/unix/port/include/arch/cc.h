@@ -75,4 +75,6 @@ typedef struct sio_status_s sio_status_t;
 #define sio_fd_t sio_status_t*
 #define __sio_fd_t_defined
 
+typedef unsigned int sys_prot_t;
+
 #endif /* LWIP_ARCH_CC_H */
