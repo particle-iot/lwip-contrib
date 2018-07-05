@@ -42,11 +42,13 @@ srv_txt(struct mdns_service *service, void *txt_userdata)
 }
 #endif
 
+#if LWIP_MDNS_RESPONDER
 static void
 mdns_example_report(struct netif* netif, u8_t result)
 {
   LWIP_PLATFORM_DIAG(("mdns status[netif %d]: %d\n", netif->num, result));
 }
+#endif
 
 void
 mdns_example_init(void)
