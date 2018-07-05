@@ -368,6 +368,12 @@ tapif_init(struct netif *netif)
 
 
 /*-----------------------------------------------------------------------------------*/
+void
+tapif_poll(struct netif *netif)
+{
+  tapif_input(netif);
+}
+
 #if NO_SYS
 
 int

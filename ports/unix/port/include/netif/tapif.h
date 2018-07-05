@@ -35,6 +35,7 @@
 #include "lwip/netif.h"
 
 err_t tapif_init(struct netif *netif);
+void tapif_poll(struct netif *netif);
 #if NO_SYS
 int tapif_select(struct netif *netif);
 #endif /* NO_SYS */

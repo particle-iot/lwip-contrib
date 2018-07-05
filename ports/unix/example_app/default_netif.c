@@ -49,16 +49,17 @@ void init_default_netif(void)
 #endif
 {
 #if NO_SYS
-  #error tapif not implemented for NO_SYS mode
-#else  /* NO_SYS */
+netif_add(&netif, NETIF_ADDRS NULL, tapif_init, netif_input);
+#else
   netif_add(&netif, NETIF_ADDRS NULL, tapif_init, tcpip_input);
-#endif /* NO_SYS */
+#endif
   netif_set_default(&netif);
 }
 
 void
 default_netif_poll(void)
 {
+  tapif_poll(&netif);
 }
 
 void
