@@ -36,6 +36,9 @@ include ../Common.mk
 
 CFLAGS+=-I$(CONTRIBDIR)/examples/example_app
 
+TESTFLAGS?=
+CFLAGS+=$(TESTFLAGS)
+
 MAKEFSDATAOBJS=$(notdir $(MAKEFSDATAFILES:.c=.o))
 
 clean:

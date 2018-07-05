@@ -32,6 +32,10 @@
 #ifndef LWIP_LWIPOPTS_H
 #define LWIP_LWIPOPTS_H
 
+#ifdef LWIP_OPTTEST_FILE
+#include "lwipopts_test.h"
+#else /* LWIP_OPTTEST_FILE */
+
 #define LWIP_IPV4                  1
 #define LWIP_IPV6                  1
 
@@ -65,20 +69,6 @@
 #define LWIP_SO_RCVBUF             1
 
 #define LWIP_TCPIP_CORE_LOCKING    1
-
-#if !NO_SYS
-void sys_check_core_locking(void);
-#define LWIP_ASSERT_CORE_LOCKED()  sys_check_core_locking()
-void sys_mark_tcpip_thread(void);
-#define LWIP_MARK_TCPIP_THREAD()   sys_mark_tcpip_thread()
-
-#if LWIP_TCPIP_CORE_LOCKING
-void sys_lock_tcpip_core(void);
-#define LOCK_TCPIP_CORE()          sys_lock_tcpip_core()
-void sys_unlock_tcpip_core(void);
-#define UNLOCK_TCPIP_CORE()        sys_unlock_tcpip_core()
-#endif
-#endif
 
 #define LWIP_NETIF_LINK_CALLBACK        1
 #define LWIP_NETIF_STATUS_CALLBACK      1
@@ -317,5 +307,23 @@ a lot of data that needs to be copied, this should be set high. */
 #define MD5_SUPPORT             1      /* Set > 0 for MD5 (see also CHAP) */
 
 #endif /* PPP_SUPPORT */
+
+#endif /* LWIP_OPTTEST_FILE */
+
+/* The following defines must be done even in OPTTEST mode: */
+
+#if !defined(NO_SYS) || !NO_SYS /* default is 0 */
+void sys_check_core_locking(void);
+#define LWIP_ASSERT_CORE_LOCKED()  sys_check_core_locking()
+void sys_mark_tcpip_thread(void);
+#define LWIP_MARK_TCPIP_THREAD()   sys_mark_tcpip_thread()
+
+#if !defined(LWIP_TCPIP_CORE_LOCKING) || LWIP_TCPIP_CORE_LOCKING /* default is 1 */
+void sys_lock_tcpip_core(void);
+#define LOCK_TCPIP_CORE()          sys_lock_tcpip_core()
+void sys_unlock_tcpip_core(void);
+#define UNLOCK_TCPIP_CORE()        sys_unlock_tcpip_core()
+#endif
+#endif
 
 #endif /* LWIP_LWIPOPTS_H */

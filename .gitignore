@@ -31,3 +31,5 @@
 /ports/win32/mingw/*.exe
 /ports/win32/mingw/*.map
 /ports/win32/mingw/cov-int
+/examples/example_app/lwipopts_test.h
+/ports/unix/example_app/iteropts.log
