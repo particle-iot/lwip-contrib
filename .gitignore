@@ -6,6 +6,8 @@
 .depend
 /examples/example_app/lwipcfg.h
 /ports/unix/example_app/build
+/ports/unix/example_app/example_app
+/ports/unix/example_app/makefsdata
 /ports/unix/unixsim/build
 /ports/unix/unixsim/simhost
 /ports/unix/unixsim/simrouter
