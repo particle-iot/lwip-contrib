@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 
 project(example_app C)
 
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(LWIP_CONTRIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 set(LWIP_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip)
 
