@@ -16,8 +16,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     list(LWIP_COMPILER_FLAGS APPEND -Wno-gnu-zero-variadic-macro-arguments)
 endif()
 
-add_definitions(-DLWIP_DEBUG -DLWIP_NOASSERT_ON_ERROR)
-
+set (LWIP_DEFINITIONS -DLWIP_DEBUG -DLWIP_NOASSERT_ON_ERROR)
 set (LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/test/unit"
     "${LWIP_DIR}/src/include"
@@ -31,6 +30,9 @@ include(${LWIP_DIR}/src/Filelists.cmake)
 include(${LWIP_DIR}/test/unit/Filelists.cmake)
 
 add_executable(lwip_unittests ${LWIP_TESTFILES})
+target_include_directories(lwip_unittests PRIVATE ${LWIP_INCLUDE_DIRS})
+target_compile_options(lwip_unittests PRIVATE ${LWIP_COMPILER_FLAGS})
+target_compile_definitions(lwip_unittests PRIVATE ${LWIP_DEFINITIONS} ${LWIP_MBEDTLS_DEFINITIONS})
 
 find_library(LIBCHECK check)
 find_library(LIBM m)
@@ -41,11 +43,6 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
     find_library(LIBSUBUNIT subunit)
     target_link_libraries(lwip_unittests ${LIBSUBUNIT})
 endif()
-
-target_include_directories(lwip_unittests PRIVATE ${LWIP_INCLUDE_DIRS})
-
-target_include_directories(lwipcore PRIVATE ${LWIP_INCLUDE_DIRS})
-target_include_directories(lwipallapps PRIVATE ${LWIP_INCLUDE_DIRS})
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_library(LIBUTIL util)
