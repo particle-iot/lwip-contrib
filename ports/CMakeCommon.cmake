@@ -11,9 +11,21 @@ if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
     
     # mbedtls uses cmake. Sweet!
     add_subdirectory(${LWIP_CONTRIB_DIR}/../mbedtls mbedtls)
-    add_definitions(-DLWIP_HAVE_MBEDTLS=1)
-    include_directories(${MBEDTLSDIR}/include)
-    link_libraries(mbedtls mbedcrypto mbedx509)
+
+    set (LWIP_MBEDTLS_DEFINITIONS
+        -DLWIP_HAVE_MBEDTLS=1
+    )
+    set (LWIP_MBEDTLS_INCLUDE_DIRS
+        ${MBEDTLSDIR}/include
+    )
+    set (LWIP_MBEDTLS_LINK_LIBRARIES
+        mbedtls
+        mbedcrypto
+        mbedx509
+    )
+else()
+    set (LWIP_MBEDTLS_INCLUDE_DIRS "")
+    set (LWIP_MBEDTLS_LINK_LIBRARIES "")
 endif()
 
 set(LWIP_COMPILER_FLAGS
