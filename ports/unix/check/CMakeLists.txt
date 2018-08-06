@@ -13,12 +13,12 @@ include(${LWIP_CONTRIB_DIR}/ports/CMakeCommon.cmake)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     # check.h causes 'error: token pasting of ',' and __VA_ARGS__ is a GNU extension' with clang 9.0.0
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-gnu-zero-variadic-macro-arguments")
+    list(LWIP_COMPILER_FLAGS APPEND -Wno-gnu-zero-variadic-macro-arguments)
 endif()
 
 add_definitions(-DLWIP_DEBUG -DLWIP_NOASSERT_ON_ERROR)
 
-include_directories(
+set (LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/test/unit"
     "${LWIP_DIR}/src/include"
     "${LWIP_CONTRIB_DIR}/"
@@ -29,6 +29,7 @@ include_directories(
 include(${LWIP_CONTRIB_DIR}/ports/unix/Filelists.cmake)
 include(${LWIP_DIR}/src/Filelists.cmake)
 include(${LWIP_DIR}/test/unit/Filelists.cmake)
+
 add_executable(lwip_unittests ${LWIP_TESTFILES})
 
 find_library(LIBCHECK check)
@@ -39,4 +40,22 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
     # check installed via brew on Darwin doesn't have a separate subunit library (must be statically linked)
     find_library(LIBSUBUNIT subunit)
     target_link_libraries(lwip_unittests ${LIBSUBUNIT})
+endif()
+
+target_include_directories(lwip_unittests PRIVATE ${LWIP_INCLUDE_DIRS})
+
+target_include_directories(lwipcore PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipallapps PRIVATE ${LWIP_INCLUDE_DIRS})
+
+if (CMAKE_SYSTEM_NAME STREQUAL Linux)
+    find_library(LIBUTIL util)
+    find_library(LIBPTHREAD pthread)
+    find_library(LIBRT rt)
+    target_link_libraries(lwip_unittests ${LIBUTIL} ${LIBPTHREAD} ${LIBRT})
+endif()
+
+if (CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    # Darwin doesn't have pthreads or POSIX real-time extensions libs
+    find_library(LIBUTIL util)
+    target_link_libraries(lwip_unittests ${LIBUTIL})
 endif()

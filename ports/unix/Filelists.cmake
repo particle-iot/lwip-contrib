@@ -20,17 +20,19 @@ set(lwipcontribportunixnetifs_SRCS
     ${LWIP_CONTRIB_DIR}/ports/unix/port/netif/fifo.c
 )
 
+add_library(lwipcontribportunix EXCLUDE_FROM_ALL ${lwipcontribportunix_SRCS} ${lwipcontribportunixnetifs_SRCS})
+target_include_directories(lwipcontribportunix PRIVATE "${WPDPACK_DIR}/include")
+target_compile_options(lwipcontribportunix PRIVATE ${LWIP_COMPILER_FLAGS})
+
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_library(LIBUTIL util)
     find_library(LIBPTHREAD pthread)
     find_library(LIBRT rt)
-    link_libraries(${LIBUTIL} ${LIBPTHREAD} ${LIBRT})
+    target_link_libraries(lwipcontribportunix PUBLIC ${LIBUTIL} ${LIBPTHREAD} ${LIBRT})
 endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL Darwin)
     # Darwin doesn't have pthreads or POSIX real-time extensions libs
     find_library(LIBUTIL util)
-    link_libraries(${LIBUTIL})
+    target_link_libraries(lwipcontribportunix PUBLIC ${LIBUTIL})
 endif()
-
-add_library(lwipcontribportunix EXCLUDE_FROM_ALL ${lwipcontribportunix_SRCS} ${lwipcontribportunixnetifs_SRCS})

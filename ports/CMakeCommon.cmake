@@ -16,24 +16,67 @@ if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
     link_libraries(mbedtls mbedcrypto mbedx509)
 endif()
 
-set(LWIP_GNU_CLANG_COMMON_FLAGS "-g -Wall -pedantic -Werror -Wparentheses -Wsequence-point -Wswitch-default -Wextra -Wundef -Wshadow -Wpointer-arith -Wcast-qual -Wc++-compat -Wwrite-strings -Wold-style-definition -Wcast-align -Wmissing-prototypes -Wnested-externs -Wunreachable-code -Wuninitialized -Wmissing-prototypes -Waggregate-return -Wlogical-not-parentheses")
+set(LWIP_COMPILER_FLAGS
+    -g
+    -Wall
+    -pedantic
+    -Werror
+    -Wparentheses
+    -Wsequence-point
+    -Wswitch-default
+    -Wextra -Wundef
+    -Wshadow
+    -Wpointer-arith
+    -Wcast-qual
+    -Wc++-compat
+    -Wwrite-strings
+    -Wold-style-definition
+    -Wcast-align
+    -Wmissing-prototypes
+    -Wnested-externs
+    -Wunreachable-code
+    -Wuninitialized
+    -Wmissing-prototypes
+    -Waggregate-return
+    -Wlogical-not-parentheses
+    )
+
 if (NOT LWIP_HAVE_MBEDTLS)
-    set(LWIP_GNU_CLANG_COMMON_FLAGS "${LWIP_GNU_CLANG_COMMON_FLAGS} -Wredundant-decls")
+    list(APPEND LWIP_COMPILER_FLAGS
+        -Wredundant-decls
+        )
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    set(CMAKE_C_FLAGS "${LWIP_GNU_CLANG_COMMON_FLAGS} -Wlogical-op -Wtrampolines")
+    list(APPEND LWIP_COMPILER_FLAGS
+        -Wlogical-op
+        -Wtrampolines
+        )
     if (NOT LWIP_HAVE_MBEDTLS)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wc90-c99-compat")
+        list(APPEND LWIP_COMPILER_FLAGS
+            -Wc90-c99-compat
+            )
     endif()
 
     if(NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fstack-protector -fstack-check -fsanitize=undefined -fno-sanitize=alignment")
+        list(APPEND LWIP_COMPILER_FLAGS
+            -fsanitize=address
+            -fstack-protector
+            -fstack-check
+            -fsanitize=undefined
+            -fno-sanitize=alignment
+            )
     endif()
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-    set(CMAKE_C_FLAGS "${LWIP_GNU_CLANG_COMMON_FLAGS} -fsanitize=address -fsanitize=undefined -fno-sanitize=alignment -Wdocumentation -Wno-documentation-deprecated-sync")
+    list(APPEND LWIP_COMPILER_FLAGS
+        -fsanitize=address
+        -fsanitize=undefined
+        -fno-sanitize=alignment
+        -Wdocumentation
+        -Wno-documentation-deprecated-sync
+        )
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL MSVC)

@@ -15,7 +15,7 @@ include(${LWIP_CONTRIB_DIR}/ports/unix/Filelists.cmake)
 
 add_definitions(-DLWIP_DEBUG)
 
-include_directories(
+set (LWIP_INCLUDE_DIRS
     "${LWIP_DIR}/src/include"
     "${LWIP_CONTRIB_DIR}/"
     "${LWIP_CONTRIB_DIR}/ports/unix/port/include"
@@ -26,3 +26,13 @@ add_executable(example_app ${LWIP_CONTRIB_DIR}/examples/example_app/test.c defau
 target_link_libraries(example_app lwipcontribexamples lwipcontribapps lwipcontribaddons lwipallapps lwipcontribportunix lwipcore)
 
 add_executable(makefsdata ${lwipmakefsdata_SRCS})
+
+target_include_directories(example_app PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(makefsdata PRIVATE ${LWIP_INCLUDE_DIRS})
+
+target_include_directories(lwipcore PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipallapps PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipcontribaddons PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipcontribapps PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipcontribexamples PRIVATE ${LWIP_INCLUDE_DIRS})
+target_include_directories(lwipcontribportunix PRIVATE ${LWIP_INCLUDE_DIRS})

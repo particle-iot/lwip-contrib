@@ -22,21 +22,23 @@ set(lwipcontribexamples_SRCS
     ${LWIP_CONTRIB_DIR}/examples/tftp/tftp_example.c
 )
 add_library(lwipcontribexamples EXCLUDE_FROM_ALL ${lwipcontribexamples_SRCS})
+target_compile_options(lwipcontribexamples PRIVATE ${LWIP_COMPILER_FLAGS})
 
 set(lwipcontribapps_SRCS
     ${LWIP_CONTRIB_DIR}/apps/httpserver/httpserver-netconn.c
-	${LWIP_CONTRIB_DIR}/apps/chargen/chargen.c
-	${LWIP_CONTRIB_DIR}/apps/udpecho/udpecho.c
-	${LWIP_CONTRIB_DIR}/apps/tcpecho/tcpecho.c
-	${LWIP_CONTRIB_DIR}/apps/shell/shell.c
-	${LWIP_CONTRIB_DIR}/apps/udpecho_raw/udpecho_raw.c
-	${LWIP_CONTRIB_DIR}/apps/tcpecho_raw/tcpecho_raw.c
-	${LWIP_CONTRIB_DIR}/apps/netio/netio.c
-	${LWIP_CONTRIB_DIR}/apps/ping/ping.c
-	${LWIP_CONTRIB_DIR}/apps/socket_examples/socket_examples.c
+    ${LWIP_CONTRIB_DIR}/apps/chargen/chargen.c
+    ${LWIP_CONTRIB_DIR}/apps/udpecho/udpecho.c
+    ${LWIP_CONTRIB_DIR}/apps/tcpecho/tcpecho.c
+    ${LWIP_CONTRIB_DIR}/apps/shell/shell.c
+    ${LWIP_CONTRIB_DIR}/apps/udpecho_raw/udpecho_raw.c
+    ${LWIP_CONTRIB_DIR}/apps/tcpecho_raw/tcpecho_raw.c
+    ${LWIP_CONTRIB_DIR}/apps/netio/netio.c
+    ${LWIP_CONTRIB_DIR}/apps/ping/ping.c
+    ${LWIP_CONTRIB_DIR}/apps/socket_examples/socket_examples.c
     ${LWIP_CONTRIB_DIR}/apps/rtp/rtp.c
 )
 add_library(lwipcontribapps EXCLUDE_FROM_ALL ${lwipcontribapps_SRCS})
+target_compile_options(lwipcontribapps PRIVATE ${LWIP_COMPILER_FLAGS})
 
 set(lwipcontribaddons_SRCS
     ${LWIP_CONTRIB_DIR}/addons/tcp_isn/tcp_isn.c
@@ -45,3 +47,4 @@ set(lwipcontribaddons_SRCS
 #    ${LWIP_CONTRIB_DIR}/addons/tcp_md5/tcp_md5.c
 )
 add_library(lwipcontribaddons EXCLUDE_FROM_ALL ${lwipcontribaddons_SRCS})
+target_compile_options(lwipcontribaddons PRIVATE ${LWIP_COMPILER_FLAGS})
