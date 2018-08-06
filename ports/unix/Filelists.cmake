@@ -21,8 +21,10 @@ set(lwipcontribportunixnetifs_SRCS
 )
 
 add_library(lwipcontribportunix EXCLUDE_FROM_ALL ${lwipcontribportunix_SRCS} ${lwipcontribportunixnetifs_SRCS})
-target_include_directories(lwipcontribportunix PRIVATE "${WPDPACK_DIR}/include")
+target_include_directories(lwipcontribportunix PRIVATE ${LWIP_INCLUDE_DIRS} ${LWIP_MBEDTLS_INCLUDE_DIRS})
 target_compile_options(lwipcontribportunix PRIVATE ${LWIP_COMPILER_FLAGS})
+target_compile_definitions(lwipcontribaddons PRIVATE ${LWIP_DEFINITIONS} ${LWIP_MBEDTLS_DEFINITIONS})
+target_link_libraries(lwipcontribportunix PUBLIC ${LWIP_MBEDTLS_LINK_LIBRARIES})
 
 if (CMAKE_SYSTEM_NAME STREQUAL Linux)
     find_library(LIBUTIL util)

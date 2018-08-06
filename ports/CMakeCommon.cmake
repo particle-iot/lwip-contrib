@@ -23,12 +23,9 @@ if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
         mbedcrypto
         mbedx509
     )
-else()
-    set (LWIP_MBEDTLS_INCLUDE_DIRS "")
-    set (LWIP_MBEDTLS_LINK_LIBRARIES "")
 endif()
 
-set(LWIP_COMPILER_FLAGS
+set(LWIP_COMPILER_FLAGS_GNU_CLANG
     -g
     -Wall
     -pedantic
@@ -54,41 +51,43 @@ set(LWIP_COMPILER_FLAGS
     )
 
 if (NOT LWIP_HAVE_MBEDTLS)
-    list(APPEND LWIP_COMPILER_FLAGS
+    list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
         -Wredundant-decls
         )
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    list(APPEND LWIP_COMPILER_FLAGS
+    list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
         -Wlogical-op
         -Wtrampolines
         )
     if (NOT LWIP_HAVE_MBEDTLS)
-        list(APPEND LWIP_COMPILER_FLAGS
+        list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
             -Wc90-c99-compat
             )
     endif()
 
     if(NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9)
-        list(APPEND LWIP_COMPILER_FLAGS
+        list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
             -fsanitize=address
-            -fstack-protector
-            -fstack-check
             -fsanitize=undefined
             -fno-sanitize=alignment
+            -fstack-protector
+            -fstack-check
             )
     endif()
+    set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
-    list(APPEND LWIP_COMPILER_FLAGS
+    list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
         -fsanitize=address
         -fsanitize=undefined
         -fno-sanitize=alignment
         -Wdocumentation
         -Wno-documentation-deprecated-sync
         )
+    set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL MSVC)
