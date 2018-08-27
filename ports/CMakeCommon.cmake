@@ -69,9 +69,9 @@ if(CMAKE_C_COMPILER_ID STREQUAL GNU)
 
     if(NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9)
         list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
-            -fsanitize=address
-            -fsanitize=undefined
-            -fno-sanitize=alignment
+#            -fsanitize=address
+#            -fsanitize=undefined
+#            -fno-sanitize=alignment
             -fstack-protector
             -fstack-check
             )
@@ -81,9 +81,9 @@ endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
-        -fsanitize=address
-        -fsanitize=undefined
-        -fno-sanitize=alignment
+#        -fsanitize=address
+#        -fsanitize=undefined
+#        -fno-sanitize=alignment
         -Wdocumentation
         -Wno-documentation-deprecated-sync
         )
