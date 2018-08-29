@@ -153,26 +153,47 @@ introduce_thread(pthread_t id)
   return thread;
 }
 
+struct thread_wrapper_data
+{
+  lwip_thread_fn function;
+  void *arg;
+};
+
+static void *
+thread_wrapper(void *arg)
+{
+  struct thread_wrapper_data *thread_data = (struct thread_wrapper_data *)arg;
+
+  thread_data->function(thread_data->arg);
+
+  /* we should never get here */
+  free(arg);
+  return NULL;
+}
+
 sys_thread_t
 sys_thread_new(const char *name, lwip_thread_fn function, void *arg, int stacksize, int prio)
 {
   int code;
   pthread_t tmp;
   struct sys_thread *st = NULL;
+  struct thread_wrapper_data *thread_data;
   LWIP_UNUSED_ARG(name);
   LWIP_UNUSED_ARG(stacksize);
   LWIP_UNUSED_ARG(prio);
 
+  thread_data = (struct thread_wrapper_data *)malloc(sizeof(struct thread_wrapper_data));
+  thread_data->arg = arg;
+  thread_data->function = function;
   code = pthread_create(&tmp,
                         NULL, 
-                        (void *(*)(void *)) 
-                        function, 
-                        arg);
+                        thread_wrapper, 
+                        thread_data);
   
   if (0 == code) {
     st = introduce_thread(tmp);
   }
-  
+
   if (NULL == st) {
     LWIP_DEBUGF(SYS_DEBUG, ("sys_thread_new: pthread_create %d, st = 0x%lx",
                        code, (unsigned long)st));
