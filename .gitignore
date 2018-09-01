@@ -8,13 +8,8 @@
 /ports/unix/example_app/build
 /ports/unix/example_app/example_app
 /ports/unix/example_app/makefsdata
-/ports/unix/unixsim/build
-/ports/unix/unixsim/simhost
-/ports/unix/unixsim/simrouter
-/ports/unix/unixsim/simnode
-/ports/unix/unixsim/makefsdata
-/ports/unix/minimal/echop
 /ports/unix/check/build
+/ports/unix/lib/build
 /ports/win32/WindowsCMake/build
 /ports/win32/example_app/build
 /ports/win32/msvc/Debug
