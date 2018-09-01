@@ -1,6 +1,4 @@
 # ARM mbedtls support https://tls.mbed.org/
-# Build mbedtls BEFORE adding our own compile flags -
-# mbedtls produces errors with them
 set(MBEDTLSDIR ${LWIP_CONTRIB_DIR}/../mbedtls)
 if(EXISTS ${MBEDTLSDIR}/CMakeLists.txt)
     set(LWIP_HAVE_MBEDTLS ON BOOL)
