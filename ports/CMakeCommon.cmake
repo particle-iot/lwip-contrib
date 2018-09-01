@@ -10,7 +10,7 @@ if(EXISTS ${MBEDTLSDIR}/CMakeLists.txt)
     set(ENABLE_TESTING  OFF CACHE BOOL "")
     
     # mbedtls uses cmake. Sweet!
-    add_subdirectory(${LWIP_CONTRIB_DIR}/../mbedtls mbedtls)
+    add_subdirectory(${MBEDTLSDIR} mbedtls)
 
     set (LWIP_MBEDTLS_DEFINITIONS
         -DLWIP_HAVE_MBEDTLS=1
