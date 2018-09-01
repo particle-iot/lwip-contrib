@@ -2,7 +2,7 @@
 # Build mbedtls BEFORE adding our own compile flags -
 # mbedtls produces errors with them
 set(MBEDTLSDIR ${LWIP_CONTRIB_DIR}/../mbedtls)
-if(EXISTS ${MBEDTLSDIR}/include/mbedtls/ssl.h)
+if(EXISTS ${MBEDTLSDIR}/CMakeLists.txt)
     set(LWIP_HAVE_MBEDTLS ON BOOL)
 
     # Prevent building MBEDTLS programs and tests
