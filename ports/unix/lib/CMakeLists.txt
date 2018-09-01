@@ -28,6 +28,3 @@ add_library(lwip ${lwipnoapps_SRCS} ${lwipcontribportunix_SRCS} ${lwipcontribpor
 target_compile_options(lwip PRIVATE ${LWIP_COMPILER_FLAGS})
 target_compile_definitions(lwip PRIVATE ${LWIP_DEFINITIONS} ${LWIP_MBEDTLS_DEFINITIONS})
 target_include_directories(lwip PRIVATE ${LWIP_INCLUDE_DIRS} ${LWIP_MBEDTLS_INCLUDE_DIRS})
-
-find_library(LIBPTHREAD pthread)
-target_link_libraries(lwip ${LIBPTHREAD})
