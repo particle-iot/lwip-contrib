@@ -477,6 +477,11 @@ cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex, u32_t timeout)
   struct timespec rtime1, rtime2, ts;
   int ret;
 
+#ifdef __GNU__
+  #define pthread_cond_wait pthread_hurd_cond_wait_np
+  #define pthread_cond_timedwait pthread_hurd_cond_timedwait_np
+#endif
+
   if (timeout == 0) {
     pthread_cond_wait(cond, mutex);
     return 0;
