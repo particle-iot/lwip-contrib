@@ -46,48 +46,58 @@ set(LWIP_COMPILER_FLAGS_GNU_CLANG
     -Wmissing-prototypes
     -Waggregate-return
     -Wlogical-not-parentheses
-    )
+)
 
 if (NOT LWIP_HAVE_MBEDTLS)
     list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
         -Wredundant-decls
-        )
+    )
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL GNU)
     list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
         -Wlogical-op
         -Wtrampolines
-        )
+    )
+
     if (NOT LWIP_HAVE_MBEDTLS)
         list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
             -Wc90-c99-compat
-            )
+        )
     endif()
 
     if(NOT CMAKE_C_COMPILER_VERSION VERSION_LESS 4.9)
-        list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
-#            -fsanitize=address
-#            -fsanitize=undefined
-#            -fno-sanitize=alignment
-#            -fstack-protector
-#            -fstack-check
+        if(LWIP_USE_SANITIZERS)
+            list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
+                -fsanitize=address
+                -fsanitize=undefined
+                -fno-sanitize=alignment
+                -fstack-protector
+                -fstack-check
             )
-#        set(LWIP_SANITIZER_LIBS asan ubsan)
+            set(LWIP_SANITIZER_LIBS asan ubsan)
+        endif()
     endif()
+
     set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
     list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
-#        -fsanitize=address
-#        -fsanitize=undefined
-#        -fno-sanitize=alignment
         -Wdocumentation
         -Wno-documentation-deprecated-sync
+    )
+
+    if(LWIP_USE_SANITIZERS)
+        list(APPEND LWIP_COMPILER_FLAGS_GNU_CLANG
+            -fsanitize=address
+            -fsanitize=undefined
+            -fno-sanitize=alignment
         )
+        set(LWIP_SANITIZER_LIBS asan ubsan)
+    endif()
+
     set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
-#    set(LWIP_SANITIZER_LIBS asan ubsan)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL MSVC)

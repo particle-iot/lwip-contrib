@@ -9,6 +9,7 @@ endif()
 set(LWIP_CONTRIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)
 set(LWIP_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/../../../../lwip)
 
+set(LWIP_USE_SANITIZERS true)
 include(${LWIP_CONTRIB_DIR}/ports/CMakeCommon.cmake)
 
 if(CMAKE_C_COMPILER_ID STREQUAL Clang)
