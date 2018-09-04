@@ -36,7 +36,7 @@ target_compile_definitions(lwip_unittests PRIVATE ${LWIP_DEFINITIONS} ${LWIP_MBE
 
 find_library(LIBCHECK check)
 find_library(LIBM m)
-target_link_libraries(lwip_unittests lwipallapps lwipcore ${LIBCHECK} ${LIBM})
+target_link_libraries(lwip_unittests ${LWIP_SANITIZER_LIBS} lwipallapps lwipcore ${LIBCHECK} ${LIBM})
 
 if (NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
     # check installed via brew on Darwin doesn't have a separate subunit library (must be statically linked)

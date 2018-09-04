@@ -70,9 +70,10 @@ if(CMAKE_C_COMPILER_ID STREQUAL GNU)
 #            -fsanitize=address
 #            -fsanitize=undefined
 #            -fno-sanitize=alignment
-            -fstack-protector
-            -fstack-check
+#            -fstack-protector
+#            -fstack-check
             )
+#        set(LWIP_SANITIZER_LIBS asan ubsan)
     endif()
     set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
 endif()
@@ -86,6 +87,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL Clang)
         -Wno-documentation-deprecated-sync
         )
     set(LWIP_COMPILER_FLAGS ${LWIP_COMPILER_FLAGS_GNU_CLANG})
+#    set(LWIP_SANITIZER_LIBS asan ubsan)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL MSVC)
