@@ -305,14 +305,14 @@ namespace LwipSnmpCodeGeneration
 				"Simply pass all known instance OID's to it and it returns the next valid one:\n\n" +
 				"{0} state;\n" +
 				"{1} result_buf;\n" +
-				"snmp_next_oid_init(&state, {2}->id, {2}->len, result_buf, SNMP_MAX_OBJ_ID_LEN);\n" + 
+				"snmp_next_oid_init(&state, {2}->id, {2}->len, result_buf.id, SNMP_MAX_OBJ_ID_LEN);\n" + 
 				"while ({{not all instances passed}}) {{\n" + 
 				"  {1} test_oid;\n" + 
 				"  {{fill test_oid to create instance oid for next instance}}\n" + 
-				"  snmp_next_oid_check(&state, test_oid->id, test_oid->len, {{target_data_ptr}});\n" + 
+				"  snmp_next_oid_check(&state, test_oid.id, test_oid.len, {{target_data_ptr}});\n" + 
 				"}}\n" + 
 				"if(state.status == SNMP_NEXT_OID_STATUS_SUCCESS) {{\n" + 
-				"  snmp_oid_assign(row_oid, result_buf->oid, result_buf->len);\n" +
+				"  snmp_oid_assign(row_oid, state.next_oid, state.next_oid_len);\n" +
 				"  {3}->reference.ptr = state.reference; //==target_data_ptr, for usage in subsequent get/test/set\n" + 
 				"  {4} = {5};\n" + 
 				"}}"
