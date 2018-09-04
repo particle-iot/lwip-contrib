@@ -33,7 +33,7 @@
 LWIPARCH?=$(CONTRIBDIR)/ports/unix/port
 SYSARCH?=$(LWIPARCH)/sys_arch.c
 ARCHFILES=$(LWIPARCH)/perf.c \
-    $(SYSARCH) \
+  $(SYSARCH) \
 	$(LWIPARCH)/netif/tapif.c \
 	$(LWIPARCH)/netif/list.c \
 	$(LWIPARCH)/netif/sio.c \
