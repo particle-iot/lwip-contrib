@@ -40,7 +40,15 @@
 #pragma warning (disable: 4711) /* The compiler performed inlining on the given function, although it was not marked for inlining */
 #endif
 
-#define LWIP_PROVIDE_ERRNO
+#ifdef _MSC_VER
+#if _MSC_VER >= 1910
+#include <errno.h> /* use MSVC errno for >= 2017 */
+#else
+#define LWIP_PROVIDE_ERRNO /* provide errno for MSVC pre-2017 */
+#endif
+#else /* _MSC_VER */
+#define LWIP_PROVIDE_ERRNO /* provide errno for non-MSVC */
+#endif /* _MSC_VER */
 
 /* Define platform endianness (might already be defined) */
 #ifndef BYTE_ORDER
@@ -79,7 +87,9 @@ typedef int sys_prot_t;
 
 #ifdef _MSC_VER
 /* C runtime functions redefined */
+#if _MSC_VER < 1910
 #define snprintf _snprintf
+#endif
 #define strdup   _strdup
 #endif
 
